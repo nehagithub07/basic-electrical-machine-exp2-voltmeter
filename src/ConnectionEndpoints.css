@@ -1,0 +1,682 @@
+.connection-lab .jtk-connector {
+  z-index: 104 !important;
+}
+
+.connection-lab .jtk-overlay {
+  z-index: 108 !important;
+}
+
+.connection-lab .jtk-endpoint {
+  z-index: 112 !important;
+}
+
+.connection-lab .connection-terminal {
+  z-index: 70 !important;
+}
+
+.connection-lab .jtk-connector {
+  pointer-events: none;
+  filter:
+    drop-shadow(0 6px 10px rgba(15, 23, 42, 0.16))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.24));
+}
+
+.connection-lab .jtk-connector path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  shape-rendering: geometricPrecision;
+}
+
+.connection-lab .jtk-connector path:not([fill="none"]) {
+  fill: none;
+}
+
+.connection-lab .jtk-endpoint {
+  --jtk-endpoint-ui-opacity: 0;
+  opacity: var(--jtk-endpoint-ui-opacity);
+  border-radius: 999px;
+  filter:
+    drop-shadow(0 2px 4px rgba(15, 23, 42, 0.18))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+  transition:
+    filter 140ms ease,
+    opacity 140ms ease;
+}
+
+.connection-lab .jtk-endpoint--positive {
+  filter:
+    drop-shadow(0 2px 5px rgba(15, 23, 42, 0.16))
+    drop-shadow(0 0 9px rgba(22, 119, 255, 0.32));
+}
+
+.connection-lab .jtk-endpoint--negative {
+  filter:
+    drop-shadow(0 2px 5px rgba(15, 23, 42, 0.16))
+    drop-shadow(0 0 9px rgba(240, 68, 56, 0.3));
+}
+
+.connection-lab .jtk-endpoint:hover,
+.connection-lab .jtk-endpoint.jtk-hover {
+  --jtk-endpoint-ui-opacity: 0;
+  filter:
+    drop-shadow(0 4px 7px rgba(15, 23, 42, 0.2))
+    drop-shadow(0 0 12px rgba(255, 255, 255, 0.34));
+}
+
+.connection-lab .jtk-endpoint[class*="jtk-endpoint--terminal-"] {
+  translate: var(--jtk-endpoint-visual-offset-x, 0) var(--jtk-endpoint-visual-offset-y, 0);
+}
+
+/* Generated jsPlumb dots are hidden but remain interactive. */
+.connection-lab .jtk-endpoint--terminal {
+  --jtk-endpoint-ui-opacity: 0;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.connection-lab .jtk-endpoint--terminal.jtk-dragging,
+.connection-lab .jtk-endpoint--terminal:active {
+  cursor: grabbing;
+}
+
+.connection-terminal {
+  --jtk-endpoint-radius: 12;
+  --jtk-endpoint-fill: #eaf0f6;
+  --jtk-endpoint-outline-stroke: #f8fbff;
+  --jtk-endpoint-outline-width: 1.8;
+  --jtk-endpoint-stroke: #8fa2b8;
+  --jtk-endpoint-stroke-width: 1.2;
+  --jtk-endpoint-hover-fill: #f7fbff;
+  --jtk-endpoint-hover-outline-stroke: #ffffff;
+  --jtk-endpoint-hover-outline-width: 2.1;
+  --jtk-endpoint-hover-stroke: #64748b;
+  --jtk-endpoint-hover-stroke-width: 1.4;
+  --terminal-size: 29px;
+  --terminal-neutral: #7c8da1;
+  --terminal-neutral-rgb: 124, 141, 161;
+  --terminal-accent: #64748b;
+  --terminal-accent-rgb: 100, 116, 139;
+  --terminal-symbol: "";
+  position: absolute;
+  z-index: 40;
+  display: grid;
+  box-sizing: border-box;
+  width: var(--terminal-size);
+  height: var(--terminal-size);
+  place-items: center;
+  overflow: visible;
+  isolation: isolate;
+  border: 1px solid rgba(var(--terminal-neutral-rgb), 0.28);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 31% 24%, rgba(255, 255, 255, 0.98) 0 17%, rgba(255, 255, 255, 0) 18%),
+    conic-gradient(
+      from 135deg,
+      rgba(var(--terminal-neutral-rgb), 0.08),
+      rgba(255, 255, 255, 0.72),
+      rgba(var(--terminal-neutral-rgb), 0.2),
+      rgba(216, 226, 238, 0.56),
+      rgba(var(--terminal-neutral-rgb), 0.08)
+    ),
+    linear-gradient(145deg, #f8fbff 0%, #e9eff5 47%, #d6e0ea 100%);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.22),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(15, 23, 42, 0.1);
+  cursor: pointer;
+  transform-origin: center;
+  transition:
+    border-color 180ms ease,
+    filter 150ms ease,
+    box-shadow 180ms ease,
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.connection-terminal[class*="connection-terminal--endpoint-"] {
+  top: calc(var(--terminal-base-top) + var(--jtk-endpoint-offset-y, 0px) - 3px);
+  left: calc(var(--terminal-base-left) + var(--jtk-endpoint-offset-x, 0px) - 3px);
+}
+
+.connection-terminal::before {
+  position: absolute;
+  inset: 5px;
+  content: "";
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--terminal-neutral-rgb), 0.1) 0 42%, transparent 44%),
+    linear-gradient(145deg, #ffffff 0%, #edf3f8 55%, #d6e0ea 100%);
+  box-shadow:
+    inset 1px 1px 2px rgba(12, 23, 38, 0.14),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.98),
+    0 0 0 1px rgba(var(--terminal-neutral-rgb), 0.12);
+  pointer-events: none;
+}
+
+.connection-terminal::after {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: 13px;
+  height: 13px;
+  place-items: center;
+  content: "";
+  border-radius: 999px;
+  color: var(--terminal-neutral);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(var(--terminal-neutral-rgb), 0.22);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.connection-terminal:hover {
+  border-color: rgba(var(--terminal-neutral-rgb), 0.42);
+  filter: brightness(1.03);
+  box-shadow:
+    0 2px 5px rgba(15, 23, 42, 0.25),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.84),
+    inset -2px -2px 4px rgba(15, 23, 42, 0.09),
+    0 0 0 2px rgba(var(--terminal-neutral-rgb), 0.08);
+  transform: translateY(-2px) scale(1.1);
+}
+
+.connection-terminal:active {
+  filter: brightness(0.98) saturate(1.04);
+  box-shadow:
+    -1px -1px 4px rgba(255, 255, 255, 0.78),
+    2px 3px 7px rgba(15, 23, 42, 0.2),
+    inset 2px 2px 4px rgba(15, 23, 42, 0.12),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.86);
+  transform: scale(0.98);
+}
+
+.connection-terminal.jtk-connected {
+  border-color: rgba(var(--terminal-accent-rgb), 0.58);
+  box-shadow:
+    -3px -3px 8px rgba(255, 255, 255, 0.84),
+    5px 7px 14px rgba(15, 23, 42, 0.28),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 4px rgba(15, 23, 42, 0.1),
+    0 0 0 5px rgba(var(--terminal-accent-rgb), 0.16),
+    0 0 24px rgba(var(--terminal-accent-rgb), 0.46);
+}
+
+.connection-terminal.jtk-connected::before {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--terminal-accent-rgb), 0.32) 0 39%, transparent 41%),
+    linear-gradient(145deg, #ffffff 0%, #eef5fb 56%, #d9e4ee 100%);
+}
+
+.connection-terminal.jtk-connected::after {
+  color: #ffffff;
+  background: var(--terminal-accent);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.76),
+    0 0 10px rgba(var(--terminal-accent-rgb), 0.42);
+}
+
+.connection-terminal--guide-highlight {
+  border-color: rgba(var(--terminal-accent-rgb), 0.82);
+  filter: brightness(1.08) saturate(1.16);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.92),
+    0 0 0 10px rgba(var(--terminal-accent-rgb), 0.18),
+    0 0 24px rgba(var(--terminal-accent-rgb), 0.62),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 4px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px) scale(1.14);
+  animation: terminal-guide-pulse 1100ms ease-in-out infinite;
+}
+
+.terminal-number-label {
+  --endpoint-neutral: #64748b;
+  --endpoint-neutral-rgb: 100, 116, 139;
+  --endpoint-accent: #64748b;
+  --endpoint-accent-rgb: 100, 116, 139;
+  position: absolute;
+  z-index: 120 !important;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid rgba(var(--endpoint-neutral-rgb), 0.34);
+  border-radius: 999px;
+  color: #172033;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 1) 0 18%, transparent 19%),
+    linear-gradient(145deg, #ffffff, #edf5ff);
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1;
+  user-select: none;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.94),
+    0 3px 8px rgba(15, 23, 42, 0.26),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.94),
+    inset -1px -1px 2px rgba(15, 23, 42, 0.06);
+  transform: translateX(-50%);
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease,
+    filter 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.terminal-number-label::before {
+  position: absolute;
+  inset: 4px;
+  content: "";
+  pointer-events: none;
+  border: 1px solid rgba(var(--endpoint-neutral-rgb), 0.18);
+  border-radius: 999px;
+}
+
+.terminal-number-label:hover {
+  border-color: rgba(var(--endpoint-neutral-rgb), 0.36);
+  color: var(--endpoint-neutral);
+  filter: brightness(1.02);
+  box-shadow:
+    0 2px 4px rgba(15, 23, 42, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.96),
+    0 0 0 2px rgba(var(--endpoint-neutral-rgb), 0.06);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.terminal-number-label:active {
+  box-shadow:
+    inset 2px 2px 4px rgba(15, 23, 42, 0.1),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.76),
+    0 2px 6px rgba(15, 23, 42, 0.12);
+  transform: translateX(-50%) translateY(0);
+}
+
+.connection-terminal[data-polarity="plus"] {
+  --jtk-endpoint-fill: #1677ff;
+  --jtk-endpoint-outline-stroke: #eef7ff;
+  --jtk-endpoint-stroke: #0d4ea6;
+  --jtk-endpoint-hover-fill: #4b96ff;
+  --jtk-endpoint-hover-stroke: #0b3f86;
+  --terminal-accent: #1677ff;
+  --terminal-accent-rgb: 22, 119, 255;
+  --terminal-symbol: "+";
+}
+
+.connection-terminal[data-polarity="plus"] + .terminal-number-label {
+  --endpoint-accent: #1677ff;
+  --endpoint-accent-rgb: 22, 119, 255;
+}
+
+.connection-terminal[data-polarity="minus"] {
+  --jtk-endpoint-fill: #f04438;
+  --jtk-endpoint-outline-stroke: #fff3f0;
+  --jtk-endpoint-stroke: #a91f18;
+  --jtk-endpoint-hover-fill: #ff665d;
+  --jtk-endpoint-hover-stroke: #871b16;
+  --terminal-accent: #f04438;
+  --terminal-accent-rgb: 240, 68, 56;
+  --terminal-symbol: "-";
+}
+
+.connection-terminal[data-polarity="minus"] + .terminal-number-label {
+  --endpoint-accent: #f04438;
+  --endpoint-accent-rgb: 240, 68, 56;
+}
+
+.connection-terminal.jtk-connected + .terminal-number-label {
+  border-color: rgba(var(--endpoint-accent-rgb), 0.42);
+  color: var(--endpoint-accent);
+  background:
+    linear-gradient(145deg, #ffffff, #eef4fa);
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.94),
+    0 4px 12px rgba(15, 23, 42, 0.24),
+    inset 0 1px 1px rgba(255, 255, 255, 0.94),
+    0 0 0 6px rgba(var(--endpoint-accent-rgb), 0.12),
+    0 0 12px rgba(var(--endpoint-accent-rgb), 0.18);
+}
+
+.terminal-number-label--guide-highlight {
+  border-color: rgba(var(--endpoint-accent-rgb), 0.78);
+  color: #ffffff;
+  background: var(--endpoint-accent);
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 8px rgba(var(--endpoint-accent-rgb), 0.16),
+    0 0 18px rgba(var(--endpoint-accent-rgb), 0.54),
+    inset 0 1px 1px rgba(255, 255, 255, 0.38);
+  transform: translateX(-50%) translateY(-2px) scale(1.08);
+  animation: terminal-number-guide-pulse 1100ms ease-in-out infinite;
+}
+
+@keyframes terminal-guide-pulse {
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(255, 255, 255, 0.96),
+      0 0 0 13px rgba(var(--terminal-accent-rgb), 0.3),
+      0 0 32px rgba(var(--terminal-accent-rgb), 0.76),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.94),
+      inset -2px -2px 4px rgba(15, 23, 42, 0.08);
+  }
+}
+
+@keyframes terminal-number-guide-pulse {
+  50% {
+    box-shadow:
+      0 0 0 3px rgba(255, 255, 255, 0.98),
+      0 0 0 10px rgba(var(--endpoint-accent-rgb), 0.24),
+      0 0 24px rgba(var(--endpoint-accent-rgb), 0.66),
+      inset 0 1px 1px rgba(255, 255, 255, 0.42);
+  }
+}
+
+/*
+  Adjust each generated jsPlumb dot, visible terminal marker, and wire anchor together here.
+  Change --jtk-endpoint-offset-x/y in the grouped endpoint block to move the real
+  terminal source position; jsPlumb wires will start from the same place.
+*/
+.connection-lab .jtk-endpoint--terminal-1,
+.connection-terminal--endpoint-1 {
+  --jtk-endpoint-offset-x: -19px;
+  --jtk-endpoint-offset-y: 9px;
+}
+
+.connection-terminal--endpoint-1 {
+  --terminal-base-top: 138px;
+  --terminal-base-left: 61px;
+}
+
+.connection-lab .jtk-endpoint--terminal-2,
+.connection-terminal--endpoint-2 {
+  --jtk-endpoint-offset-x: -19px;
+  --jtk-endpoint-offset-y: 9px;
+}
+
+.connection-terminal--endpoint-2 {
+  --terminal-base-top: 138px;
+  --terminal-base-left: 103px;
+}
+
+.connection-lab .jtk-endpoint--terminal-3,
+.connection-terminal--endpoint-3 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-3 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 27px;
+}
+
+.connection-lab .jtk-endpoint--terminal-4,
+.connection-terminal--endpoint-4 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-4 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 87px;
+}
+
+.connection-lab .jtk-endpoint--terminal-5,
+.connection-terminal--endpoint-5 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-5 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 27px;
+}
+
+.connection-lab .jtk-endpoint--terminal-6,
+.connection-terminal--endpoint-6 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-6 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 87px;
+}
+
+.connection-lab .jtk-endpoint--terminal-7,
+.connection-terminal--endpoint-7 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-7 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 27px;
+}
+
+.connection-lab .jtk-endpoint--terminal-8,
+.connection-terminal--endpoint-8 {
+  --jtk-endpoint-offset-x: 0px;
+  --jtk-endpoint-offset-y: 0px;
+}
+
+.connection-terminal--endpoint-8 {
+  --terminal-base-top: 181px;
+  --terminal-base-left: 87px;
+}
+
+.connection-lab .jtk-endpoint--terminal-9,
+.connection-terminal--endpoint-9 {
+   --jtk-endpoint-offset-x: -12px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-9 {
+  --terminal-base-top: 128px;
+  --terminal-base-left: 68px;
+}
+
+.connection-lab .jtk-endpoint--terminal-10,
+.connection-terminal--endpoint-10 {
+  --jtk-endpoint-offset-x: -12px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-10 {
+  --terminal-base-top: 177px;
+  --terminal-base-left: 68px;
+}
+
+.connection-lab .jtk-endpoint--terminal-11,
+.connection-terminal--endpoint-11 {
+  --jtk-endpoint-offset-x: -12px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-11 {
+  --terminal-base-top: 18px;
+  --terminal-base-left: 166px;
+}
+
+.connection-lab .jtk-endpoint--terminal-12,
+.connection-terminal--endpoint-12 {
+  --jtk-endpoint-offset-x: 75px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-12 {
+  --terminal-base-top: 17px;
+  --terminal-base-left: 222px;
+}
+
+.connection-lab .jtk-endpoint--terminal-13,
+.connection-terminal--endpoint-13 {
+  --jtk-endpoint-offset-x: -14px;
+  --jtk-endpoint-offset-y: -2px;
+}
+
+.connection-terminal--endpoint-13 {
+  --terminal-base-top: 115px;
+  --terminal-base-left: 407px;
+}
+
+.connection-lab .jtk-endpoint--terminal-14,
+.connection-terminal--endpoint-14 {
+  --jtk-endpoint-offset-x: -12px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-14 {
+  --terminal-base-top: 158px;
+  --terminal-base-left: 407px;
+}
+
+.connection-lab .jtk-endpoint--terminal-15,
+.connection-terminal--endpoint-15 {
+  --jtk-endpoint-offset-x: -135px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-15 {
+  --terminal-base-top: 18px;
+  --terminal-base-left: 620px;
+}
+
+.connection-lab .jtk-endpoint--terminal-16,
+.connection-terminal--endpoint-16 {
+  --jtk-endpoint-offset-x: -35px;
+  --jtk-endpoint-offset-y: 1px;
+}
+
+.connection-terminal--endpoint-16 {
+  --terminal-base-top: 18px;
+  --terminal-base-left: 668px;
+}
+
+/* Keep the invisible jsPlumb hit targets in the same modern polarity palette. */
+.connection-terminal[data-polarity="plus"] {
+  --jtk-endpoint-fill: #1677ff;
+  --jtk-endpoint-outline-stroke: #eef7ff;
+  --jtk-endpoint-stroke: #0d4ea6;
+  --jtk-endpoint-hover-fill: #4b96ff;
+  --jtk-endpoint-hover-stroke: #0b3f86;
+}
+
+.connection-terminal[data-polarity="minus"] {
+  --jtk-endpoint-fill: #f04438;
+  --jtk-endpoint-outline-stroke: #fff3f0;
+  --jtk-endpoint-stroke: #a91f18;
+  --jtk-endpoint-hover-fill: #ff665d;
+  --jtk-endpoint-hover-stroke: #871b16;
+}
+
+/* Adjust each terminal number label here. */
+.terminal-number-label--endpoint-1 {
+  top: 176px;
+  left: 54px;
+}
+
+.terminal-number-label--endpoint-2 {
+  top: 176px;
+  left: 97px;
+}
+
+.terminal-number-label--endpoint-3 {
+  top: 210px;
+  left: 39px;
+}
+
+.terminal-number-label--endpoint-4 {
+  top: 210px;
+  left: 99px;
+}
+
+.terminal-number-label--endpoint-5 {
+  top: 210px;
+  left: 39px;
+}
+
+.terminal-number-label--endpoint-6 {
+  top: 210px;
+  left: 99px;
+}
+
+.terminal-number-label--endpoint-7 {
+  top: 210px;
+  left: 39px;
+}
+
+.terminal-number-label--endpoint-8 {
+  top: 210px;
+  left: 99px;
+}
+
+.terminal-number-label--endpoint-9 {
+  top: 127px;
+  left: 35px;
+}
+
+.terminal-number-label--endpoint-10 {
+  top: 175px;
+  left: 35px;
+}
+
+.terminal-number-label--endpoint-11 {
+  top: -20px;
+  left: 165px;
+}
+
+.terminal-number-label--endpoint-12 {
+  top: -20px;
+  left: 310px;
+}
+
+.terminal-number-label--endpoint-13 {
+  top: 110px;
+  left: 440px;
+}
+
+.terminal-number-label--endpoint-14 {
+  top: 155px;
+  left: 440px;
+}
+
+.terminal-number-label--endpoint-15 {
+  top: -20px;
+  left: 495px;
+}
+
+.terminal-number-label--endpoint-16 {
+  top: -20px;
+  left: 645px;
+}
+
+.terminal-label {
+  position: absolute;
+  z-index: 60;
+  display: grid;
+  min-width: 23px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  border-radius: 4px;
+  color: #21150e;
+  background: #fff8ef;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32);
+}
+
+.connection-lab--locked .connection-terminal,
+.connection-lab--locked .terminal-label,
+.connection-lab--locked .terminal-number-label {
+  pointer-events: none;
+  cursor: not-allowed;
+}
