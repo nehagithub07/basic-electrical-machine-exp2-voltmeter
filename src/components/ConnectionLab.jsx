@@ -7,12 +7,11 @@ import {
   addAllEndpoints,
   autoConnectDefaultCircuit,
   DEFAULT_VOLTMETER_READING_KEYS,
-  DEFAULT_AUTO_CONNECTIONS,
   deleteConnectionsForTerminal,
   getVoltmeterReadingKeys,
   getConnectedTerminalIds,
   getConnectionStatus,
-  hasConnectionBetween,
+  getNextRequiredConnectionPair,
   isValidConnectionPair,
   lockJsPlumbCircuit,
   resolveJsPlumb,
@@ -29,30 +28,6 @@ const areTerminalIdsEqual = (currentIds, nextIds) => (
   && currentIds.every((terminalId, index) => terminalId === nextIds[index])
 )
 
-const getNextRequiredConnectionPair = (instance) => (
-  DEFAULT_AUTO_CONNECTIONS.find(([sourceId, targetId]) => (
-    !hasConnectionBetween(instance, sourceId, targetId)
-  )) ?? null
-)
-
-const areConnectionPairsEqual = (firstPair, secondPair) => (
-  Array.isArray(firstPair)
-  && Array.isArray(secondPair)
-  && firstPair.length === 2
-  && secondPair.length === 2
-  && (
-    (firstPair[0] === secondPair[0] && firstPair[1] === secondPair[1])
-    || (firstPair[0] === secondPair[1] && firstPair[1] === secondPair[0])
-  )
-)
-
-const getExpectedConnectionPairForLatestConnection = (instance, latestPair) => (
-  DEFAULT_AUTO_CONNECTIONS.find((pair) => (
-    areConnectionPairsEqual(pair, latestPair)
-    || !hasConnectionBetween(instance, pair[0], pair[1])
-  )) ?? null
-)
-
 const getNextGuideHighlightTerminalIds = (instance, guideEndpointHighlightActive, isLocked) => {
   if (!guideEndpointHighlightActive || isLocked || !instance) {
     return []
@@ -62,7 +37,6 @@ const getNextGuideHighlightTerminalIds = (instance, guideEndpointHighlightActive
 }
 
 const ConnectionLab = ({
-  aiGuideActive = false,
   autoConnectRequest,
   checkRequest,
   guideEndpointHighlightActive = false,
@@ -83,7 +57,6 @@ const ConnectionLab = ({
   const instanceRef = useRef(null)
   const onConnectionChangeRef = useRef(onConnectionChange)
   const onCheckConnectionsRef = useRef(onCheckConnections)
-  const aiGuideActiveRef = useRef(aiGuideActive)
   const scaleRef = useRef(getJsPlumbZoom(scale))
   const suppressConnectionAlertsRef = useRef(false)
 
@@ -100,10 +73,6 @@ const ConnectionLab = ({
   useEffect(() => {
     onConnectionChangeRef.current = onConnectionChange
   }, [onConnectionChange])
-
-  useEffect(() => {
-    aiGuideActiveRef.current = aiGuideActive
-  }, [aiGuideActive])
 
   useEffect(() => {
     let cancelled = false
@@ -169,21 +138,11 @@ const ConnectionLab = ({
         const connection = info?.connection ?? info
         const sourceId = connection?.sourceId || connection?.source?.id
         const targetId = connection?.targetId || connection?.target?.id
-        const latestPair = sourceId && targetId ? [sourceId, targetId] : null
-        const expectedPair = getExpectedConnectionPairForLatestConnection(instance, latestPair)
         const latestConnectionIsInvalid = Boolean(
           sourceId && targetId && !isValidConnectionPair(sourceId, targetId),
         )
-        const latestConnectionIsWrongForGuide = Boolean(
-          aiGuideActiveRef.current
-          && expectedPair
-          && latestPair
-          && !areConnectionPairsEqual(expectedPair, latestPair)
-        )
-        const latestConnectionIsWrong = latestConnectionIsInvalid || latestConnectionIsWrongForGuide
-        const nextRequiredConnection = latestConnectionIsWrong
-          ? expectedPair ?? getNextRequiredConnectionPair(instance)
-          : getNextRequiredConnectionPair(instance)
+        const latestConnectionIsWrong = latestConnectionIsInvalid
+        const nextRequiredConnection = getNextRequiredConnectionPair(instance)
 
         if (suppressConnectionAlertsRef.current) {
           setConnectionRevision((current) => current + 1)

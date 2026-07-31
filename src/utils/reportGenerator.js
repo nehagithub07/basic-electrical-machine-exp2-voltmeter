@@ -910,7 +910,7 @@ tr:nth-child(even) {
         <p class="report-stamp">Generated on ${escapeHtml(reportDateText)}</p>
       </div>
       <p class="report-experiment-label">Experiment Title</p>
-      <p class="report-experiment-title">To Verify Kirchhoff's Current Law</p>
+      <p class="report-experiment-title">To Verify Kirchhoff's VOLTAGE Law</p>
       <div class="info-grid">
         <div class="info-card"><span class="label">Start Time:</span>${escapeHtml(startTimeText)}</div>
         <div class="info-card"><span class="label">End Time:</span>${escapeHtml(endTimeText)}</div>
@@ -928,9 +928,9 @@ tr:nth-child(even) {
       <h3>Components and Key Parameters</h3>
       <ul class="two-column-list">
         <li>DC power supply: 10 V</li>
-        <li>DC Voltmeter V<sub>1</sub> for total current I<sub>1</sub>: 0 - 10 V</li>
-        <li>DC Voltmeter V<sub>2</sub> for branch current I<sub>2</sub>: 0 - 10 V</li>
-        <li>DC Voltmeter V<sub>3</sub> for branch current I<sub>3</sub>: 0 - 10 V</li>
+        <li>DC Voltmeter V<sub>1</sub> for the voltage drop across R<sub>1</sub>: 0 - 10 V</li>
+        <li>DC Voltmeter V<sub>2</sub> for the voltage drop across R<sub>2</sub>: 0 - 10 V</li>
+        <li>DC Voltmeter V<sub>3</sub> for the voltage drop across R<sub>3</sub>: 0 - 10 V</li>
         <li>R<sub>1</sub>: ${formatResistance(r1)} &Omega;</li>
         <li>R<sub>2</sub>: ${formatResistance(r2)} &Omega;</li>
         <li>R<sub>3</sub>: ${formatResistance(r3)} &Omega;</li>

@@ -56,68 +56,70 @@ const buttons = [
     handlerName: 'onPlot',
   },
   {
-    id: 'reset-button',
-    label: 'RESET',
-    tone: 'action-button--red',
-    Icon: ResetIcon,
-    handlerName: 'onReset',
-  },
-  {
     id: 'print-button',
     label: 'PRINT',
     tone: 'action-button--purple',
     Icon: PrintIcon,
     handlerName: 'onPrint',
   },
-  
- 
+  {
+    id: 'reset-button',
+    label: 'RESET',
+    tone: 'action-button--red',
+    Icon: ResetIcon,
+    handlerName: 'onReset',
+  },
 ]
 
 const instructionSteps = [
   {
     number: 1,
-    text: 'Make connections as per the instructions given below by drag and drop the wire from terminals.',
+    text: 'Make connections by dragging nodes from the apparatus to the circuit.',
     substeps: [
-      'Connect power supply to the circuit (1-9, 2-10).',
-      'Connect voltmeters (3-11, 4-12), (5-13, 6-14) and (7-15, 8-16).',
-      'Note: Click on the label to delete the connection for the corresponding terminals.',
+      'Connect the power supply to the circuit (1-9, 2-10).',
+      'Connect voltmeters (3-11, 4-12), (5-13, 6-14), and (7-15, 8-16), or connect any voltmeter to any resistance in the circuit.',
+      'Click on a label to delete all connections for the corresponding node.',
     ],
   },
   {
     number: 2,
-    text: "Check your connections by clicking on the 'CHECK' button.",
+    text: <>Check your connections by clicking on the <strong>'CHECK'</strong> button.</>,
   },
   {
     number: 3,
-    text: 'Set the values of resistances R1, R2 and R3 by moving the sliders on right. These values will remain constant throughout the experiment.',
+    text: 'Set the values of resistances R1, R2, and R3 by adjusting the sliders on the left. These values will remain constant throughout the experiment.',
   },
   {
     number: 4,
-    text: "Click the 'Power' button to turn on the power supply.",
+    text: <>Click on the <strong>'Power'</strong> button to turn on the power supply.</>,
   },
   {
     number: 5,
-    text: 'Vary the voltage value by moving the voltage slider to the right side. The readings on the voltmeter will change accordingly.',
+    text: 'Now, vary the voltage value by moving the voltage slider to the right. The readings on the voltmeters will change accordingly.',
   },
   {
     number: 6,
-    text: "Click on the 'ADD' button to add the readings to the observation table.",
+    text: <>Click on the <strong>'ADD'</strong> button to add the readings to the observation table.</>,
   },
   {
     number: 7,
-    text: 'Repeat Steps 5 and 6 until six readings are recorded. At least 6 readings are required to plot the graph.',
+    text: 'Repeat Steps 6 and 7 until the sixth reading is recorded. A minimum of six readings is required to plot the graph.',
   },
   {
     number: 8,
-    text: "Click on the 'PLOT' button to plot the graph.",
+    text: 'To verify KVL, compare the theoretically calculated values with the practical values.',
   },
   {
     number: 9,
-    text: 'Click "Generate Report" to generate the simulation report, then use the report page to print or download it.',
+    text: <>Click on the <strong>'PLOT'</strong> button to display the graph.</>,
   },
   {
     number: 10,
-    text: "Click on 'RESET' button to refresh the simulation.",
+    text: <>Click on the <strong>'PRINT'</strong> button to print the page.</>,
+  },
+  {
+    number: 11,
+    text: <>Click on the <strong>'RESET'</strong> button to refresh the page.</>,
   },
 ]
 

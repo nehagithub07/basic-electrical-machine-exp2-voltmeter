@@ -138,7 +138,7 @@ const getActiveInstructionStep = ({
       return 8
     }
 
-    return reportGenerated ? 10 : 9
+    return reportGenerated ? 11 : 10
   }
 
   if (readingCount > 0) {
@@ -991,7 +991,6 @@ const App = () => {
 
               <section className="right-panel">
                 <ConnectionLab
-                  aiGuideActive={aiGuidePlaying}
                   guideEndpointHighlightActive={isAiGuideConnectionStep(activeAiGuideStepId)}
                   key={`connection-lab-${resetRequest}`}
                   autoConnectRequest={autoConnectRequest}

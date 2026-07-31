@@ -181,7 +181,7 @@
         "en": "Equations"
       },
       "description": {
-        "en": " This section displays the equations used to determine the branch currents."
+        "en": "This section displays the equations used to determine the branch currents and voltage drops."
       },
       "audio": "./walkthrough-audios/Equations.wav",
       "placement": "top"

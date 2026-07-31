@@ -17,11 +17,17 @@ export const calculateReadings = ({ voltage, r1, r2, r3 }) => {
   const i1 = totalResistance > 0 ? powerSupply / totalResistance : 0
   const i2 = branchResistance > 0 ? (r3Value / branchResistance) * i1 : 0
   const i3 = branchResistance > 0 ? (r2Value / branchResistance) * i1 : 0
+  const v1 = i1 * r1Value
+  const v2 = i2 * r2Value
+  const v3 = i3 * r3Value
 
   return {
     totalResistance,
     i1,
     i2,
     i3,
+    v1,
+    v2,
+    v3,
   }
 }

@@ -39,6 +39,33 @@ const formulas = [
     ),
     symbol: 'I3',
   },
+  {
+    description: 'Voltage drop across R1.',
+    expression: (
+      <>
+        V<sub>1</sub> = I<sub>1</sub> x R<sub>1</sub>
+      </>
+    ),
+    symbol: 'V1',
+  },
+  {
+    description: 'Voltage drop across R2.',
+    expression: (
+      <>
+        V<sub>2</sub> = I<sub>2</sub> x R<sub>2</sub>
+      </>
+    ),
+    symbol: 'V2',
+  },
+  {
+    description: 'Voltage drop across R3.',
+    expression: (
+      <>
+        V<sub>3</sub> = I<sub>3</sub> x R<sub>3</sub>
+      </>
+    ),
+    symbol: 'V3',
+  },
 ]
 
 const ReportControls = ({

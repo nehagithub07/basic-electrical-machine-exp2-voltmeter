@@ -81,29 +81,29 @@ export const DEFAULT_AUTO_CONNECTIONS = [
 ]
 
 export const DEFAULT_VOLTMETER_READING_KEYS = {
-  V1: 'i1',
-  V2: 'i2',
-  V3: 'i3',
+  V1: 'v1',
+  V2: 'v2',
+  V3: 'v3',
 }
 
 const VOLTMETER_BRANCH_CONNECTIONS = {
   V1: [
     {
-      currentKey: 'i1',
+      readingKey: 'v1',
       negativeTerminal: '4-endpoint',
       positiveTerminal: '3-endpoint',
       circuitNegativeTerminal: '12-endpoint',
       circuitPositiveTerminal: '11-endpoint',
     },
     {
-      currentKey: 'i2',
+      readingKey: 'v2',
       negativeTerminal: '4-endpoint',
       positiveTerminal: '3-endpoint',
       circuitNegativeTerminal: '14-endpoint',
       circuitPositiveTerminal: '13-endpoint',
     },
     {
-      currentKey: 'i3',
+      readingKey: 'v3',
       negativeTerminal: '4-endpoint',
       positiveTerminal: '3-endpoint',
       circuitNegativeTerminal: '16-endpoint',
@@ -112,21 +112,21 @@ const VOLTMETER_BRANCH_CONNECTIONS = {
   ],
   V2: [
     {
-      currentKey: 'i1',
+      readingKey: 'v1',
       negativeTerminal: '6-endpoint',
       positiveTerminal: '5-endpoint',
       circuitNegativeTerminal: '12-endpoint',
       circuitPositiveTerminal: '11-endpoint',
     },
     {
-      currentKey: 'i2',
+      readingKey: 'v2',
       negativeTerminal: '6-endpoint',
       positiveTerminal: '5-endpoint',
       circuitNegativeTerminal: '14-endpoint',
       circuitPositiveTerminal: '13-endpoint',
     },
     {
-      currentKey: 'i3',
+      readingKey: 'v3',
       negativeTerminal: '6-endpoint',
       positiveTerminal: '5-endpoint',
       circuitNegativeTerminal: '16-endpoint',
@@ -135,21 +135,21 @@ const VOLTMETER_BRANCH_CONNECTIONS = {
   ],
   V3: [
     {
-      currentKey: 'i1',
+      readingKey: 'v1',
       negativeTerminal: '8-endpoint',
       positiveTerminal: '7-endpoint',
       circuitNegativeTerminal: '12-endpoint',
       circuitPositiveTerminal: '11-endpoint',
     },
     {
-      currentKey: 'i2',
+      readingKey: 'v2',
       negativeTerminal: '8-endpoint',
       positiveTerminal: '7-endpoint',
       circuitNegativeTerminal: '14-endpoint',
       circuitPositiveTerminal: '13-endpoint',
     },
     {
-      currentKey: 'i3',
+      readingKey: 'v3',
       negativeTerminal: '8-endpoint',
       positiveTerminal: '7-endpoint',
       circuitNegativeTerminal: '16-endpoint',
@@ -380,6 +380,72 @@ export const hasConnectionBetween = (instance, firstId, secondId) => (
   Boolean(getConnectionBetween(instance, firstId, secondId))
 )
 
+const getConnectedPeerTerminalId = (instance, terminalId) => {
+  const connection = getAllConnections(instance).find((candidate) => {
+    const { sourceId, targetId } = getConnectionEndpointIds(candidate)
+
+    return sourceId === terminalId || targetId === terminalId
+  })
+
+  if (!connection) {
+    return null
+  }
+
+  const { sourceId, targetId } = getConnectionEndpointIds(connection)
+
+  return sourceId === terminalId ? targetId : sourceId
+}
+
+export const getNextRequiredConnectionPair = (instance) => {
+  const missingPowerConnection = DEFAULT_AUTO_CONNECTIONS
+    .slice(0, 2)
+    .find(([sourceId, targetId]) => !hasConnectionBetween(instance, sourceId, targetId))
+
+  if (missingPowerConnection) {
+    return missingPowerConnection
+  }
+
+  for (const [meterLabel, branches] of Object.entries(VOLTMETER_BRANCH_CONNECTIONS)) {
+    const { negativeTerminal, positiveTerminal } = branches[0]
+    const positivePeer = getConnectedPeerTerminalId(instance, positiveTerminal)
+    const negativePeer = getConnectedPeerTerminalId(instance, negativeTerminal)
+    const positiveBranch = branches.find((branch) => (
+      branch.circuitPositiveTerminal === positivePeer
+    ))
+    const negativeBranch = branches.find((branch) => (
+      branch.circuitNegativeTerminal === negativePeer
+    ))
+
+    if (positiveBranch && !negativePeer) {
+      return [negativeTerminal, positiveBranch.circuitNegativeTerminal]
+    }
+
+    if (negativeBranch && !positivePeer) {
+      return [positiveTerminal, negativeBranch.circuitPositiveTerminal]
+    }
+
+    if (positivePeer || negativePeer) {
+      continue
+    }
+
+    const preferredBranchIndex = Number(meterLabel.slice(1)) - 1
+    const preferredBranches = [
+      branches[preferredBranchIndex],
+      ...branches.filter((_, index) => index !== preferredBranchIndex),
+    ]
+    const availableBranch = preferredBranches.find((branch) => (
+      !getConnectedPeerTerminalId(instance, branch.circuitPositiveTerminal)
+      && !getConnectedPeerTerminalId(instance, branch.circuitNegativeTerminal)
+    ))
+
+    if (availableBranch) {
+      return [positiveTerminal, availableBranch.circuitPositiveTerminal]
+    }
+  }
+
+  return null
+}
+
 export const getVoltmeterReadingKeys = (instance) => {
   const readingKeys = {
     ...DEFAULT_VOLTMETER_READING_KEYS,
@@ -400,7 +466,7 @@ export const getVoltmeterReadingKeys = (instance) => {
     ))
 
     if (matchedBranch) {
-      readingKeys[meterLabel] = matchedBranch.currentKey
+      readingKeys[meterLabel] = matchedBranch.readingKey
     }
   })
 
