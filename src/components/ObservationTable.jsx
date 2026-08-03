@@ -10,15 +10,15 @@ const ObservationTable = ({ observations }) => (
         <thead>
           <tr>
             <th>S.No</th>
-            <th>Voltage (V)</th>
+            <th>Voltage</th>
             <th>
-              I<sub>1</sub> (A)
+              V<sub>1</sub> (V)
             </th>
             <th>
-              I<sub>2</sub> (A)
+              V<sub>2</sub> (V)
             </th>
             <th>
-              I<sub>3</sub> (A)
+              V<sub>3</sub> (V)
             </th>
           </tr>
         </thead>
@@ -30,9 +30,9 @@ const ObservationTable = ({ observations }) => (
               <tr key={index}>
                 <td>{row?.id ?? ''}</td>
                 <td>{row ? row.voltage.toFixed(1) : ''}</td>
-                <td>{row ? row.i1.toFixed(3) : ''}</td>
-                <td>{row ? row.i2.toFixed(3) : ''}</td>
-                <td>{row ? row.i3.toFixed(3) : ''}</td>
+                <td>{row ? row.v1.toFixed(3) : ''}</td>
+                <td>{row ? row.v2.toFixed(3) : ''}</td>
+                <td>{row ? row.v3.toFixed(3) : ''}</td>
               </tr>
             )
           })}

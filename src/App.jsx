@@ -17,7 +17,7 @@ import { useAiGuideNarration } from './aiGuide/useAiGuideNarration.js'
 import { calculateReadings } from './utils/circuitMath.js'
 import { generateKclReport } from './utils/reportGenerator.js'
  
-const BASE_WIDTH = 1440
+const BASE_WIDTH = 1600
 const BASE_HEIGHT = 960
 const GRAPH_SECTION_GAP = 28
 const GRAPH_SECTION_HEIGHT = 430
@@ -179,9 +179,11 @@ const getScale = () => {
   }
 
   const widthScale = (window.innerWidth - PANEL_VIEWPORT_MARGIN) / BASE_WIDTH
-  const heightScale = (window.innerHeight - PANEL_VIEWPORT_MARGIN) / BASE_HEIGHT
 
-  return Math.max(Math.min(widthScale, heightScale, PANEL_MAX_SCALE), 0.1)
+  // Keep the controls readable on laptop screens. The document already scrolls
+  // vertically, so fitting the full experiment into the viewport height only
+  // makes the lab and its instruments unnecessarily small.
+  return Math.max(Math.min(widthScale, PANEL_MAX_SCALE), 0.1)
 }
 
 const App = () => {
@@ -486,6 +488,9 @@ const App = () => {
       i1: readings.i1,
       i2: readings.i2,
       i3: readings.i3,
+      v1: readings.v1,
+      v2: readings.v2,
+      v3: readings.v3,
     }
     const nextObservationCount = readingCount + 1
 

@@ -97,7 +97,7 @@ const ConnectionLab = ({
         Container: containerRef.current,
         ConnectionsDetachable: true,
         ReattachConnections: true,
-        Connector: ['Bezier', { curviness: 72 }],
+        Connector: ['Bezier', { curviness: 52 }],
         PaintStyle: {
           ...wirePaintStyles.positive,
         },

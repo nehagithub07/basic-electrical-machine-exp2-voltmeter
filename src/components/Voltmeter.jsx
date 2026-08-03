@@ -4,8 +4,10 @@ import v3Img from '../assets/V3.png'
 import needleImg from '../assets/needle.png'
 import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
 
-const METER_MAX_READING = 10
-const DIAL_START_ANGLE = 180
+const METER_MAX_READING = 20
+// The needle artwork points upward in its unrotated state. Rotate it 90 degrees
+// counter-clockwise so a zero reading points at the dial's left-hand zero tick.
+const DIAL_START_ANGLE = -90
 const DIAL_SWEEP_ANGLE = 180
 
 const voltmeterImages = {

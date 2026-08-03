@@ -260,9 +260,9 @@ const createObservationRows = (observations) => (
       <tr>
         <td>${index + 1}</td>
         <td>${formatNumber(row.voltage, 1)}</td>
-        <td>${formatNumber(row.i1)}</td>
-        <td>${formatNumber(row.i2)}</td>
-        <td>${formatNumber(row.i3)}</td>
+        <td>${formatNumber(row.v1 ?? row.i1 * row.r1)}</td>
+        <td>${formatNumber(row.v2 ?? row.i2 * row.r2)}</td>
+        <td>${formatNumber(row.v3 ?? row.i3 * row.r3)}</td>
       </tr>
     `
   }).join('')
@@ -928,9 +928,9 @@ tr:nth-child(even) {
       <h3>Components and Key Parameters</h3>
       <ul class="two-column-list">
         <li>DC power supply: 10 V</li>
-        <li>DC Voltmeter V<sub>1</sub> for the voltage drop across R<sub>1</sub>: 0 - 10 V</li>
-        <li>DC Voltmeter V<sub>2</sub> for the voltage drop across R<sub>2</sub>: 0 - 10 V</li>
-        <li>DC Voltmeter V<sub>3</sub> for the voltage drop across R<sub>3</sub>: 0 - 10 V</li>
+        <li>DC Voltmeter V<sub>1</sub> for the voltage drop across R<sub>1</sub>: 0 - 20 V</li>
+        <li>DC Voltmeter V<sub>2</sub> for the voltage drop across R<sub>2</sub>: 0 - 20 V</li>
+        <li>DC Voltmeter V<sub>3</sub> for the voltage drop across R<sub>3</sub>: 0 - 20 V</li>
         <li>R<sub>1</sub>: ${formatResistance(r1)} &Omega;</li>
         <li>R<sub>2</sub>: ${formatResistance(r2)} &Omega;</li>
         <li>R<sub>3</sub>: ${formatResistance(r3)} &Omega;</li>
@@ -951,10 +951,10 @@ tr:nth-child(even) {
               <thead>
                 <tr>
                   <th>S.No.</th>
-                  <th>Voltage (V)</th>
-                  <th>I<sub>1</sub> (A)</th>
-                  <th>I<sub>2</sub> (A)</th>
-                  <th>I<sub>3</sub> (A)</th>
+                  <th>Voltage (Power supply)</th>
+                  <th>V<sub>1</sub> (V)</th>
+                  <th>V<sub>2</sub> (V)</th>
+                  <th>V<sub>3</sub> (V)</th>
                 </tr>
               </thead>
               <tbody>${observationRows}</tbody>

@@ -92,7 +92,7 @@
   --jtk-endpoint-hover-outline-width: 2.1;
   --jtk-endpoint-hover-stroke: #64748b;
   --jtk-endpoint-hover-stroke-width: 1.4;
-  --terminal-size: 29px;
+  --terminal-size: 33px;
   --terminal-neutral: #7c8da1;
   --terminal-neutral-rgb: 124, 141, 161;
   --terminal-accent: #64748b;
@@ -386,8 +386,8 @@
 */
 .connection-lab .jtk-endpoint--terminal-1,
 .connection-terminal--endpoint-1 {
-  --jtk-endpoint-offset-x: -19px;
-  --jtk-endpoint-offset-y: 9px;
+  --jtk-endpoint-offset-x: -18px;
+  --jtk-endpoint-offset-y: 7px;
 }
 
 .connection-terminal--endpoint-1 {
@@ -397,8 +397,8 @@
 
 .connection-lab .jtk-endpoint--terminal-2,
 .connection-terminal--endpoint-2 {
-  --jtk-endpoint-offset-x: -19px;
-  --jtk-endpoint-offset-y: 9px;
+  --jtk-endpoint-offset-x: -18px;
+  --jtk-endpoint-offset-y: 7px;
 }
 
 .connection-terminal--endpoint-2 {
@@ -413,8 +413,8 @@
 }
 
 .connection-terminal--endpoint-3 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 27px;
+  --terminal-base-top: 175px;
+  --terminal-base-left: 29px;
 }
 
 .connection-lab .jtk-endpoint--terminal-4,
@@ -424,8 +424,8 @@
 }
 
 .connection-terminal--endpoint-4 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 87px;
+  --terminal-base-top: 175px;
+  --terminal-base-left: 95px;
 }
 
 .connection-lab .jtk-endpoint--terminal-5,
@@ -435,8 +435,8 @@
 }
 
 .connection-terminal--endpoint-5 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 27px;
+  --terminal-base-top: 175px;
+  --terminal-base-left: 29px;
 }
 
 .connection-lab .jtk-endpoint--terminal-6,
@@ -446,8 +446,8 @@
 }
 
 .connection-terminal--endpoint-6 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 87px;
+  --terminal-base-top: 175px;
+  --terminal-base-left: 95px;
 }
 
 .connection-lab .jtk-endpoint--terminal-7,
@@ -457,8 +457,8 @@
 }
 
 .connection-terminal--endpoint-7 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 27px;
+  --terminal-base-top: 170px;
+  --terminal-base-left: 29px;
 }
 
 .connection-lab .jtk-endpoint--terminal-8,
@@ -468,8 +468,8 @@
 }
 
 .connection-terminal--endpoint-8 {
-  --terminal-base-top: 181px;
-  --terminal-base-left: 87px;
+  --terminal-base-top: 170px;
+  --terminal-base-left: 95px;
 }
 
 .connection-lab .jtk-endpoint--terminal-9,
@@ -579,43 +579,43 @@
 
 /* Adjust each terminal number label here. */
 .terminal-number-label--endpoint-1 {
-  top: 176px;
+  top: 177px;
   left: 54px;
 }
 
 .terminal-number-label--endpoint-2 {
-  top: 176px;
-  left: 97px;
+  top: 177px;
+  left: 100px;
 }
 
 .terminal-number-label--endpoint-3 {
   top: 210px;
-  left: 39px;
+  left: 43px;
 }
 
 .terminal-number-label--endpoint-4 {
   top: 210px;
-  left: 99px;
+  left: 110px;
 }
 
 .terminal-number-label--endpoint-5 {
   top: 210px;
-  left: 39px;
+  left: 42px;
 }
 
 .terminal-number-label--endpoint-6 {
   top: 210px;
-  left: 99px;
+  left: 110px;
 }
 
 .terminal-number-label--endpoint-7 {
   top: 210px;
-  left: 39px;
+  left: 42px;
 }
 
 .terminal-number-label--endpoint-8 {
   top: 210px;
-  left: 99px;
+  left: 110px;
 }
 
 .terminal-number-label--endpoint-9 {
