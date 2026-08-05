@@ -921,9 +921,9 @@ tr:nth-child(even) {
     <div class="section">
       <h2>Summary</h2>
       <h3>Aim</h3>
-      <p style="text-align: justify;">To verify Kirchhoff’s Current Law by measuring the total current entering and leaving a junction in a resistive DC circuit.</p>
+      <p style="text-align: justify;">To verify Kirchhoff’s Voltage Law in a resistive DC circuit by observing that the sum of the voltage drops is equal to the applied source voltage.</p>
       <h3>Simulation Summary</h3>
-      <p style="text-align: justify;">The circuit was connected, and the connections were verified successfully. The resistance values were selected, and the DC supply voltage was varied to measure the branch readings at different voltage values. The voltmeter readings were recorded, and the current–voltage graph was plotted using the measured readings.</p>
+      <p style="text-align: justify;">The guided walkthrough familiarised the user with the simulation's interface. The circuit was connected, and the connections were verified successfully. The resistance values were selected, and the DC supply voltage was varied to measure the voltage across each resistor at different supply voltage values. The voltmeter readings were recorded, and the measured voltages were used to verify Kirchhoff’s Voltage Law (KVL) by verifying that the algebraic sum of the voltage rises and voltage drops around the closed loop is zero.</p>
 
       <h3>Components and Key Parameters</h3>
       <ul class="two-column-list">
@@ -978,7 +978,7 @@ tr:nth-child(even) {
 
         <div class="results-card">
           <h3>Conclusion</h3>
-          <p style="text-align: justify;">For each recorded voltage value, the total current I<sub>1</sub>  was found to be equal to the sum of branch currents I<sub>2</sub> and I<sub>3</sub>. Hence, Kirchhoff’s Current Law was verified for the given resistive DC circuit.</p>
+          <p style="text-align: justify;">For each recorded supply voltage value, the sum of the voltage drops across the resistors was found to be equal to the applied source voltage. Hence, Kirchhoff’s Voltage Law (KVL) was successfully verified for the given resistive DC circuit. </p>
         </div>
       </div>
     </div>

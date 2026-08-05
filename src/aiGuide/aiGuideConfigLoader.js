@@ -37,7 +37,7 @@ const resolveAiGuideAudio = (audio) => {
 
   const fileName = audio.replaceAll('\\', '/').split('/').at(-1)
 
-  return aiGuideAudioModules[`../audios/${fileName}`] ?? audio
+  return aiGuideAudioModules[`../audios/${fileName}`] ?? '#'
 }
 
 export const loadAiGuideConfig = (config, locale = FALLBACK_LOCALE) => {

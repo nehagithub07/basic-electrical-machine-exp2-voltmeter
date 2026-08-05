@@ -243,38 +243,37 @@ const isNegativeTerminal = (terminalId) => (
 
 const terminalPaintStyles = {
   positive: {
-    fill: '#0969e8',
-    outlineStroke: '#f8fbff',
-    outlineWidth: 2,
-    stroke: '#062b77',
-    strokeWidth: 1.4,
-  },
-  negative: {
     fill: '#e33024',
     outlineStroke: '#fff8f6',
     outlineWidth: 2,
     stroke: '#8f140e',
     strokeWidth: 1.4,
   },
+  negative: {
+    fill: '#151515',
+    outlineStroke: '#f5f5f5',
+    outlineWidth: 2,
+    stroke: '#000000',
+    strokeWidth: 1.4,
+  },
 }
 
 const terminalHoverPaintStyles = {
   positive: {
-    fill: '#2a7cff',
-    outlineStroke: '#ffffff',
-    outlineWidth: 2.4,
-    stroke: '#082767',
-    strokeWidth: 1.6,
-  },
-  negative: {
     fill: '#ff4a3d',
     outlineStroke: '#ffffff',
     outlineWidth: 2.4,
     stroke: '#81130f',
     strokeWidth: 1.6,
   },
+  negative: {
+    fill: '#303030',
+    outlineStroke: '#ffffff',
+    outlineWidth: 2.4,
+    stroke: '#000000',
+    strokeWidth: 1.6,
+  },
 }
-
 const getTerminalNumber = (terminalId) => terminalId.replace('-endpoint', '')
 
 const getCssValue = (styles, propertyName, fallback) => {
@@ -334,30 +333,30 @@ const getEndpointCssClass = (terminalId, type) => {
 
 export const wirePaintStyles = {
   positive: {
-    outlineStroke: '#07306e',
+    outlineStroke: '#8f140e',
     outlineWidth: 1.15,
-    stroke: '#1f73e6',
+    stroke: '#e33024',
     strokeWidth: 4.6,
   },
   negative: {
-    outlineStroke: '#771914',
+    outlineStroke: '#000000',
     outlineWidth: 1.15,
-    stroke: '#dd342d',
+    stroke: '#1f1f1f',
     strokeWidth: 4.6,
   },
 }
 
 export const wireHoverPaintStyles = {
   positive: {
-    outlineStroke: '#052357',
+    outlineStroke: '#81130f',
     outlineWidth: 1.35,
-    stroke: '#3a8aff',
+    stroke: '#ff4a3d',
     strokeWidth: 5,
   },
   negative: {
-    outlineStroke: '#5d110d',
+    outlineStroke: '#000000',
     outlineWidth: 1.35,
-    stroke: '#f04a42',
+    stroke: '#3a3a3a',
     strokeWidth: 5,
   },
 }

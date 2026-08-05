@@ -13,7 +13,7 @@
         "en": "Aim"
       },
       "description": {
-        "en": "The aim of the experiment is to verify KCL by applying Kirchhoff’s rules to an electrical circuit and determining the currents flowing through its respective branches."
+        "en": "The aim of the experiment is to verify KVL in a resistive DC circuit by observing that the sum of the voltage drops is equal to the applied source voltage."
       },
       "audio": "./walkthrough-audios/AIM.wav",
       "placement": "bottom"
@@ -37,7 +37,7 @@
         "en": "AI Guide Button"
       },
       "description": {
-        "en": "To use this feature, click on the “AI Guide” button. The AI guide will assist you in performing the simulation accurately at each step."
+        "en": "The AI guide will assist you in performing the simulation accurately at each step."
       },
       "audio": "./walkthrough-audios/AI Guide Button.wav",
       "placement": "right"
@@ -49,7 +49,7 @@
         "en": "Check Button"
       },
       "description": {
-        "en": "The CHECK button verifies all the connections to ensure that they are correct. \n\nNote: If a wire is connected incorrectly, click the corresponding label number to remove the connection."
+        "en": "The CHECK button verifies all the connections to ensure that they are correct. \n\nIf a wire is connected incorrectly, click the corresponding label number to remove the connection."
       },
       "audio": "./walkthrough-audios/Check Button.wav",
       "placement": "right"
@@ -109,7 +109,7 @@
         "en": "Print Button"
       },
       "description": {
-        "en": " The PRINT button allows you to print the simulation."
+        "en": "The PRINT button allows you to print the simulation."
       },
       "audio": "./walkthrough-audios/Print Button.wav",
       "placement": "right"
@@ -121,7 +121,7 @@
         "en": "Resistance Sliders"
       },
       "description": {
-        "en": "Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Current Law."
+        "en": " Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Current Law. \n\nRange: 1 kΩ to 5 kΩ"
       },
       "audio": "./walkthrough-audios/Resistance Sliders.wav",
       "placement": "right"
@@ -133,7 +133,7 @@
         "en": "Regulated DC Power Supply"
       },
       "description": {
-        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value."
+        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value. \n\nRating:  15 V DC"
       },
       "audio": "./walkthrough-audios/Regulated DC Power Supply.wav",
       "placement": "left"
@@ -145,7 +145,7 @@
         "en": "DC Voltmeters"
       },
       "description": {
-        "en": "DC Voltmeters are used to display the circuit readings. Record the readings for each branch at different voltage values."
+        "en": "Voltmeters are used to measure the voltage drop across each resistor in an electrical circuit. Record the voltage readings across each resistor at different supply voltages. \n\nRating:  0 - 20 V DC"
       },
       "audio": "#",
       "placement": "bottom"
@@ -157,7 +157,7 @@
         "en": "Circuit Connections"
       },
       "description": {
-        "en": "This section displays the circuit and allows users to make the required connections by dragging and dropping wires between the connection points."
+        "en": " This section displays the circuit and allows users to make the required connections by dragging and dropping wires between the connection points."
       },
       "audio": "./walkthrough-audios/Circuit Connections.wav",
       "placement": "left"
@@ -169,7 +169,7 @@
         "en": "Observation Table"
       },
       "description": {
-        "en": "This table records the measured branch currents I₁, I₂, and I₃ at different voltages. These readings will be used later to plot the graph."
+        "en": "This table records the measured voltage drop V1, V2, and V3 at different source voltages. These readings will be used later to plot the graph."
       },
       "audio": "./walkthrough-audios/Observation table.wav",
       "placement": "right"
@@ -181,19 +181,19 @@
         "en": "Equations"
       },
       "description": {
-        "en": "This section displays the equations used to determine the branch currents and voltage drops."
+        "en": " This section displays the equations you can use to verify Kirchhoff’s Voltage Law."
       },
       "audio": "./walkthrough-audios/Equations.wav",
       "placement": "top"
     },
     {
       "id": 16,
-      "target": "#graph-panel",
+      "target": "#calculation-panel",
       "title": {
-        "en": "Graph"
+        "en": "Theoretical Verification"
       },
       "description": {
-        "en": "After recording the observations, this section generates the current–voltage graph from the measured readings for analysis. "
+        "en": "This section allows you to verify the KVL using the measured readings and the provided equations. Compare the calculated and measured voltages to confirm that the algebraic sum of all voltages around the closed loop is zero."
       },
       "audio": "./walkthrough-audios/graph.wav",
       "placement": "top"
@@ -205,7 +205,7 @@
         "en": "Generate Report"
       },
       "description": {
-        "en": "The Report button generates a summarised report of the simulation. After completing the observation table and graph plotting, generate the report. The report will include the time taken to complete the simulation, key parameters, recorded readings, graph plot and conclusion."
+        "en": "The Report button generates a summarised report of the simulation. After completing the observation table and theoretical verification, generate the report. The report will include the time taken to complete the simulation, simulation summary, apparatus used, recorded readings, user-calculated results and conclusion."
       },
       "audio": "./walkthrough-audios/Generate Report.wav",
       "placement": "top"

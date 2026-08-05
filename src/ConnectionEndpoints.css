@@ -301,35 +301,41 @@
 }
 
 .connection-terminal[data-polarity="plus"] {
-  --jtk-endpoint-fill: #1677ff;
-  --jtk-endpoint-outline-stroke: #eef7ff;
-  --jtk-endpoint-stroke: #0d4ea6;
-  --jtk-endpoint-hover-fill: #4b96ff;
-  --jtk-endpoint-hover-stroke: #0b3f86;
-  --terminal-accent: #1677ff;
-  --terminal-accent-rgb: 22, 119, 255;
+  --jtk-endpoint-fill: #e33024;
+  --jtk-endpoint-outline-stroke: #fff8f6;
+  --jtk-endpoint-stroke: #8f140e;
+  --jtk-endpoint-hover-fill: #ff4a3d;
+  --jtk-endpoint-hover-stroke: #81130f;
+  --terminal-accent: #e33024;
+  --terminal-accent-rgb: 227, 48, 36;
   --terminal-symbol: "+";
 }
 
 .connection-terminal[data-polarity="plus"] + .terminal-number-label {
-  --endpoint-accent: #1677ff;
-  --endpoint-accent-rgb: 22, 119, 255;
+  --endpoint-neutral: #e33024;
+  --endpoint-neutral-rgb: 227, 48, 36;
+  --endpoint-accent: #e33024;
+  --endpoint-accent-rgb: 227, 48, 36;
+  color: #e33024;
 }
 
 .connection-terminal[data-polarity="minus"] {
-  --jtk-endpoint-fill: #f04438;
-  --jtk-endpoint-outline-stroke: #fff3f0;
-  --jtk-endpoint-stroke: #a91f18;
-  --jtk-endpoint-hover-fill: #ff665d;
-  --jtk-endpoint-hover-stroke: #871b16;
-  --terminal-accent: #f04438;
-  --terminal-accent-rgb: 240, 68, 56;
+  --jtk-endpoint-fill: #1f1f1f;
+  --jtk-endpoint-outline-stroke: #f5f5f5;
+  --jtk-endpoint-stroke: #000000;
+  --jtk-endpoint-hover-fill: #3a3a3a;
+  --jtk-endpoint-hover-stroke: #111111;
+  --terminal-accent: #1f1f1f;
+  --terminal-accent-rgb: 31, 31, 31;
   --terminal-symbol: "-";
 }
 
 .connection-terminal[data-polarity="minus"] + .terminal-number-label {
-  --endpoint-accent: #f04438;
-  --endpoint-accent-rgb: 240, 68, 56;
+  --endpoint-neutral: #1f1f1f;
+  --endpoint-neutral-rgb: 31, 31, 31;
+  --endpoint-accent: #1f1f1f;
+  --endpoint-accent-rgb: 31, 31, 31;
+  color: #1f1f1f;
 }
 
 .connection-terminal.jtk-connected + .terminal-number-label {
@@ -562,19 +568,19 @@
 
 /* Keep the invisible jsPlumb hit targets in the same modern polarity palette. */
 .connection-terminal[data-polarity="plus"] {
-  --jtk-endpoint-fill: #1677ff;
-  --jtk-endpoint-outline-stroke: #eef7ff;
-  --jtk-endpoint-stroke: #0d4ea6;
-  --jtk-endpoint-hover-fill: #4b96ff;
-  --jtk-endpoint-hover-stroke: #0b3f86;
+  --jtk-endpoint-fill: #e33024;
+  --jtk-endpoint-outline-stroke: #fff8f6;
+  --jtk-endpoint-stroke: #8f140e;
+  --jtk-endpoint-hover-fill: #ff4a3d;
+  --jtk-endpoint-hover-stroke: #81130f;
 }
 
 .connection-terminal[data-polarity="minus"] {
-  --jtk-endpoint-fill: #f04438;
-  --jtk-endpoint-outline-stroke: #fff3f0;
-  --jtk-endpoint-stroke: #a91f18;
-  --jtk-endpoint-hover-fill: #ff665d;
-  --jtk-endpoint-hover-stroke: #871b16;
+  --jtk-endpoint-fill: #1f1f1f;
+  --jtk-endpoint-outline-stroke: #f5f5f5;
+  --jtk-endpoint-stroke: #000000;
+  --jtk-endpoint-hover-fill: #3a3a3a;
+  --jtk-endpoint-hover-stroke: #111111;
 }
 
 /* Adjust each terminal number label here. */

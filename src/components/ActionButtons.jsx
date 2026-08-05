@@ -49,11 +49,11 @@ const buttons = [
     handlerName: 'onAdd',
   },
   {
-    id: 'plot-button',
-    label: 'PLOT',
+    id: 'verify-button',
+    label: 'VERIFY',
     tone: 'action-button--orange',
     Icon: PlotIcon,
-    handlerName: 'onPlot',
+    handlerName: 'onVerify',
   },
   {
     id: 'print-button',
@@ -103,15 +103,15 @@ const instructionSteps = [
   },
   {
     number: 7,
-    text: 'Repeat Steps 6 and 7 until the sixth reading is recorded. A minimum of six readings is required to plot the graph.',
+    text: 'Repeat the reading process until at least three observations have been recorded. You may record up to five readings.',
   },
   {
     number: 8,
-    text: 'To verify KVL, compare the theoretically calculated values with the practical values.',
+    text: 'Select an observation, calculate R, I₁, I₂, I₃, V₁, V₂, and V₃, then enter them in the calculation section.',
   },
   {
     number: 9,
-    text: <>Click on the <strong>'PLOT'</strong> button to display the graph.</>,
+    text: <>Click <strong>'VERIFY'</strong> and confirm V = V₁ + V₂ = V₁ + V₃.</>,
   },
   {
     number: 10,
@@ -130,7 +130,7 @@ const ActionButtons = ({
   onAdd,
   onAiGuide,
   onCheck,
-  onPlot,
+  onVerify,
   onPrint,
   onReset,
   onAutoConnect,
@@ -140,7 +140,7 @@ const ActionButtons = ({
   const handlers = {
     onAdd,
     onCheck,
-    onPlot,
+    onVerify,
     onPrint,
     onReset,
     onAutoConnect,

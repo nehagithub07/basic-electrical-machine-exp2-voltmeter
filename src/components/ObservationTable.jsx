@@ -1,6 +1,6 @@
 import SectionCard from './SectionCard.jsx'
 
-const OBSERVATION_ROW_COUNT = 10
+const OBSERVATION_ROW_COUNT = 5
 const emptyRows = Array.from({ length: OBSERVATION_ROW_COUNT })
 
 const ObservationTable = ({ observations }) => (
@@ -10,7 +10,7 @@ const ObservationTable = ({ observations }) => (
         <thead>
           <tr>
             <th>S.No</th>
-            <th>Voltage</th>
+            <th>Source Voltage (V)</th>
             <th>
               V<sub>1</sub> (V)
             </th>

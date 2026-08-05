@@ -82,8 +82,8 @@ const ReportControls = ({
   const buttonTitle = reportGenerated
     ? 'Report generated. Click to regenerate the report.'
     : readingsReady && !graphGenerated
-      ? 'Please generate the graph first.'
-      : `Generate report after ${minReadings} readings and graph plotting.`
+      ? 'Please verify the calculations first.'
+      : `Generate report after ${minReadings} readings and calculation verification.`
 
   return (
     <div className="report-controls">

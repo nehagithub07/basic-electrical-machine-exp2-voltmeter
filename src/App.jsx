@@ -4,7 +4,7 @@ import './ConnectionEndpoints.css'
 import ConnectionLab from './components/ConnectionLab.jsx'
 import ActionButtons from './components/ActionButtons.jsx'
 import ControlPanel from './components/ControlPanel.jsx'
-import GraphPanel from './components/GraphPanel.jsx'
+import CalculationPanel from './components/CalculationPanel.jsx'
 import HeaderBoard from './components/HeaderBoard.jsx'
 import ReportControls from './components/ReportControls.jsx'
 import WalkthroughStartButton from './walkthrough/components/WalkthroughStartButton.jsx'
@@ -20,14 +20,14 @@ import { generateKclReport } from './utils/reportGenerator.js'
 const BASE_WIDTH = 1600
 const BASE_HEIGHT = 960
 const GRAPH_SECTION_GAP = 28
-const GRAPH_SECTION_HEIGHT = 430
+const GRAPH_SECTION_HEIGHT = 720
 const FOOTER_SECTION_GAP = 16
 const FOOTER_HEIGHT = 48
 const CONTENT_HEIGHT = BASE_HEIGHT + GRAPH_SECTION_GAP + GRAPH_SECTION_HEIGHT + FOOTER_SECTION_GAP + FOOTER_HEIGHT
 const PANEL_MAX_SCALE = 1
 const PANEL_VIEWPORT_MARGIN = 24
-const MIN_GRAPH_READINGS = 6
-const MAX_OBSERVATIONS = 10
+const MIN_GRAPH_READINGS = 3
+const MAX_OBSERVATIONS = 5
 const INITIAL_RESISTANCE = 1.0
 const INITIAL_VOLTAGE = 1.0
 
@@ -453,7 +453,7 @@ const App = () => {
     }
 
     if (readingCount >= MAX_OBSERVATIONS) {
-      setStatus('Ten readings are already recorded. Plot the graph or reset for a new run.')
+      setStatus('Five readings are already recorded. Verify KVL or reset for a new run.')
       showStepAlert(EXPERIMENT_ALERTS.maxReadingsReached, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.maxReadingsReached.audio,
       })
@@ -515,7 +515,7 @@ const App = () => {
       if (aiGuidePlaying) {
         playAiGuideSteps([26])
       } else {
-        playLabAlertAudio(ALERT_AUDIO.secondReadingAdded)
+        showStepAlert(EXPERIMENT_ALERTS.secondReadingAdded)
       }
 
       return
@@ -534,16 +534,6 @@ const App = () => {
       return
     }
 
-    if (nextObservationCount === MAX_OBSERVATIONS) {
-      showStepAlert(EXPERIMENT_ALERTS.tenReadingsRecorded, {
-        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.tenReadingsRecorded.audio,
-        replaceExisting: true,
-      })
-
-      if (aiGuidePlaying) {
-        playAiGuideSteps([28])
-      }
-    }
   }
 
   const resetSimulation = useCallback(({ guideActive = false, stopGuide = true } = {}) => {
@@ -591,13 +581,13 @@ const App = () => {
     }
   }
 
-  const handlePlot = () => {
+  const handleVerifyCalculations = () => {
     if (!canPlotGraph) {
       const remainingReadings = MIN_GRAPH_READINGS - readingCount
 
       setGraphGenerated(false)
       setReportGenerated(false)
-      setStatus(`Add ${remainingReadings} more reading(s) before plotting the graph.`)
+      setStatus(`Add ${remainingReadings} more reading(s) before verifying calculations.`)
       showStepAlert(EXPERIMENT_ALERTS.insufficientGraphReadings, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.insufficientGraphReadings.audio,
       })
@@ -609,20 +599,24 @@ const App = () => {
       return
     }
 
-    setGraphGenerated(true)
-    setReportGenerated(false)
-    setStatus('Graph is plotted. Now you can generate the report.')
-    showStepAlert(EXPERIMENT_ALERTS.graphPlotted, {
-      audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.graphPlotted.audio,
-      replaceExisting: true,
-    })
-
-    if (aiGuidePlaying) {
-      playAiGuideSteps([30])
-    }
+    document.getElementById('calculation-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    document.getElementById('calculation-verify-button')?.click()
   }
 
+  const handleCalculationVerification = useCallback((verified) => {
+    setGraphGenerated(verified)
+    setReportGenerated(false)
+    setStatus(verified
+      ? 'Calculations are correct and KVL is verified. You can now generate the report.'
+      : 'Complete and verify the theoretical calculations.')
+  }, [])
+
   const handlePrint = () => {
+    if (aiGuidePlaying) {
+      playAiGuideSteps([32])
+    } else {
+      playLabAlertAudio(ALERT_AUDIO.print)
+    }
     window.print()
   }
 
@@ -633,9 +627,9 @@ const App = () => {
       setStatus(`Add ${remainingReadings} more reading(s) before generating the report.`)
       showStepAlert(EXPERIMENT_ALERTS.minimumReadingsRequired, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.minimumReadingsRequired.audio,
-        description: `Add ${remainingReadings} more reading(s), then plot the graph before generating a report.`,
+        description: `Add ${remainingReadings} more reading(s), then verify the calculations before generating a report.`,
         target: '#generate-report-button',
-        title: 'Report Requires 6 Readings',
+        title: 'Report Requires 3 Readings',
       })
 
       if (aiGuidePlaying) {
@@ -646,18 +640,18 @@ const App = () => {
     }
 
     if (!graphGenerated) {
-      setStatus('Please generate the graph first.')
+      setStatus('Please verify the calculations first.')
       showStepAlert(EXPERIMENT_ALERTS.insufficientGraphReadings, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.insufficientGraphReadings.audio,
-        description: 'Please generate the graph first.',
-        target: '#plot-button',
-        title: 'Generate Graph First',
+        description: 'Please complete and verify the calculations first.',
+        target: '#calculation-panel',
+        title: 'Verify Calculations First',
         type: 'warning',
       })
       if (aiGuidePlaying) {
         playAiGuideSteps([29])
       }
-      window.alert('Please generate the graph first.')
+      window.alert('Please complete and verify the calculations first.')
       return
     }
 
@@ -678,7 +672,7 @@ const App = () => {
         }
 
         setReportGenerated(true)
-        setStatus('Experiment report generated from the plotted graph and current observations.')
+        setStatus('Experiment report generated from the verified calculations and observations.')
       },
       replaceExisting: true,
       requiresConfirmation: true,
@@ -733,7 +727,7 @@ const App = () => {
       lastConnectionInstructionAudioKeyRef.current = latestConnectionPairKey
 
       if (aiGuidePlaying && nextGuideStepId) {
-        playAiGuideSteps([nextGuideStepId])
+        playAiGuideSteps(nextGuideStepId === 4 ? [34, 4] : [nextGuideStepId])
       } else {
         playLabAlertAudio(nextConnectionAudio)
       }
@@ -900,7 +894,7 @@ const App = () => {
   const handleAutoConnect = () => {
     setAutoConnectRequest((current) => current + 1)
     setConnectionsReadyForCheck(true)
-    setConnectionsVerified(false)
+    setConnectionsVerified(true)
     setResistanceAdjusted(getInitialResistanceAdjusted())
     allConnectionsAlertShownRef.current = true
     lastConnectionInstructionAudioKeyRef.current = null
@@ -908,7 +902,7 @@ const App = () => {
     voltageSetAudioPlayedRef.current = false
 
     setStatus(
-      'Autoconnect completed. Click on the check button to verify the connections.',
+      'Autoconnect completed. Connections are verified and locked.',
     )
     showStepAlert(EXPERIMENT_ALERTS.circuitConnectionsCompleted, {
       audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.circuitConnectionsCompleted.audio,
@@ -922,7 +916,7 @@ const App = () => {
   const handleVoltageChange = useCallback((nextVoltage) => {
     setVoltage(nextVoltage)
 
-    if (powerOn && nextVoltage !== INITIAL_VOLTAGE) {
+    if (powerOn) {
       setVoltageAdjusted(true)
 
       if (!voltageSetAudioPlayedRef.current) {
@@ -970,12 +964,12 @@ const App = () => {
                     onAdd: !powerOn || !voltageAdjusted,
                     onAutoConnect: connectionsVerified || powerOn,
                     onCheck: connectionsVerified,
-                    onPlot: false,
+                    onVerify: false,
                     onPrint: false,
                   }}
                   onAdd={recordObservation}
                   onCheck={handleCheck}
-                  onPlot={handlePlot}
+                  onVerify={handleVerifyCalculations}
                   onPrint={handlePrint}
                   onReset={handleReset}
                   onAutoConnect={handleAutoConnect}
@@ -1026,11 +1020,9 @@ const App = () => {
 
           </main>
 
-          <GraphPanel
-            className="graph-panel--separate"
-            id="graph-panel"
+          <CalculationPanel
             observations={observations}
-            plotted={graphGenerated}
+            onVerificationChange={handleCalculationVerification}
           />
 
           <footer className="app-footer" aria-label="Copyright">

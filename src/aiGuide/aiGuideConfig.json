@@ -15,18 +15,18 @@
     },
     {
       "id": 3,
-      "text": "Connect the DC power supply to the circuit by clicking and drag the wire from terminal 1 and drop it on terminal 9",
+      "text": "Connect the DC power supply to the circuit by clicking and dragging the wire from terminal 1 and dropping it on terminal 9.",
       "audio": "./audios/Correct Connections.wav"
     },
     {
       "id": 4,
-      "text": "Let's move on to the next connection. Connect terminal 2 to terminal 10.",
-      "audio": "./audios/Let's move on to the next connection.wav"
+      "text": "Connect terminal 2 to terminal 10.",
+      "audio": "./audios/Connect terminal 2 to terminal 10.wav"
     },
     {
       "id": 5,
-      "text": "Now, connect terminal 3 of the voltmeter to terminal 11.",
-      "audio": "#"
+      "text": "Now, connect terminal 3 of the ammeter to terminal 11.",
+      "audio": "./audios/Now, connect terminal 3 of the ammeter to terminal 11.wav"
     },
     {
       "id": 6,
@@ -75,17 +75,17 @@
     },
     {
       "id": 15,
-      "text": "Autoconnect completed. Click on the check button to verify the connections.",
-      "audio": "./audios/Autoconnect.wav"
+      "text": "Autoconnect completed. Now set the required resistance value by moving the resistance sliders.",
+      "audio": "#"
     },
     {
       "id": 16,
-      "text": "Please add at least six readings to plot the graph.",
+      "text": "Please add at least three readings before verifying KVL.",
       "audio": "./audios/InsufficientReadings.wav"
     },
     {
       "id": 17,
-      "text": "Please add at least six readings to plot the graph.",
+      "text": "Please add at least three readings before verifying KVL.",
       "audio": "./audios/InsufficientReadings.wav"
     },
     {
@@ -130,28 +130,28 @@
     },
     {
       "id": 26,
-      "text": "Second reading added successfully. Change the voltage value and click the Add button again to record the next reading. Repeat these steps until at least six readings are recorded.",
+      "text": "Second reading added successfully. Change the voltage value and click the Add button again to record the next reading. Repeat these steps until at least three readings are recorded.",
       "audio": "./audios/2nd readings added.wav"
     },
     {
       "id": 27,
-      "text": "You have added six readings. Now you can plot the graph by clicking on the graph button or add more readings to the table.",
-      "audio": "./audios/After 6 readings, Graph click.wav"
+      "text": "Third reading added successfully. Now, verify the KVL in the theoretical verification section or repeat these steps to record more readings.",
+      "audio": "#"
     },
     {
       "id": 28,
-      "text": "All ten readings have been recorded. Now plot the graph and then click on the generate report button to generate your report.",
-      "audio": "./audios/After 10 readings have been done.wav"
+      "text": "All five readings have been recorded. Now verify KVL in the theoretical verification section.",
+      "audio": "#"
     },
     {
       "id": 29,
-      "text": "You can add a maximum of ten readings to the table. Now, click the Graph button.",
+      "text": "You can add up to five readings to the table. Now, verify the KVL in the theoretical verification section.",
       "audio": "./audios/For max. readings, add button click.wav"
     },
     {
       "id": 30,
-      "text": "The graph of current vs voltage has been plotted successfully. Your simulation is now complete. You may view the report by clicking on the generate report button, then use print to print the page or reset to start the simulation again.",
-      "audio": "./audios/Graph 2.wav"
+      "text": "KVL has been verified successfully. Your simulation is now complete. You may generate the report, print the page, or reset to start again.",
+      "audio": "#"
     },
     {
       "id": 31,
@@ -167,6 +167,11 @@
       "id": 33,
       "text": "Report Generated: Your report has been generated successfully. Click OK to view your report.",
       "audio": "./audios/Generate Report button click.wav"
+    },
+    {
+      "id": 34,
+      "text": "Let's move on to the next connection.",
+      "audio": "./audios/Let's move on to the next connection.wav"
     }
   ]
 }

@@ -235,6 +235,9 @@ const ConnectionLab = ({
 
     try {
       autoConnectDefaultCircuit(instanceRef.current)
+      setVoltmeterReadingKeys(getVoltmeterReadingKeys(instanceRef.current))
+      lockJsPlumbCircuit(instanceRef.current, containerRef.current)
+      setIsLocked(true)
     } finally {
       suppressConnectionAlertsRef.current = false
     }
