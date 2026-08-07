@@ -6,9 +6,10 @@ const toFiniteNumber = (value) => {
 
 export const calculateReadings = ({ voltage, r1, r2, r3 }) => {
   const powerSupply = Math.max(toFiniteNumber(voltage), 0)
-  const r1Value = Math.max(toFiniteNumber(r1), 0)
-  const r2Value = Math.max(toFiniteNumber(r2), 0)
-  const r3Value = Math.max(toFiniteNumber(r3), 0)
+  // Resistance controls are expressed in kΩ; circuit calculations use Ω and A.
+  const r1Value = Math.max(toFiniteNumber(r1) * 1000, 0)
+  const r2Value = Math.max(toFiniteNumber(r2) * 1000, 0)
+  const r3Value = Math.max(toFiniteNumber(r3) * 1000, 0)
   const branchResistance = r2Value + r3Value
   const parallelResistance = branchResistance > 0
     ? (r2Value * r3Value) / branchResistance

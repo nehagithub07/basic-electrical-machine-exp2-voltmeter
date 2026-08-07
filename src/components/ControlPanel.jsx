@@ -13,7 +13,7 @@ const ControlPanel = ({
   setR3,
 }) => (
   <>
-    <SectionCard className="h-[212px]" icon="sliders" id="resistance-controls" title="RESISTANCE SLIDERS">
+    <SectionCard className="h-[212px]" icon="sliders" id="resistance-controls" title="RESISTANCE SLIDERS (1–5 kΩ)">
       <div className="flex flex-col gap-[18px] px-[26px] pt-[26px]">
         <ResistanceSlider disabled={locked} label="R1" onChange={setR1} value={r1} />
         <ResistanceSlider disabled={locked} label="R2" onChange={setR2} value={r2} />

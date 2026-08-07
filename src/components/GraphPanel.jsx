@@ -1,5 +1,5 @@
-const MIN_GRAPH_READINGS = 6
-const VOLTAGE_MAX = 12
+const MIN_GRAPH_READINGS = 3
+const VOLTAGE_MAX = 15
 const CHART_VIEWBOX = {
   height: 220,
   width: 960,
@@ -10,7 +10,7 @@ const CHART = {
   top: 28,
   width: 784,
 }
-const X_TICKS = [0, 2, 4, 6, 8, 10, 12]
+const X_TICKS = [0, 3, 6, 9, 12, 15]
 const Y_TICK_COUNT = 5
 // Tune labelLeft and labelTop to manually adjust graph labels in SVG units.
 const SERIES = [

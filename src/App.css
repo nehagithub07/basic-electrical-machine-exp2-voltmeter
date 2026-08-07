@@ -453,7 +453,7 @@
   display: grid;
   height: 35px;
   align-items: center;
-  grid-template-columns: 82px 1fr 58px;
+  grid-template-columns: 82px 1fr 82px;
   gap: 12px;
 }
 
@@ -534,7 +534,7 @@
 
 .resistance-slider__value {
   display: grid;
-  width: 54px;
+  width: 78px;
   height: 34px;
   place-items: center;
   border: 1px solid rgba(107, 76, 45, 0.38);
@@ -557,7 +557,7 @@
 .observation-table-wrap {
   position: relative;
   z-index: 1;
-  height: 296px;
+  height: 186px;
   margin: 8px 10px 0;
   overflow: hidden;
   border: 1px solid rgba(96, 61, 35, 0.34);
@@ -582,7 +582,7 @@
 }
 
 .observation-table td {
-  height: 25px;
+  height: 30px;
   color: #2d1b11;
   font-weight: 700;
   text-align: center;
@@ -1080,7 +1080,7 @@
 
 .calculation-panel__setup {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(560px, 1fr);
   gap: 20px;
   margin-bottom: 24px;
   padding: 22px 28px;
@@ -1111,7 +1111,7 @@
 .calculation-panel__resistance-card::before {
   background: linear-gradient(180deg, #db7a24, #a94217);
 }
-
+ 
 .calculation-panel__reading-card::before {
   background: linear-gradient(180deg, #2585b4, #15517c);
 }
@@ -1158,21 +1158,57 @@
 }
 
 .calculation-panel__reading-card label {
-  display: flex;
+  display: grid;
   align-items: center;
-  gap: 12px;
+  grid-template-columns: 140px minmax(240px, 360px);
+  gap: 14px;
   font-weight: 900;
 }
 
 .calculation-panel__reading-card select {
-  flex: 1;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
+  min-height: 46px;
+  padding: 9px 42px 9px 14px;
+  border-width: 2px;
+  border-color: rgba(30, 103, 143, 0.45);
+  background-color: #f7fcff;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .calculation-panel__reading-card > strong {
   display: block;
-  margin: 13px 0 0 72px;
+  margin: 13px 0 0 154px;
   color: #075f3b;
+}
+
+.calculation-panel__reading-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.calculation-panel__reading-header h3 {
+  margin: 0;
+}
+
+.calculation-panel__reading-step {
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(180deg, #278ab8, #15567e);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.calculation-panel--disabled .calculation-panel__setup,
+.calculation-panel--disabled .calculation-panel__content {
+  filter: grayscale(0.45);
+  opacity: 0.62;
 }
 
 .calculation-panel__supply {
@@ -1365,6 +1401,10 @@
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
+.calculation-panel input {
+  text-align: center;
+}
+
 .calculation-panel input:focus,
 .calculation-panel select:focus {
   border-color: #b75a1d;
@@ -1389,6 +1429,7 @@
 .calculation-panel__content--verification {
   position: relative;
   z-index: 1;
+  grid-template-columns: minmax(0, 1fr) 440px;
   align-items: stretch;
 }
 
@@ -1701,6 +1742,124 @@
 .calculation-panel__result .is-success { color: #087044; }
 .calculation-panel__result .is-error { color: #a52620; }
 
+.calculation-panel .calculation-panel__result {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(13, 105, 68, 0.28);
+  background:
+    radial-gradient(circle at 100% 0, rgba(55, 177, 116, 0.2), transparent 42%),
+    linear-gradient(145deg, rgba(252, 255, 253, 0.98), rgba(221, 243, 232, 0.96));
+  box-shadow: inset 0 1px 0 #fff, 0 10px 24px rgba(20, 83, 53, 0.16);
+}
+
+.calculation-panel__result::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 5px;
+  content: "";
+  background: linear-gradient(90deg, #087247, #27ad6e, #7acb9e);
+}
+
+.calculation-panel__verification-badge {
+  padding: 7px 13px;
+  box-shadow: 0 4px 10px rgba(7, 102, 62, 0.2);
+}
+
+.calculation-panel__result-intro {
+  margin: 0 0 14px !important;
+  color: #527060 !important;
+  font-size: 12px !important;
+}
+
+.calculation-panel__voltage-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.calculation-panel__voltage-summary-item {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  justify-content: start;
+  column-gap: 5px;
+  padding: 10px;
+  border: 1px solid rgba(41, 112, 77, 0.18);
+  border-top-width: 3px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.calculation-panel__voltage-summary-item span {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+  color: #557060;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.calculation-panel__voltage-summary-item strong {
+  overflow: hidden;
+  color: #183d2c;
+  font-size: 22px;
+  text-overflow: ellipsis;
+}
+
+.calculation-panel__voltage-summary-item i {
+  color: #60806f;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.calculation-panel__voltage-summary-item--source { border-top-color: #93611f; }
+.calculation-panel__voltage-summary-item--v1 { border-top-color: #c64a3a; }
+.calculation-panel__voltage-summary-item--v2 { border-top-color: #1979a8; }
+.calculation-panel__voltage-summary-item--v3 { border-top-color: #398448; }
+
+.calculation-panel__kvl-equations {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.calculation-panel__kvl-equations > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(22, 116, 73, 0.16);
+  border-radius: 9px;
+  background: rgba(235, 248, 241, 0.86);
+}
+
+.calculation-panel__kvl-equations span {
+  color: #406653;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.calculation-panel__kvl-equations strong {
+  color: #075f3b;
+  font-size: 18px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.calculation-panel__kvl-arrow {
+  color: #168052;
+  font-size: 19px;
+  font-weight: 900;
+  text-align: center;
+}
+
 .calculation-panel__kvl {
   display: grid;
   gap: 6px;
@@ -1917,12 +2076,12 @@
 }
 
 .report-controls {
-  position: absolute;
-  right: 36px;
-  bottom: 17px;
+  position: relative;
   z-index: 4;
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 

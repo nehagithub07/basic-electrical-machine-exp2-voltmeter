@@ -4,6 +4,7 @@ import v3Img from '../assets/V3.png'
 import needleImg from '../assets/needle.png'
 import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
 
+// The meter artwork is a 0–20 V scale, so map calculated voltage to that full arc.
 const METER_MAX_READING = 20
 // The needle artwork points upward in its unrotated state. Rotate it 90 degrees
 // counter-clockwise so a zero reading points at the dial's left-hand zero tick.

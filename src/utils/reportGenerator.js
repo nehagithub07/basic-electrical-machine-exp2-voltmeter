@@ -10,8 +10,8 @@ const GRAPH_CHART = {
   width: 762,
 }
 
-const GRAPH_VOLTAGE_MAX = 12
-const GRAPH_X_TICKS = [0, 2, 4, 6, 8, 10, 12]
+const GRAPH_VOLTAGE_MAX = 15
+const GRAPH_X_TICKS = [0, 3, 6, 9, 12, 15]
 const GRAPH_Y_TICK_COUNT = 5
 const GRAPH_SERIES = [
   { className: 'i1', color: '#c83f35', key: 'i1', labelIndex: '1', labelOffset: -12 },
@@ -927,13 +927,13 @@ tr:nth-child(even) {
 
       <h3>Components and Key Parameters</h3>
       <ul class="two-column-list">
-        <li>DC power supply: 10 V</li>
+        <li>DC power supply: 1–15 V</li>
         <li>DC Voltmeter V<sub>1</sub> for the voltage drop across R<sub>1</sub>: 0 - 20 V</li>
         <li>DC Voltmeter V<sub>2</sub> for the voltage drop across R<sub>2</sub>: 0 - 20 V</li>
         <li>DC Voltmeter V<sub>3</sub> for the voltage drop across R<sub>3</sub>: 0 - 20 V</li>
-        <li>R<sub>1</sub>: ${formatResistance(r1)} &Omega;</li>
-        <li>R<sub>2</sub>: ${formatResistance(r2)} &Omega;</li>
-        <li>R<sub>3</sub>: ${formatResistance(r3)} &Omega;</li>
+        <li>R<sub>1</sub>: ${formatResistance(r1 * 1000)} &Omega;</li>
+        <li>R<sub>2</sub>: ${formatResistance(r2 * 1000)} &Omega;</li>
+        <li>R<sub>3</sub>: ${formatResistance(r3 * 1000)} &Omega;</li>
         <li>Connecting leads</li>
       </ul>
 

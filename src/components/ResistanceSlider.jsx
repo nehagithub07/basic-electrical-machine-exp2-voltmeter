@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const MIN_RESISTANCE = 1
-const MAX_RESISTANCE = 10
+const MAX_RESISTANCE = 5
 const RESISTANCE_STEP = 0.1
 
 const normalizeResistance = (value) => {
@@ -10,6 +10,8 @@ const normalizeResistance = (value) => {
 
   return Number(bounded.toFixed(1))
 }
+
+const formatResistance = (value) => String(Number(value.toFixed(1)))
 
 const ResistanceSlider = ({ disabled = false, label, onChange, value }) => {
   const [draftValue, setDraftValue] = useState(value)
@@ -28,7 +30,7 @@ const ResistanceSlider = ({ disabled = false, label, onChange, value }) => {
     <div className={`resistance-slider ${disabled ? 'resistance-slider--locked' : ''}`}>
       <label className="resistance-slider__label" htmlFor={`${label}-slider`}>
         {label.slice(0, 1)}
-        <sub>{label.slice(1)}</sub> (&Omega;)
+        <sub>{label.slice(1)}</sub> (k&Omega;)
       </label>
 
       <div className="resistance-slider__control">
@@ -53,7 +55,7 @@ const ResistanceSlider = ({ disabled = false, label, onChange, value }) => {
         />
       </div>
 
-      <span className="resistance-slider__value">{sliderValue.toFixed(1)}</span>
+      <span className="resistance-slider__value">{formatResistance(sliderValue)}</span>
     </div>
   )
 }

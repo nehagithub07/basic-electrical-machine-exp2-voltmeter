@@ -3,7 +3,7 @@ import powerSupplyOn from '../assets/PowerSupply_ON.png'
 import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
 
 const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], onTogglePower, powerOn, setVoltage, voltage }) => {
-  const displayedVoltage = powerOn ? `${voltage.toFixed(1)} V` : ''
+  const displayedVoltage = powerOn ? `${Number(voltage.toFixed(1))} V` : ''
   const positiveTerminalId = '1-endpoint'
   const negativeTerminalId = '2-endpoint'
   const handleVoltageChange = (event) => {
@@ -64,7 +64,7 @@ const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], o
           className="voltage-range"
           disabled={!powerOn}
           id="voltage-slider"
-          max="10"
+          max="15"
           min="1"
           onChange={handleVoltageChange}
           step="0.1"

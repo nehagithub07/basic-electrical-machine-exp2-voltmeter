@@ -241,7 +241,6 @@ const App = () => {
       || getObservationSignature(row) === currentReadingSignature
   ))
   const readingCount = observations.length
-  const canPlotGraph = readingCount >= MIN_GRAPH_READINGS
   const allResistanceValuesAdjusted = resistanceAdjusted.r1 && resistanceAdjusted.r2 && resistanceAdjusted.r3
   const activeInstructionStep = useMemo(
     () => getActiveInstructionStep({
@@ -582,12 +581,12 @@ const App = () => {
   }
 
   const handleVerifyCalculations = () => {
-    if (!canPlotGraph) {
-      const remainingReadings = MIN_GRAPH_READINGS - readingCount
+    if (readingCount < MAX_OBSERVATIONS) {
+      const remainingReadings = MAX_OBSERVATIONS - readingCount
 
       setGraphGenerated(false)
       setReportGenerated(false)
-      setStatus(`Add ${remainingReadings} more reading(s) before verifying calculations.`)
+      setStatus(`Record ${remainingReadings} more reading(s) to unlock theoretical verification.`)
       showStepAlert(EXPERIMENT_ALERTS.insufficientGraphReadings, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.insufficientGraphReadings.audio,
       })
@@ -964,7 +963,7 @@ const App = () => {
                     onAdd: !powerOn || !voltageAdjusted,
                     onAutoConnect: connectionsVerified || powerOn,
                     onCheck: connectionsVerified,
-                    onVerify: false,
+                    onVerify: readingCount < MAX_OBSERVATIONS,
                     onPrint: false,
                   }}
                   onAdd={recordObservation}
@@ -985,6 +984,14 @@ const App = () => {
                   setR1={handleR1Change}
                   setR2={handleR2Change}
                   setR3={handleR3Change}
+                />
+
+                <ReportControls
+                  graphGenerated={graphGenerated}
+                  minReadings={MIN_GRAPH_READINGS}
+                  onGenerateReport={handleGenerateReport}
+                  readingCount={readingCount}
+                  reportGenerated={reportGenerated}
                 />
               </aside>
 
@@ -1010,19 +1017,12 @@ const App = () => {
               </section>
             </section>
 
-            <ReportControls
-              graphGenerated={graphGenerated}
-              minReadings={MIN_GRAPH_READINGS}
-              onGenerateReport={handleGenerateReport}
-              readingCount={readingCount}
-              reportGenerated={reportGenerated}
-            />
-
           </main>
 
           <CalculationPanel
             observations={observations}
             onVerificationChange={handleCalculationVerification}
+            requiredReadings={MAX_OBSERVATIONS}
           />
 
           <footer className="app-footer" aria-label="Copyright">
