@@ -1,24 +1,3 @@
-const GRAPH_VIEWBOX = {
-  height: 320,
-  width: 960,
-}
-
-const GRAPH_CHART = {
-  height: 178,
-  left: 92,
-  top: 48,
-  width: 762,
-}
-
-const GRAPH_VOLTAGE_MAX = 15
-const GRAPH_X_TICKS = [0, 3, 6, 9, 12, 15]
-const GRAPH_Y_TICK_COUNT = 5
-const GRAPH_SERIES = [
-  { className: 'i1', color: '#c83f35', key: 'i1', labelIndex: '1', labelOffset: -12 },
-  { className: 'i2', color: '#1579a8', key: 'i2', labelIndex: '2', labelOffset: 14 },
-  { className: 'i3', color: '#3f8f43', key: 'i3', labelIndex: '3', labelOffset: -2 },
-]
-
 const escapeHtml = (value) => String(value)
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
@@ -32,218 +11,9 @@ const toNumber = (value) => {
   return Number.isFinite(number) ? number : 0
 }
 
-const formatNumber = (value, fractionDigits = 3) => toNumber(value).toFixed(fractionDigits)
+const formatNumber = (value, fractionDigits = 3) => String(Number(toNumber(value).toFixed(fractionDigits)))
 
 const formatResistance = (value) => formatNumber(value, 1)
-
-const formatCurrentTick = (value) => {
-  if (value === 0) {
-    return '0'
-  }
-
-  return formatNumber(value, 2)
-}
-
-const getNiceMaxCurrent = (observations) => {
-  const maxCurrent = observations.reduce(
-    (currentMax, row) => Math.max(currentMax, toNumber(row.i1), toNumber(row.i2), toNumber(row.i3)),
-    0,
-  )
-  const paddedCurrent = Math.max(maxCurrent * 1.08, 0.1)
-  const roughStep = paddedCurrent / (GRAPH_Y_TICK_COUNT - 1)
-  const magnitude = 10 ** Math.floor(Math.log10(roughStep))
-  const normalizedStep = roughStep / magnitude
-  const niceStep = (
-    normalizedStep <= 1 ? 1
-      : normalizedStep <= 2 ? 2
-        : normalizedStep <= 2.5 ? 2.5
-          : normalizedStep <= 5 ? 5
-            : 10
-  ) * magnitude
-
-  return niceStep * (GRAPH_Y_TICK_COUNT - 1)
-}
-
-const getYTicks = (maxCurrent) => (
-  Array.from({ length: GRAPH_Y_TICK_COUNT }, (_, index) => (
-    (maxCurrent / (GRAPH_Y_TICK_COUNT - 1)) * index
-  ))
-)
-
-const getXFromVoltage = (voltage) => {
-  const ratio = Math.min(Math.max(toNumber(voltage) / GRAPH_VOLTAGE_MAX, 0), 1)
-
-  return GRAPH_CHART.left + ratio * GRAPH_CHART.width
-}
-
-const getYFromCurrent = (current, maxCurrent) => {
-  const ratio = Math.min(Math.max(toNumber(current) / maxCurrent, 0), 1)
-
-  return GRAPH_CHART.top + GRAPH_CHART.height - ratio * GRAPH_CHART.height
-}
-
-const getPoint = (row, current, maxCurrent) => ({
-  x: getXFromVoltage(row.voltage),
-  y: getYFromCurrent(current, maxCurrent),
-})
-
-const getLinePath = (observations, currentKey, maxCurrent) => (
-  observations
-    .map((row, index) => {
-      const point = getPoint(row, row[currentKey], maxCurrent)
-      const command = index === 0 ? 'M' : 'L'
-
-      return `${command}${point.x.toFixed(1)} ${point.y.toFixed(1)}`
-    })
-    .join(' ')
-)
-
-const getSeriesLabelPoint = (observations, currentKey, maxCurrent, offset) => {
-  const row = observations.at(-1)
-  const point = getPoint(row, row[currentKey], maxCurrent)
-  const y = Math.min(
-    Math.max(point.y + offset, GRAPH_CHART.top + 12),
-    GRAPH_CHART.top + GRAPH_CHART.height - 12,
-  )
-
-  return {
-    x: Math.min(point.x + 17, GRAPH_VIEWBOX.width - 54),
-    y,
-  }
-}
-
-const createReportGraphSvg = (observations) => {
-  if (!observations.length) {
-    return '<em>No readings available to plot.</em>'
-  }
-
-  const plottedObservations = [...observations].sort((current, next) => current.voltage - next.voltage)
-  const maxCurrent = getNiceMaxCurrent(plottedObservations)
-  const yTicks = getYTicks(maxCurrent)
-  const chartBottom = GRAPH_CHART.top + GRAPH_CHART.height
-  const chartRight = GRAPH_CHART.left + GRAPH_CHART.width
-  const yAxisTitleX = 31
-  const yAxisTitleY = GRAPH_CHART.top + GRAPH_CHART.height / 2
-
-  const xTickMarkup = GRAPH_X_TICKS.map((tick) => {
-    const x = getXFromVoltage(tick)
-
-    return `
-      <g>
-        <line class="report-graph__grid report-graph__grid--vertical" x1="${x}" x2="${x}" y1="${GRAPH_CHART.top}" y2="${chartBottom}" />
-        <line class="report-graph__tick" x1="${x}" x2="${x}" y1="${chartBottom}" y2="${chartBottom + 7}" />
-        <text class="report-graph__tick-label" text-anchor="middle" x="${x}" y="${chartBottom + 27}">${tick}</text>
-      </g>
-    `
-  }).join('')
-
-  const yTickMarkup = yTicks.map((tick) => {
-    const y = getYFromCurrent(tick, maxCurrent)
-
-    return `
-      <g>
-        <line class="report-graph__grid report-graph__grid--horizontal" x1="${GRAPH_CHART.left}" x2="${chartRight}" y1="${y}" y2="${y}" />
-        <line class="report-graph__tick" x1="${GRAPH_CHART.left - 7}" x2="${GRAPH_CHART.left}" y1="${y}" y2="${y}" />
-        <text class="report-graph__tick-label report-graph__tick-label--y" text-anchor="end" x="${GRAPH_CHART.left - 13}" y="${y + 4}">${formatCurrentTick(tick)}</text>
-      </g>
-    `
-  }).join('')
-
-  const bandMarkup = yTicks.slice(0, -1).map((tick, index) => {
-    const nextTick = yTicks[index + 1]
-    const y = getYFromCurrent(nextTick, maxCurrent)
-    const height = getYFromCurrent(tick, maxCurrent) - y
-
-    return `<rect class="report-graph__band" height="${height}" width="${GRAPH_CHART.width}" x="${GRAPH_CHART.left}" y="${y}" />`
-  }).join('')
-
-  const lineMarkup = GRAPH_SERIES.map((series) => (
-    `<path class="report-graph__line report-graph__line--${series.className}" d="${getLinePath(plottedObservations, series.key, maxCurrent)}" />`
-  )).join('')
-
-  const pointMarkup = GRAPH_SERIES.map((series) => (
-    plottedObservations.map((row) => {
-      const point = getPoint(row, row[series.key], maxCurrent)
-
-      return `<circle class="report-graph__point report-graph__point--${series.className}" cx="${point.x}" cy="${point.y}" r="3.8" />`
-    }).join('')
-  )).join('')
-
-  const labelMarkup = GRAPH_SERIES.map((series) => {
-    const point = getSeriesLabelPoint(plottedObservations, series.key, maxCurrent, series.labelOffset)
-
-    return `<text class="report-graph__series-label report-graph__series-label--${series.className}" x="${point.x}" y="${point.y}">I<tspan class="report-graph__series-label-sub" dx="1">${series.labelIndex}</tspan></text>`
-  }).join('')
-
-  return `
-    <svg
-      class="report-graph__svg"
-      role="img"
-      aria-label="Line graph of branch currents against applied voltage"
-      viewBox="0 0 ${GRAPH_VIEWBOX.width} ${GRAPH_VIEWBOX.height}"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <style>
-          <![CDATA[
-            .report-graph__plot-bg { fill: #fffdf8; stroke: #d7cbbd; stroke-width: 1; }
-            .report-graph__band { fill: rgba(51, 124, 102, 0.025); }
-            .report-graph__axis { fill: none; stroke: #563927; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
-            .report-graph__grid { stroke: rgba(117, 88, 62, 0.2); stroke-width: 0.8; }
-            .report-graph__grid--horizontal { stroke-dasharray: 4 8; }
-            .report-graph__tick { stroke: rgba(74, 43, 31, 0.38); stroke-linecap: round; stroke-width: 1; }
-            .report-graph__tick-label { fill: #6a4b34; font-size: 13px; font-weight: 700; }
-            .report-graph__tick-label--y { font-size: 12px; }
-            .report-graph__axis-title { fill: #38271c; font-size: 15px; font-weight: 800; }
-            .report-graph__line { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; }
-            .report-graph__line--i1, .report-graph__point--i1 { stroke: #c83f35; }
-            .report-graph__line--i2, .report-graph__point--i2 { stroke: #1579a8; }
-            .report-graph__line--i3, .report-graph__point--i3 { stroke: #3f8f43; }
-            .report-graph__point { fill: #ffffff; stroke-width: 1.6; }
-            .report-graph__series-label { dominant-baseline: middle; font-size: 13px; font-weight: 800; paint-order: stroke; stroke: #fffdf8; stroke-linejoin: round; stroke-width: 5px; }
-            .report-graph__series-label--i1 { fill: #c83f35; }
-            .report-graph__series-label--i2 { fill: #1579a8; }
-            .report-graph__series-label--i3 { fill: #3f8f43; }
-            .report-graph__series-label-sub { baseline-shift: sub; font-size: 72%; }
-          ]]>
-        </style>
-        <marker id="report-graph-axis-arrow" markerHeight="7" markerWidth="8" orient="auto" refX="7" refY="3.5">
-          <path d="M0 0 7 3.5 0 7z" />
-        </marker>
-        <clipPath id="report-graph-plot-clip">
-          <rect height="${GRAPH_CHART.height}" width="${GRAPH_CHART.width}" x="${GRAPH_CHART.left}" y="${GRAPH_CHART.top}" />
-        </clipPath>
-      </defs>
-
-      <rect class="report-graph__plot-bg" height="${GRAPH_CHART.height}" width="${GRAPH_CHART.width}" x="${GRAPH_CHART.left}" y="${GRAPH_CHART.top}" />
-      ${bandMarkup}
-      ${xTickMarkup}
-      ${yTickMarkup}
-
-      <path class="report-graph__axis" d="M${GRAPH_CHART.left} ${chartBottom}H${chartRight + 18}" marker-end="url(#report-graph-axis-arrow)" />
-      <path class="report-graph__axis" d="M${GRAPH_CHART.left} ${chartBottom}V${GRAPH_CHART.top - 16}" marker-end="url(#report-graph-axis-arrow)" />
-
-      <text class="report-graph__axis-title" text-anchor="middle" x="${GRAPH_CHART.left + GRAPH_CHART.width / 2}" y="${GRAPH_VIEWBOX.height - 20}">
-        Voltage (V)
-      </text>
-      <text
-        class="report-graph__axis-title report-graph__axis-title--y"
-        text-anchor="middle"
-        transform="rotate(-90 ${yAxisTitleX} ${yAxisTitleY})"
-        x="${yAxisTitleX}"
-        y="${yAxisTitleY}"
-      >
-        Current (A)
-      </text>
-
-      <g clip-path="url(#report-graph-plot-clip)">
-        ${lineMarkup}
-      </g>
-      ${pointMarkup}
-      ${labelMarkup}
-    </svg>
-  `
-}
 
 const getSessionDurationText = (sessionStart, sessionEnd) => {
   const durationMs = Math.max(0, sessionEnd - sessionStart)
@@ -274,6 +44,7 @@ const createReportHtml = ({
   observations,
   resistances,
   sessionStart,
+  verifiedCalculation,
   virtualLabsLogoSrc,
 }) => {
   const reportDate = new Date()
@@ -291,7 +62,26 @@ const createReportHtml = ({
   const r2 = toNumber(resistances?.r2 ?? firstObservation.r2)
   const r3 = toNumber(resistances?.r3 ?? firstObservation.r3)
   const observationRows = createObservationRows(observations)
-  const graphSvg = createReportGraphSvg(observations)
+  const verifiedValues = verifiedCalculation?.calculatedVoltages
+  const verifiedCalculationHtml = verifiedCalculation && verifiedValues ? `
+    <div class="results-card results-card--verification">
+      <h3>Verified Reading and Calculated Values</h3>
+      <p>Reading <strong>${escapeHtml(verifiedCalculation.readingNumber)}</strong>, with user-selected supply voltage
+        <strong>${formatNumber(verifiedCalculation.sourceVoltage, 1)} V</strong>, was used for KVL verification.</p>
+      <div class="table-shell">
+        <table class="compact-table">
+          <thead><tr><th>Verified Reading</th><th>V<sub>s</sub> (V)</th><th>Calculated V<sub>1</sub> (V)</th><th>Calculated V<sub>2</sub> (V)</th><th>Calculated V<sub>3</sub> (V)</th><th>Status</th></tr></thead>
+          <tbody><tr>
+            <td>Reading ${escapeHtml(verifiedCalculation.readingNumber)}</td>
+            <td>${formatNumber(verifiedCalculation.sourceVoltage, 3)}</td>
+            <td>${formatNumber(verifiedValues.v1, 3)}</td>
+            <td>${formatNumber(verifiedValues.v2, 3)}</td>
+            <td>${formatNumber(verifiedValues.v3, 3)}</td>
+            <td><strong>KVL Verified</strong></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </div>` : ''
 
   const css = `
 body {
@@ -326,10 +116,6 @@ body {
   margin-bottom: 0;
 }
 .report-page--results {
-  break-before: page;
-  page-break-before: always;
-}
-.report-page--graph {
   break-before: page;
   page-break-before: always;
 }
@@ -962,27 +748,16 @@ tr:nth-child(even) {
           </div>
         </div>
 
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="report-page report-page--graph">
-    <div class="section results-section">
-      <h2>Graph and Conclusion</h2>
-      <div class="results-stack">
-        <div class="graph report-graph-card results-card results-card--graph">
-          <h3>Current versus Voltage Graph</h3>
-          <div id="report-graph">${graphSvg}</div>
-        </div>
+        ${verifiedCalculationHtml}
 
         <div class="results-card">
           <h3>Conclusion</h3>
-          <p style="text-align: justify;">For each recorded supply voltage value, the sum of the voltage drops across the resistors was found to be equal to the applied source voltage. Hence, Kirchhoff’s Voltage Law (KVL) was successfully verified for the given resistive DC circuit. </p>
+          <p style="text-align: justify;">For each recorded supply voltage value, the sum of the voltage drops across the resistors was found to be equal to the applied source voltage. Hence, Kirchhoff's Voltage Law (KVL) was successfully verified for the given resistive DC circuit.</p>
         </div>
       </div>
     </div>
   </div>
+
   </main>
 
   <div class="report-actions" data-html2canvas-ignore="true">
@@ -1002,58 +777,8 @@ tr:nth-child(even) {
       });
     }
 
-    function prepareReportGraphImage() {
-      return new Promise(function(resolve) {
-        var graphContainer = document.getElementById('report-graph');
-        var svg = graphContainer && graphContainer.querySelector('svg');
-
-        if (!graphContainer || !svg) return resolve();
-
-        try {
-          var viewBox = svg.viewBox && svg.viewBox.baseVal;
-          var width = viewBox && viewBox.width ? viewBox.width : 960;
-          var height = viewBox && viewBox.height ? viewBox.height : 320;
-          var svgText = new XMLSerializer().serializeToString(svg);
-          var svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-          var svgUrl = URL.createObjectURL(svgBlob);
-          var image = new Image();
-
-          image.onload = function() {
-            var canvas = document.createElement('canvas');
-            var scale = 2;
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-
-            var context = canvas.getContext('2d');
-            context.fillStyle = '#f8fbfe';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-            var png = new Image();
-            png.className = 'report-graph__image';
-            png.alt = 'Current versus voltage graph';
-            png.src = canvas.toDataURL('image/png');
-            graphContainer.innerHTML = '';
-            graphContainer.appendChild(png);
-
-            URL.revokeObjectURL(svgUrl);
-            resolve();
-          };
-
-          image.onerror = function() {
-            URL.revokeObjectURL(svgUrl);
-            resolve();
-          };
-
-          image.src = svgUrl;
-        } catch {
-          resolve();
-        }
-      });
-    }
-
     function downloadReport() {
-      prepareReportGraphImage().then(ensureHtml2Pdf).then(function() {
+      ensureHtml2Pdf().then(function() {
         var element = document.getElementById('report-document') || document.body;
         var opts = {
           margin: [0.18, 0.18, 0.18, 0.18],
@@ -1071,8 +796,8 @@ tr:nth-child(even) {
           jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
           pagebreak: {
             mode: ['css', 'legacy'],
-            before: ['.report-page--results', '.report-page--graph'],
-            avoid: ['.report-page', '.header-row', '.report-overview', '.info-grid', '.report-graph-card', 'thead', 'tr']
+            before: ['.report-page--results'],
+            avoid: ['.report-page', '.header-row', '.report-overview', '.info-grid', 'thead', 'tr']
           }
         };
         return window.html2pdf().set(opts).from(element).save();
@@ -1086,7 +811,7 @@ tr:nth-child(even) {
   `
 }
 
-export const generateKclReport = ({ observations, resistances, sessionStart }) => {
+export const generateKclReport = ({ observations, resistances, sessionStart, verifiedCalculation }) => {
   const baseHref = new URL(import.meta.env.BASE_URL, window.location.origin).href
   const iitLogoSrc = new URL('../assets/IIT Logo.png', import.meta.url).href
   const virtualLabsLogoSrc = new URL('../assets/image.png', import.meta.url).href
@@ -1096,6 +821,7 @@ export const generateKclReport = ({ observations, resistances, sessionStart }) =
     observations,
     resistances,
     sessionStart,
+    verifiedCalculation,
     virtualLabsLogoSrc,
   })
   const reportBlob = new Blob([reportHtml], { type: 'text/html' })

@@ -83,7 +83,6 @@ const WalkthroughProvider = ({
       return
     }
 
-    setTargetRect(null)
     setIsPositioningTarget(true)
     setCurrentStepIndex(clamp(stepIndex, 0, totalSteps - 1))
   }, [totalSteps])
@@ -127,23 +126,41 @@ const WalkthroughProvider = ({
     const target = document.querySelector(activeTargetSelector)
 
     target?.scrollIntoView({
-      behavior: 'auto',
+      behavior: 'smooth',
       block: 'center',
       inline: 'center',
     })
 
-    let secondAnimationFrame = null
-    const animationFrame = window.requestAnimationFrame(() => {
-      secondAnimationFrame = window.requestAnimationFrame(() => {
-        readActiveTarget()
+    let animationFrame = null
+    let stableFrames = 0
+    let previousScrollX = window.scrollX
+    let previousScrollY = window.scrollY
+    const startedAt = performance.now()
+
+    const trackSmoothScroll = () => {
+      readActiveTarget()
+
+      const scrollIsStable = (
+        Math.abs(window.scrollX - previousScrollX) < 0.5
+        && Math.abs(window.scrollY - previousScrollY) < 0.5
+      )
+      stableFrames = scrollIsStable ? stableFrames + 1 : 0
+      previousScrollX = window.scrollX
+      previousScrollY = window.scrollY
+
+      if ((stableFrames >= 5 && performance.now() - startedAt > 150) || performance.now() - startedAt > 900) {
         setIsPositioningTarget(false)
-      })
-    })
+        return
+      }
+
+      animationFrame = window.requestAnimationFrame(trackSmoothScroll)
+    }
+
+    animationFrame = window.requestAnimationFrame(trackSmoothScroll)
 
     return () => {
-      window.cancelAnimationFrame(animationFrame)
-      if (secondAnimationFrame) {
-        window.cancelAnimationFrame(secondAnimationFrame)
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame)
       }
     }
   }, [activeTargetSelector, isOpen, readActiveTarget])

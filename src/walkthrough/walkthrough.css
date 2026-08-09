@@ -10,6 +10,7 @@
   z-index: 1000;
   pointer-events: none;
   background: rgba(5, 10, 18, 0.68);
+  transition: top 140ms linear, left 140ms linear, width 140ms linear, height 140ms linear;
 }
 
 .walkthrough-interaction-shield {
@@ -30,6 +31,7 @@
     0 0 0 1px rgba(255, 255, 255, 0.45),
     0 0 24px rgba(45, 212, 191, 0.72),
     0 0 54px rgba(37, 99, 235, 0.38);
+  transition: top 140ms linear, left 140ms linear, width 140ms linear, height 140ms linear;
 }
 
 .walkthrough-active-target {
@@ -146,6 +148,7 @@
   box-shadow:
     0 24px 60px rgba(2, 6, 23, 0.34),
     0 0 0 1px rgba(15, 23, 42, 0.04);
+  transition: top 180ms ease-out, left 180ms ease-out;
 }
 
 .walkthrough-popup:focus {

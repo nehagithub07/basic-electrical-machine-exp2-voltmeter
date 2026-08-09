@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import ObservationTable from './ObservationTable.jsx'
 import ResistanceSlider from './ResistanceSlider.jsx'
 import SectionCard from './SectionCard.jsx'
@@ -13,8 +14,8 @@ const ControlPanel = ({
   setR3,
 }) => (
   <>
-    <SectionCard className="h-[212px]" icon="sliders" id="resistance-controls" title="RESISTANCE SLIDERS (1–5 kΩ)">
-      <div className="flex flex-col gap-[18px] px-[26px] pt-[26px]">
+    <SectionCard className="resistance-controls-card" icon="sliders" id="resistance-controls" title="RESISTANCE SLIDERS (1–5 kΩ)">
+      <div className="resistance-controls-card__body">
         <ResistanceSlider disabled={locked} label="R1" onChange={setR1} value={r1} />
         <ResistanceSlider disabled={locked} label="R2" onChange={setR2} value={r2} />
         <ResistanceSlider disabled={locked} label="R3" onChange={setR3} value={r3} />
@@ -25,4 +26,4 @@ const ControlPanel = ({
   </>
 )
 
-export default ControlPanel
+export default memo(ControlPanel)

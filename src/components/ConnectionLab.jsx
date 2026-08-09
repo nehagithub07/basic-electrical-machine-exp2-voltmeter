@@ -59,6 +59,7 @@ const ConnectionLab = ({
   const onCheckConnectionsRef = useRef(onCheckConnections)
   const scaleRef = useRef(getJsPlumbZoom(scale))
   const suppressConnectionAlertsRef = useRef(false)
+  const resizeFrameRef = useRef(null)
 
   const [isLocked, setIsLocked] = useState(false)
   const [voltmeterReadingKeys, setVoltmeterReadingKeys] = useState(DEFAULT_VOLTMETER_READING_KEYS)
@@ -175,9 +176,14 @@ const ConnectionLab = ({
     initJsPlumb()
 
     const handleResize = () => {
-      window.setTimeout(() => {
+      if (resizeFrameRef.current !== null) {
+        window.cancelAnimationFrame(resizeFrameRef.current)
+      }
+
+      resizeFrameRef.current = window.requestAnimationFrame(() => {
+        resizeFrameRef.current = null
         instanceRef.current?.repaintEverything()
-      }, 100)
+      })
     }
 
     window.addEventListener('resize', handleResize)
@@ -185,6 +191,10 @@ const ConnectionLab = ({
     return () => {
       cancelled = true
       window.removeEventListener('resize', handleResize)
+      if (resizeFrameRef.current !== null) {
+        window.cancelAnimationFrame(resizeFrameRef.current)
+        resizeFrameRef.current = null
+      }
 
       instanceRef.current?.reset()
       instanceRef.current = null
@@ -221,9 +231,11 @@ const ConnectionLab = ({
 
     instance.setZoom(zoom, true)
 
-    window.setTimeout(() => {
+    const frameId = window.requestAnimationFrame(() => {
       instance.repaintEverything?.()
-    }, 0)
+    })
+
+    return () => window.cancelAnimationFrame(frameId)
   }, [scale])
 
   useEffect(() => {

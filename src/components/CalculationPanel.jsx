@@ -35,7 +35,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
 
   const resetVerification = () => {
     setVerification(null)
-    onVerificationChange?.(false)
+    onVerificationChange?.(false, null)
   }
 
   const selectReading = (event) => {
@@ -54,7 +54,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
   const verifyKvl = () => {
     if (!selectedReading) {
       setVerification({ passed: false, message: 'Select a reading before verification.' })
-      onVerificationChange?.(false)
+      onVerificationChange?.(false, null)
       return
     }
 
@@ -65,7 +65,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
 
     if (!allValuesEntered) {
       setVerification({ passed: false, message: 'Enter all current and resistance values before verification.' })
-      onVerificationChange?.(false)
+      onVerificationChange?.(false, null)
       return
     }
 
@@ -90,13 +90,19 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
         ? 'The entered current and resistance values are correct, and KVL is verified.'
         : 'Verification failed. Check the entered current and resistance values.',
     })
-    onVerificationChange?.(passed)
+    onVerificationChange?.(passed, passed ? {
+      calculatedVoltages: { v1, v2, v3 },
+      readingId: selectedReading.id,
+      readingNumber: observations.findIndex((row) => row.id === selectedReading.id) + 1,
+      sourceVoltage: selectedReading.voltage,
+    } : null)
   }
 
   return (
     <section className={`calculation-panel${isEnabled ? '' : ' calculation-panel--disabled'}`} id="calculation-panel" aria-labelledby="calculation-title" aria-disabled={!isEnabled}>
       <div className="calculation-panel__heading">
         <div>
+          <span className="calculation-panel__eyebrow">KIRCHHOFF'S VOLTAGE LAW</span>
           <h2 id="calculation-title">THEORETICAL VERIFICATION</h2>
           <p className="calculation-panel__subtitle">
             {isEnabled ? 'Choose any recorded reading and enter each current/resistance pair.' : `Record all ${requiredReadings} readings to unlock this section (${observations.length}/${requiredReadings}).`}
@@ -194,9 +200,14 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
         </div>
 
         <div className="calculation-panel__result">
-          <span className="calculation-panel__verification-badge">FINAL CHECK</span>
-          <h3>KVL Verification</h3>
-          <p className="calculation-panel__result-intro">Calculated voltage values are inserted automatically.</p>
+          <div className="calculation-panel__result-header">
+            <span className="calculation-panel__result-icon" aria-hidden="true">✓</span>
+            <div>
+              <span className="calculation-panel__verification-badge">FINAL CHECK</span>
+              <h3>KVL Verification</h3>
+              <p className="calculation-panel__result-intro">Calculated voltage values are inserted automatically.</p>
+            </div>
+          </div>
 
           <div className="calculation-panel__voltage-summary">
             <div className="calculation-panel__voltage-summary-item calculation-panel__voltage-summary-item--source">

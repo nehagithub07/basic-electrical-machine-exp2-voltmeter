@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 
+import { memo } from 'react'
 import circuitImage from '../assets/circuit.png'
 import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
 const terminalLabels = [
@@ -48,7 +49,7 @@ const terminalLabels = [
 const CircuitDiagram = ({ className = '', connectedTerminalIds = [], highlightedTerminalIds = [], r1, r2, r3 }) => (
   <section className={`circuit-panel ${className}`} id="circuit-panel">
     <div className="circuit-panel__stage">
-      <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" src={circuitImage} />
+      <img alt="Kirchhoff current law circuit diagram" className="circuit-panel__image" decoding="async" src={circuitImage} />
 
       {terminalLabels.map(({ id, label, polarity }) => (
         <Fragment key={id}>
@@ -69,11 +70,11 @@ const CircuitDiagram = ({ className = '', connectedTerminalIds = [], highlighted
         </Fragment>
       ))}
 
-      <span className="resistor-value left-[205px] top-[100px]">{r1} &Omega;</span>
-      <span className="resistor-value left-[480px] top-[195px]">{r2} &Omega;</span>
-      <span className="resistor-value left-[540px] top-[100px]">{r3} &Omega;</span>
+      <span className="resistor-value resistor-value--r1">{r1} &Omega;</span>
+      <span className="resistor-value resistor-value--r2">{r2} &Omega;</span>
+      <span className="resistor-value resistor-value--r3">{r3} &Omega;</span>
     </div>
   </section>
 )
 
-export default CircuitDiagram
+export default memo(CircuitDiagram)

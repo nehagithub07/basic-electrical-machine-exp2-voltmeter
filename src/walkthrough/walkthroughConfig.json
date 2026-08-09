@@ -80,12 +80,12 @@
     },
     {
       "id": 7,
-      "target": "#plot-button",
+      "target": "#verify-button",
       "title": {
-        "en": "Plot Button"
+        "en": "Verify Button"
       },
       "description": {
-        "en": " The PLOT button helps visualise the readings through a graph."
+        "en": "The VERIFY button opens the theoretical verification section after all required readings are recorded."
       },
       "audio": "./walkthrough-audios/plot button.wav",
       "placement": "right"

@@ -6,4 +6,5 @@ const HeaderBoard = () => (
   </header>
 )
 
-export default HeaderBoard
+export default memo(HeaderBoard)
+import { memo } from 'react'

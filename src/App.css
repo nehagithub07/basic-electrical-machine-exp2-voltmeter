@@ -12,7 +12,7 @@
 #app-viewport {
   position: relative;
   flex: 0 0 auto;
-  overflow: visible;
+  overflow: hidden;
 }
 
 #app-scale {
@@ -1014,9 +1014,9 @@
 
 .calculation-panel {
   position: relative;
-  width: 1600px;
+  width: auto;
   min-height: 720px;
-  margin-top: 28px;
+  margin-top: 18px;
   padding: 26px 32px 30px;
   overflow: hidden;
   border: 1px solid rgba(122, 86, 52, 0.28);
@@ -1818,6 +1818,21 @@
   line-height: 1;
 }
 
+.action-buttons-card { height: 176px; }
+.resistance-controls-card { height: 212px; }
+.observation-table-card { height: 250px; }
+
+.resistance-controls-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px 26px 0;
+}
+
+.resistor-value--r1 { top: 100px; left: 205px; }
+.resistor-value--r2 { top: 195px; left: 480px; }
+.resistor-value--r3 { top: 100px; left: 540px; }
+
 .calculation-panel__voltage-summary-item--source { border-top-color: #93611f; }
 .calculation-panel__voltage-summary-item--v1 { border-top-color: #c64a3a; }
 .calculation-panel__voltage-summary-item--v2 { border-top-color: #1979a8; }
@@ -1867,6 +1882,156 @@
   border-radius: 7px;
   background: #e8f7ee;
   font-weight: 800;
+}
+
+/* Premium presentation for theoretical verification and final KVL check. */
+.calculation-panel {
+  border: 1px solid rgba(79, 47, 25, 0.35);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(239, 174, 63, 0.22), transparent 25%),
+    linear-gradient(145deg, #fffaf1 0%, #f3e2ca 52%, #ead0ae 100%);
+  box-shadow: 0 24px 55px rgba(67, 37, 17, 0.22), inset 0 1px 0 #fff;
+}
+
+.calculation-panel__heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  overflow: hidden;
+  padding: 24px 32px;
+  border-radius: 19px 19px 0 0;
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 15%, rgba(255, 196, 91, 0.25), transparent 28%),
+    linear-gradient(115deg, #3b1c0d 0%, #713412 58%, #a95016 100%);
+  box-shadow: 0 8px 20px rgba(69, 32, 11, 0.2);
+  text-align: left;
+}
+
+.calculation-panel__heading > div {
+  position: relative;
+  z-index: 1;
+  text-align: left;
+}
+
+.calculation-panel__heading::after {
+  position: absolute;
+  right: 34px;
+  width: 120px;
+  height: 120px;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.035), 0 0 0 38px rgba(255, 255, 255, 0.025);
+}
+
+.calculation-panel__heading-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 16px;
+  color: #4b240e;
+  background: linear-gradient(145deg, #ffe8a6, #f2a936);
+  box-shadow: inset 0 1px 0 #fff, 0 8px 18px rgba(31, 13, 4, 0.28);
+  font-family: Georgia, serif;
+  font-size: 29px;
+  font-weight: 900;
+}
+
+.calculation-panel__eyebrow {
+  display: block;
+  margin-bottom: 3px;
+  color: #ffd995;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.calculation-panel__heading h2 {
+  color: #fff;
+  font-size: 27px;
+  letter-spacing: 0.055em;
+  text-shadow: 0 2px 4px rgba(20, 7, 1, 0.35);
+}
+
+.calculation-panel__heading h2::before { display: none; }
+
+.calculation-panel__subtitle {
+  margin: 5px 0 0 !important;
+  color: rgba(255, 245, 229, 0.84) !important;
+}
+
+.calculation-panel .calculation-panel__result {
+  padding: 22px;
+  border: 1px solid rgba(7, 104, 62, 0.3);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(49, 190, 119, 0.2), transparent 38%),
+    linear-gradient(145deg, #fbfffc 0%, #e1f5e9 100%);
+  box-shadow: 0 14px 30px rgba(12, 91, 53, 0.16), inset 0 1px 0 #fff;
+}
+
+.calculation-panel__result-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: -2px 0 17px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(14, 113, 68, 0.15);
+}
+
+.calculation-panel__result-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #28b873, #087044);
+  box-shadow: 0 6px 14px rgba(7, 103, 61, 0.28), 0 0 0 1px rgba(7, 103, 61, 0.18);
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.calculation-panel__result-header h3 {
+  margin: 7px 0 2px;
+  font-size: 21px;
+}
+
+.calculation-panel__result-header .calculation-panel__result-intro { margin: 0 !important; }
+
+.calculation-panel__verification-badge {
+  padding: 5px 10px;
+  border: 1px solid rgba(8, 102, 62, 0.16);
+  color: #087044;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(7, 102, 62, 0.1);
+  letter-spacing: 0.14em;
+}
+
+.calculation-panel__voltage-summary-item {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.calculation-panel__voltage-summary-item:hover {
+  box-shadow: 0 8px 16px rgba(20, 83, 53, 0.12);
+  transform: translateY(-2px);
+}
+
+.calculation-panel__result button {
+  border-radius: 11px;
+  background: linear-gradient(135deg, #15965b, #05603a);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 17px rgba(5, 91, 53, 0.27);
+  letter-spacing: 0.04em;
 }
 
 .app-footer {

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import powerSupplyOff from '../assets/PowerSupply_Off.png'
 import powerSupplyOn from '../assets/PowerSupply_ON.png'
 import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
@@ -15,6 +16,7 @@ const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], o
       <img
         alt={powerOn ? 'Power supply switched on' : 'Power supply switched off'}
         className="power-supply__image"
+        decoding="async"
         src={powerOn ? powerSupplyOn : powerSupplyOff}
       />
 
@@ -76,4 +78,4 @@ const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], o
   )
 }
 
-export default PowerSupply
+export default memo(PowerSupply)

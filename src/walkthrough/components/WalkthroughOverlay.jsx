@@ -13,7 +13,6 @@ const WalkthroughOverlay = () => {
     close,
     currentStep,
     isOpen,
-    isPositioningTarget,
     isReportStep,
     next,
     previous,
@@ -34,26 +33,23 @@ const WalkthroughOverlay = () => {
           transition={{ duration: 0.18 }}
         >
           <div aria-hidden="true" className="walkthrough-interaction-shield" />
-          <Spotlight rect={isPositioningTarget ? null : targetRect} />
-          <AnimatePresence mode="wait">
-            {!isPositioningTarget && targetRect ? (
-              <WalkthroughPopup
-                activeStep={activeStep}
-                autoPlayAudio={autoPlayAudioForStep}
-                canGoNext={canGoNext}
-                canGoPrevious={canGoPrevious}
-                currentStep={currentStep}
-                isReportStep={isReportStep}
-                key={activeStep.id}
-                onClose={close}
-                onNext={next}
-                onPrevious={previous}
-                onSkip={skipToReport}
-                targetRect={targetRect}
-                totalSteps={totalSteps}
-              />
-            ) : null}
-          </AnimatePresence>
+          <Spotlight rect={targetRect} />
+          {targetRect ? (
+            <WalkthroughPopup
+              activeStep={activeStep}
+              autoPlayAudio={autoPlayAudioForStep}
+              canGoNext={canGoNext}
+              canGoPrevious={canGoPrevious}
+              currentStep={currentStep}
+              isReportStep={isReportStep}
+              onClose={close}
+              onNext={next}
+              onPrevious={previous}
+              onSkip={skipToReport}
+              targetRect={targetRect}
+              totalSteps={totalSteps}
+            />
+          ) : null}
           <span className="sr-only">
             Step {currentStep} of {totalSteps}: {activeStep.title}
           </span>

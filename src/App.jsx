@@ -190,6 +190,8 @@ const App = () => {
   const { clearAlerts, showStepAlert } = useLabAlerts()
   const { isOpen: walkthroughOpen } = useWalkthrough()
   const [scale, setScale] = useState(getScale)
+  const [contentHeight, setContentHeight] = useState(CONTENT_HEIGHT)
+  const appScaleRef = useRef(null)
   const [r1, setR1] = useState(INITIAL_RESISTANCE)
   const [r2, setR2] = useState(INITIAL_RESISTANCE)
   const [r3, setR3] = useState(INITIAL_RESISTANCE)
@@ -198,7 +200,8 @@ const App = () => {
   const [observations, setObservations] = useState([])
   const [graphGenerated, setGraphGenerated] = useState(false)
   const [reportGenerated, setReportGenerated] = useState(false)
-  const [status, setStatus] = useState('Make the connections, click CHECK, then set the resistance values.')
+  const [verifiedCalculation, setVerifiedCalculation] = useState(null)
+  const [, setStatus] = useState('Make the connections, click CHECK, then set the resistance values.')
 
   const [autoConnectRequest, setAutoConnectRequest] = useState(0)
   const [checkRequest, setCheckRequest] = useState(0)
@@ -222,6 +225,24 @@ const App = () => {
     window.addEventListener('resize', handleResize)
 
     return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    const element = appScaleRef.current
+
+    if (!element) {
+      return undefined
+    }
+
+    const updateContentHeight = () => {
+      setContentHeight(Math.max(CONTENT_HEIGHT, Math.ceil(element.scrollHeight)))
+    }
+
+    updateContentHeight()
+    const observer = new ResizeObserver(updateContentHeight)
+    observer.observe(element)
+
+    return () => observer.disconnect()
   }, [])
 
   const readings = useMemo(
@@ -496,6 +517,7 @@ const App = () => {
     setObservations([...observations, nextObservation])
     setGraphGenerated(false)
     setReportGenerated(false)
+    setVerifiedCalculation(null)
     setStatus('Reading added to the observation table.')
 
     if (nextObservationCount === 1) {
@@ -548,6 +570,7 @@ const App = () => {
     setObservations([])
     setGraphGenerated(false)
     setReportGenerated(false)
+    setVerifiedCalculation(null)
     setAutoConnectRequest(0)
     setCheckRequest(0)
     setConnectionsReadyForCheck(false)
@@ -602,9 +625,10 @@ const App = () => {
     document.getElementById('calculation-verify-button')?.click()
   }
 
-  const handleCalculationVerification = useCallback((verified) => {
+  const handleCalculationVerification = useCallback((verified, calculation = null) => {
     setGraphGenerated(verified)
     setReportGenerated(false)
+    setVerifiedCalculation(verified ? calculation : null)
     setStatus(verified
       ? 'Calculations are correct and KVL is verified. You can now generate the report.'
       : 'Complete and verify the theoretical calculations.')
@@ -662,6 +686,7 @@ const App = () => {
           observations,
           resistances: { r1, r2, r3 },
           sessionStart,
+          verifiedCalculation,
         })
 
         if (!generated) {
@@ -683,7 +708,7 @@ const App = () => {
   }
 
   const scaledWidth = Math.ceil(BASE_WIDTH * scale)
-  const scaledHeight = Math.ceil(CONTENT_HEIGHT * scale)
+  const scaledHeight = Math.ceil(contentHeight * scale)
   const handleConnectionChange = useCallback((result) => {
     if (connectionsVerified) {
       return
@@ -941,8 +966,9 @@ const App = () => {
       >
         <div
           id="app-scale"
+          ref={appScaleRef}
           style={{
-            height: `${CONTENT_HEIGHT}px`,
+            height: `${contentHeight}px`,
             transform: `scale(${scale})`,
           }}
         >

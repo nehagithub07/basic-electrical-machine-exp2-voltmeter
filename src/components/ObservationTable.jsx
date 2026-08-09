@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import SectionCard from './SectionCard.jsx'
 
 const OBSERVATION_ROW_COUNT = 5
@@ -5,7 +6,7 @@ const emptyRows = Array.from({ length: OBSERVATION_ROW_COUNT })
 const formatReading = (value, fractionDigits = 3) => String(Number(value.toFixed(fractionDigits)))
 
 const ObservationTable = ({ observations }) => (
-  <SectionCard className="h-[250px]" icon="table" id="observation-table-panel" title="OBSERVATION TABLE">
+  <SectionCard className="observation-table-card" icon="table" id="observation-table-panel" title="OBSERVATION TABLE">
     <div className="observation-table-wrap">
       <table className="observation-table">
         <thead>
@@ -43,4 +44,4 @@ const ObservationTable = ({ observations }) => (
   </SectionCard>
 )
 
-export default ObservationTable
+export default memo(ObservationTable)

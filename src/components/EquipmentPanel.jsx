@@ -1,4 +1,5 @@
 
+import { memo } from 'react'
 import Voltmeter from './Voltmeter.jsx'
 import PowerSupply from './PowerSupply.jsx'
 
@@ -29,4 +30,4 @@ const EquipmentPanel = ({
   </section>
 )
 
-export default EquipmentPanel
+export default memo(EquipmentPanel)

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import v1Img from '../assets/V1.png'
 import v2Img from '../assets/V2.png'
 import v3Img from '../assets/V3.png'
@@ -37,6 +38,7 @@ const Voltmeter = ({ connectedTerminalIds = [], highlightedTerminalIds = [], lab
         src={voltmeterImages[label]}
         alt={`${label} voltmeter`}
         className="voltmeter__image"
+        decoding="async"
       />
 
       <span
@@ -77,10 +79,11 @@ const Voltmeter = ({ connectedTerminalIds = [], highlightedTerminalIds = [], lab
           src={needleImg}
           alt="Needle"
           className="voltmeter__needle-image"
+          decoding="async"
         />
       </div>
     </article>
   )
 }
 
-export default Voltmeter
+export default memo(Voltmeter)
