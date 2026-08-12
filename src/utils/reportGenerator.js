@@ -1,3 +1,5 @@
+import html2PdfBundleSrc from 'html2pdf.js/dist/html2pdf.bundle.min.js?url'
+
 const escapeHtml = (value) => String(value)
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
@@ -40,6 +42,7 @@ const createObservationRows = (observations) => (
 
 const createReportHtml = ({
   baseHref,
+  html2PdfSrc,
   iitLogoSrc,
   observations,
   resistances,
@@ -540,6 +543,8 @@ tr:nth-child(even) {
   box-shadow: 0 6px 14px rgba(31, 45, 61, 0.12);
 }
 .pdf-exporting .report-page {
+  width: 186mm !important;
+  height: 273mm !important;
   border-color: transparent !important;
   box-shadow: none !important;
   margin: 0 !important;
@@ -553,14 +558,18 @@ tr:nth-child(even) {
 .pdf-exporting .report-graph-card #report-graph {
   overflow: visible !important;
 }
+.pdf-exporting .report-document {
+  width: 186mm !important;
+}
 .pdf-exporting .report-page--results {
+  height: 272mm !important;
   break-before: auto !important;
   page-break-before: auto !important;
 }
 .pdf-exporting .graphs-conclusion-section {
   display: block;
-  break-before: page !important;
-  page-break-before: always !important;
+  break-before: auto !important;
+  page-break-before: auto !important;
 }
 .pdf-exporting .report-graph-card,
 .pdf-exporting .results-card--verification,
@@ -647,13 +656,13 @@ tr:nth-child(even) {
     page-break-inside: auto;
   }
   .report-page--results {
-    break-before: auto;
-    page-break-before: auto;
+    break-before: page;
+    page-break-before: always;
   }
   .graphs-conclusion-section {
     display: block;
-    break-before: page;
-    page-break-before: always;
+    break-before: auto;
+    page-break-before: auto;
   }
   .section {
     margin-bottom: 8px;
@@ -766,7 +775,7 @@ tr:nth-child(even) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kirchhoff Current Law Simulation Report</title>
+  <title>Kirchhoff Voltage Law Simulation Report</title>
   <base href="${escapeHtml(baseHref)}">
   <style>${css}</style>
 </head>
@@ -864,7 +873,7 @@ tr:nth-child(even) {
       return new Promise(function(resolve, reject) {
         if (window.html2pdf) return resolve();
         var script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.src = ${JSON.stringify(html2PdfSrc)};
         script.onload = resolve;
         script.onerror = reject;
         document.head.appendChild(script);
@@ -874,9 +883,10 @@ tr:nth-child(even) {
     function downloadReport() {
       ensureHtml2Pdf().then(function() {
         var element = document.getElementById('report-document') || document.body;
+        document.body.classList.add('pdf-exporting');
         var opts = {
           margin: [12, 12, 12, 12],
-          filename: 'kcl-simulation-report.pdf',
+          filename: 'kvl-simulation-report.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
             scale: 2,
@@ -889,13 +899,14 @@ tr:nth-child(even) {
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
           pagebreak: {
-            mode: ['css', 'legacy'],
-            before: ['.graphs-conclusion-section'],
-            avoid: ['.header-row', '.report-overview', '.info-grid', '.report-graph-card', '.results-card--verification', '.results-card--conclusion', 'thead', 'tr']
+            mode: ['legacy']
           }
         };
-        return window.html2pdf().set(opts).from(element).save();
+        return window.html2pdf().set(opts).from(element).save().finally(function() {
+          document.body.classList.remove('pdf-exporting');
+        });
       }).catch(function() {
+        document.body.classList.remove('pdf-exporting');
         alert('Unable to download the report automatically. Please use your browser\\'s Save as PDF option.');
       });
     }
@@ -911,6 +922,7 @@ export const generateKclReport = ({ observations, resistances, sessionStart, ver
   const virtualLabsLogoSrc = new URL('../assets/image.png', import.meta.url).href
   const reportHtml = createReportHtml({
     baseHref,
+    html2PdfSrc: html2PdfBundleSrc,
     iitLogoSrc,
     observations,
     resistances,

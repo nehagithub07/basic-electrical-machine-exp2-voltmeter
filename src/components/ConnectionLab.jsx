@@ -163,6 +163,15 @@ const ConnectionLab = ({
       })
 
       instance.bind?.('connectionDetached', () => {
+        if (!suppressConnectionAlertsRef.current) {
+          onConnectionChangeRef.current?.({
+            ...getConnectionStatus(instance),
+            latestConnection: null,
+            latestConnectionIsWrong: false,
+            nextRequiredConnection: getNextRequiredConnectionPair(instance),
+          })
+        }
+
         setConnectionRevision((current) => current + 1)
       })
 

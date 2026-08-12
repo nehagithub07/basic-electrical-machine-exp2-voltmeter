@@ -12,7 +12,7 @@ const isClose = (value, expected) => (
 )
 const formatVoltage = (value) => value === null ? '—' : String(Number(value.toFixed(3)))
 
-const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerificationChange, requiredReadings = 5 }) => {
+const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerificationChange, requiredReadings = 3 }) => {
   const [selectedId, setSelectedId] = useState('')
   const [inputs, setInputs] = useState(emptyInputs)
   const [verification, setVerification] = useState(null)
@@ -121,7 +121,7 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
           <label htmlFor="calculation-reading-select">
             <span>Verification for: </span>
             <select id="calculation-reading-select" value={selectedId} onChange={selectReading} disabled={!isEnabled}>
-              <option value="">Choose from 5 readings…</option>
+              <option value="">Choose a recorded reading…</option>
               {observations.slice(0, 5).map((row, index) => (
                 <option value={String(row.id)} key={row.id}>Reading {index + 1} · Vs = {row.voltage.toFixed(1)} V</option>
               ))}
@@ -240,7 +240,7 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
               <strong>{selectedReading ? String(Number(selectedReading.voltage.toFixed(1))) : '—'} = {formatVoltage(calculatedVoltages.v1)} + {formatVoltage(calculatedVoltages.v3)} (V)</strong>
             </div>
           </div>
-          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled || !selectedReading}>Verify</button>
+          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled}>Verify</button>
           {verification ? <p className={verification.passed ? 'is-success' : 'is-error'} role="status">{verification.message}</p> : null}
         </div>
       </div>

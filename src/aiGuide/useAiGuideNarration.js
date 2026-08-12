@@ -378,7 +378,7 @@ export const useAiGuideNarration = ({
     }
   }, [guideConfig.steps, playConfiguredStepById])
 
-  const start = useCallback(() => {
+  const start = useCallback(({ stepIds = null } = {}) => {
     stopCurrentPlayback()
 
     if (guideConfig.steps.length === 0) {
@@ -394,11 +394,15 @@ export const useAiGuideNarration = ({
     onStart?.(guideConfig)
 
     const configuredStepIds = new Set(guideConfig.steps.map((step) => step.id))
+    const requestedStepIds = (Array.isArray(stepIds) ? stepIds : stepIds === null ? [] : [stepIds])
+      .map(String)
+      .filter((stepId) => configuredStepIds.has(stepId))
     const pendingStepIds = pendingStepIdsRef.current.filter((stepId) => configuredStepIds.has(stepId))
     const lastStepId = configuredStepIds.has(lastStepIdRef.current) ? lastStepIdRef.current : null
-    const resumeStepIds = pendingStepIds.length > 0
+    const savedStepIds = pendingStepIds.length > 0
       ? pendingStepIds
       : [lastStepId ?? guideConfig.steps[0].id]
+    const resumeStepIds = requestedStepIds.length > 0 ? requestedStepIds : savedStepIds
 
     if (resumeStepIds.length > 1) {
       playStepsById(resumeStepIds)

@@ -12,6 +12,7 @@ import { useWalkthrough } from './walkthrough/useWalkthrough.js'
 import { ALERT_AUDIO, ALERT_AUDIO_PLACEHOLDER, EXPERIMENT_ALERTS } from './alerts/experimentStepAlerts.js'
 import { useLabAlerts } from './alerts/useLabAlerts.js'
 import { useAiGuideNarration } from './aiGuide/useAiGuideNarration.js'
+import { dispatchExclusiveAudioStart } from './utils/audioCoordinator.js'
 // import StatusBar from './components/StatusBar.jsx'
  
 import { calculateReadings } from './utils/circuitMath.js'
@@ -30,6 +31,55 @@ const MIN_GRAPH_READINGS = 3
 const MAX_OBSERVATIONS = 5
 const INITIAL_RESISTANCE = 1.0
 const INITIAL_VOLTAGE = 1.0
+const PRINT_AUDIO_SOURCE_ID = 'print-action'
+
+const playAudioToCompletion = (audioSource) => new Promise((resolve) => {
+  if (
+    typeof window === 'undefined'
+    || typeof window.Audio === 'undefined'
+    || !audioSource
+    || audioSource === ALERT_AUDIO_PLACEHOLDER
+  ) {
+    resolve(false)
+    return
+  }
+
+  dispatchExclusiveAudioStart(PRINT_AUDIO_SOURCE_ID)
+
+  const audio = new window.Audio(audioSource)
+  let settled = false
+  let timeoutId = null
+
+  const finish = (played) => {
+    if (settled) {
+      return
+    }
+
+    settled = true
+    window.clearTimeout(timeoutId)
+    audio.removeEventListener('ended', handleEnded)
+    audio.removeEventListener('error', handleError)
+    resolve(played)
+  }
+
+  const handleEnded = () => finish(true)
+  const handleError = () => finish(false)
+
+  audio.addEventListener('ended', handleEnded)
+  audio.addEventListener('error', handleError)
+  timeoutId = window.setTimeout(() => {
+    audio.pause()
+    finish(false)
+  }, 15000)
+
+  audio.play().catch(handleError)
+})
+
+const getInitialConnectionProgress = () => ({
+  hasInvalidConnection: false,
+  nextRequiredConnection: ['1-endpoint', '9-endpoint'],
+  totalConnections: 0,
+})
 
 const getTerminalPairKey = (connection) => {
   if (!connection?.sourceId || !connection?.targetId) {
@@ -89,6 +139,76 @@ const getConnectionPromptAudio = (terminalIds) => {
   const pairKey = getTerminalPairKeyFromIds(terminalIds)
 
   return pairKey ? CONNECTION_PROMPT_AUDIO_BY_PAIR[pairKey] : null
+}
+
+const getAiGuideEntryStepIds = ({
+  allResistanceValuesAdjusted,
+  connectionProgress,
+  connectionsReadyForCheck,
+  connectionsVerified,
+  graphGenerated,
+  powerOn,
+  readingCount,
+  reportGenerated,
+  voltageAdjusted,
+}) => {
+  if (reportGenerated) {
+    return [32]
+  }
+
+  if (graphGenerated) {
+    return [29]
+  }
+
+  if (!connectionsVerified) {
+    if (connectionsReadyForCheck) {
+      return [11]
+    }
+
+    const nextConnectionStepId = getAiGuideConnectionStepId(
+      connectionProgress.nextRequiredConnection,
+    )
+
+    if (connectionProgress.hasInvalidConnection) {
+      return nextConnectionStepId ? [12, nextConnectionStepId] : [12]
+    }
+
+    if (connectionProgress.totalConnections > 0) {
+      return nextConnectionStepId ? [nextConnectionStepId] : [14]
+    }
+
+    return [1]
+  }
+
+  if (!allResistanceValuesAdjusted) {
+    return [20]
+  }
+
+  if (!powerOn) {
+    return [21]
+  }
+
+  if (!voltageAdjusted) {
+    return [22]
+  }
+
+  if (readingCount === 0) {
+    return [23]
+  }
+
+  if (readingCount === 1) {
+    return [24]
+  }
+
+  if (readingCount === 2) {
+    return [26]
+  }
+
+  if (readingCount >= MAX_OBSERVATIONS) {
+    return [27]
+  }
+
+  return [34]
 }
 
 const isAiGuideConnectionStep = (stepId) => {
@@ -187,7 +307,7 @@ const getScale = () => {
 }
 
 const App = () => {
-  const { clearAlerts, showStepAlert } = useLabAlerts()
+  const { clearAlerts, confirmAlert, showStepAlert } = useLabAlerts()
   const { isOpen: walkthroughOpen } = useWalkthrough()
   const [scale, setScale] = useState(getScale)
   const [contentHeight, setContentHeight] = useState(CONTENT_HEIGHT)
@@ -208,6 +328,7 @@ const App = () => {
   const [resetRequest, setResetRequest] = useState(0)
   const [connectionsReadyForCheck, setConnectionsReadyForCheck] = useState(false)
   const [connectionsVerified, setConnectionsVerified] = useState(false)
+  const [connectionProgress, setConnectionProgress] = useState(getInitialConnectionProgress)
   const [resistanceAdjusted, setResistanceAdjusted] = useState(getInitialResistanceAdjusted)
   const [voltageAdjusted, setVoltageAdjusted] = useState(false)
   const [sessionStart, setSessionStart] = useState(() => Date.now())
@@ -276,6 +397,30 @@ const App = () => {
     }),
     [
       allResistanceValuesAdjusted,
+      connectionsReadyForCheck,
+      connectionsVerified,
+      graphGenerated,
+      powerOn,
+      readingCount,
+      reportGenerated,
+      voltageAdjusted,
+    ],
+  )
+  const aiGuideEntryStepIds = useMemo(
+    () => getAiGuideEntryStepIds({
+      allResistanceValuesAdjusted,
+      connectionProgress,
+      connectionsReadyForCheck,
+      connectionsVerified,
+      graphGenerated,
+      powerOn,
+      readingCount,
+      reportGenerated,
+      voltageAdjusted,
+    }),
+    [
+      allResistanceValuesAdjusted,
+      connectionProgress,
       connectionsReadyForCheck,
       connectionsVerified,
       graphGenerated,
@@ -364,8 +509,8 @@ const App = () => {
 
     interfaceIntroPlayedRef.current = false
     walkthroughWasOpenRef.current = false
-    startAiGuide()
-  }, [aiGuidePlaying, startAiGuide, stopAiGuide])
+    startAiGuide({ stepIds: aiGuideEntryStepIds })
+  }, [aiGuideEntryStepIds, aiGuidePlaying, startAiGuide, stopAiGuide])
 
   useEffect(() => {
     if (walkthroughOpen) {
@@ -479,7 +624,7 @@ const App = () => {
       })
 
       if (aiGuidePlaying) {
-        playAiGuideSteps([29])
+        playAiGuideSteps([28])
       }
 
       return
@@ -548,10 +693,6 @@ const App = () => {
         replaceExisting: true,
       })
 
-      if (aiGuidePlaying) {
-        playAiGuideSteps([27])
-      }
-
       return
     }
 
@@ -562,7 +703,7 @@ const App = () => {
       })
 
       if (aiGuidePlaying) {
-        playAiGuideSteps([28])
+        playAiGuideSteps([27])
       }
 
       return
@@ -588,6 +729,7 @@ const App = () => {
     setCheckRequest(0)
     setConnectionsReadyForCheck(false)
     setConnectionsVerified(false)
+    setConnectionProgress(getInitialConnectionProgress())
     setResistanceAdjusted(getInitialResistanceAdjusted())
     setVoltageAdjusted(false)
     setResetRequest((current) => current + 1)
@@ -612,13 +754,13 @@ const App = () => {
     })
 
     if (aiGuidePlaying) {
-      playAiGuideSteps([31])
+      playAiGuideSteps([30])
     }
   }
 
   const handleVerifyCalculations = () => {
-    if (readingCount < MAX_OBSERVATIONS) {
-      const remainingReadings = MAX_OBSERVATIONS - readingCount
+    if (readingCount < MIN_GRAPH_READINGS) {
+      const remainingReadings = MIN_GRAPH_READINGS - readingCount
 
       setGraphGenerated(false)
       setReportGenerated(false)
@@ -642,7 +784,7 @@ const App = () => {
     })
 
     if (aiGuidePlaying) {
-      playAiGuideSteps([35])
+      playAiGuideSteps([34])
     }
   }
 
@@ -657,10 +799,10 @@ const App = () => {
 
   const handleCalculationVerificationAttempt = useCallback((outcome) => {
     const feedbackByOutcome = {
-      correct: [EXPERIMENT_ALERTS.correctCalculations, 30],
-      incorrect: [EXPERIMENT_ALERTS.incorrectCalculations, 38],
-      'multiple-values-missing': [EXPERIMENT_ALERTS.multipleCalculationValuesMissing, 36],
-      'one-value-missing': [EXPERIMENT_ALERTS.calculationValueMissing, 37],
+      correct: [EXPERIMENT_ALERTS.correctCalculations, 29],
+      incorrect: [EXPERIMENT_ALERTS.incorrectCalculations, 37],
+      'multiple-values-missing': [EXPERIMENT_ALERTS.multipleCalculationValuesMissing, 35],
+      'one-value-missing': [EXPERIMENT_ALERTS.calculationValueMissing, 36],
     }
     const feedback = feedbackByOutcome[outcome]
 
@@ -682,11 +824,19 @@ const App = () => {
     }
   }, [aiGuidePlaying, playAiGuideSteps, showStepAlert])
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    setStatus('Opening the print dialog.')
+
+    if (aiGuidePlaying) {
+      await playAiGuideSteps([31])
+    } else {
+      await playAudioToCompletion(ALERT_AUDIO.print)
+    }
+
     window.print()
   }
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     if (readingCount < MIN_GRAPH_READINGS) {
       const remainingReadings = MIN_GRAPH_READINGS - readingCount
 
@@ -715,44 +865,56 @@ const App = () => {
         type: 'warning',
       })
       if (aiGuidePlaying) {
-        playAiGuideSteps([29])
+        playAiGuideSteps([34])
       }
       window.alert('Please complete and verify the calculations first.')
       return
     }
 
     setStatus('Report Generated: Your report has been generated successfully. Click OK to view your report.')
-    showStepAlert(EXPERIMENT_ALERTS.printLayoutGenerated, {
+    const confirmationPromise = confirmAlert({
+      ...EXPERIMENT_ALERTS.printLayoutGenerated,
       audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.printLayoutGenerated.audio,
-      onConfirm: () => {
-        const generated = generateKclReport({
-          observations,
-          resistances: { r1, r2, r3 },
-          sessionStart,
-          verifiedCalculation,
-        })
-
-        if (!generated) {
-          setStatus('Unable to open the report window.')
-          window.alert('Unable to open the report window. Please allow pop-ups and try again.')
-          return
-        }
-
-        setReportGenerated(true)
-        setStatus('Experiment report generated from the verified calculations and observations.')
-      },
+      confirmLabel: 'OK',
       replaceExisting: true,
-      requiresConfirmation: true,
     })
 
     if (aiGuidePlaying) {
-      playAiGuideSteps([33])
+      playAiGuideSteps([32])
     }
+
+    const confirmed = await confirmationPromise
+
+    if (!confirmed) {
+      return
+    }
+
+    const generated = generateKclReport({
+      observations,
+      resistances: { r1, r2, r3 },
+      sessionStart,
+      verifiedCalculation,
+    })
+
+    if (!generated) {
+      setStatus('Unable to open the report window.')
+      window.alert('Unable to open the report window. Please allow pop-ups and try again.')
+      return
+    }
+
+    setReportGenerated(true)
+    setStatus('Experiment report generated from the verified calculations and observations.')
   }
 
   const scaledWidth = Math.ceil(BASE_WIDTH * scale)
   const scaledHeight = Math.ceil(contentHeight * scale)
   const handleConnectionChange = useCallback((result) => {
+    setConnectionProgress({
+      hasInvalidConnection: Boolean(result.hasInvalidConnection || result.latestConnectionIsWrong),
+      nextRequiredConnection: result.nextRequiredConnection ?? null,
+      totalConnections: Number(result.totalConnections) || 0,
+    })
+
     if (connectionsVerified) {
       return
     }
@@ -794,7 +956,7 @@ const App = () => {
       lastConnectionInstructionAudioKeyRef.current = latestConnectionPairKey
 
       if (aiGuidePlaying && nextGuideStepId) {
-        playAiGuideSteps(nextGuideStepId === 4 ? [34, 4] : [nextGuideStepId])
+        playAiGuideSteps(nextGuideStepId === 4 ? [33, 4] : [nextGuideStepId])
       } else {
         playLabAlertAudio(nextConnectionAudio)
       }
@@ -825,6 +987,12 @@ const App = () => {
   }, [aiGuidePlaying, connectionsVerified, playAiGuideSteps, playWrongConnectionCorrection, showStepAlert])
 
   const handleCheckConnections = useCallback((result) => {
+    setConnectionProgress({
+      hasInvalidConnection: Boolean(result.hasInvalidConnection),
+      nextRequiredConnection: result.nextRequiredConnection ?? null,
+      totalConnections: Number(result.totalConnections) || 0,
+    })
+
     if (result.isCorrect) {
       setConnectionsVerified(true)
       setConnectionsReadyForCheck(true)
@@ -962,6 +1130,11 @@ const App = () => {
     setAutoConnectRequest((current) => current + 1)
     setConnectionsReadyForCheck(true)
     setConnectionsVerified(true)
+    setConnectionProgress({
+      hasInvalidConnection: false,
+      nextRequiredConnection: null,
+      totalConnections: 8,
+    })
     setResistanceAdjusted(getInitialResistanceAdjusted())
     allConnectionsAlertShownRef.current = true
     lastConnectionInstructionAudioKeyRef.current = null
@@ -1032,7 +1205,7 @@ const App = () => {
                     onAdd: !powerOn || !voltageAdjusted,
                     onAutoConnect: connectionsVerified || powerOn,
                     onCheck: connectionsVerified,
-                    onVerify: readingCount < MAX_OBSERVATIONS,
+                    onVerify: readingCount < MIN_GRAPH_READINGS,
                     onPrint: false,
                   }}
                   onAdd={recordObservation}
@@ -1089,10 +1262,11 @@ const App = () => {
           </main>
 
           <CalculationPanel
+            key={`calculation-panel-${resetRequest}`}
             observations={observations}
             onVerificationAttempt={handleCalculationVerificationAttempt}
             onVerificationChange={handleCalculationVerification}
-            requiredReadings={MAX_OBSERVATIONS}
+            requiredReadings={MIN_GRAPH_READINGS}
           />
 
           <footer className="app-footer" aria-label="Copyright">
