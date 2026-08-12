@@ -6,13 +6,6 @@ import LabAlertSpotlight from './LabAlertSpotlight.jsx'
 import { addExclusiveAudioListener, dispatchExclusiveAudioStart } from '../utils/audioCoordinator.js'
 import './labAlerts.css'
 
-const DEFAULT_DURATIONS = {
-  error: 6500,
-  info: 4200,
-  success: 3800,
-  warning: 5600,
-}
-
 const DEFAULT_ICONS = {
   error: '❌',
   info: '🎛️',
@@ -405,7 +398,7 @@ const LabAlertProvider = ({ children }) => {
     return {
       ...alert,
       critical,
-      duration: requiresConfirmation ? null : alert.duration ?? DEFAULT_DURATIONS[type],
+      duration: null,
       icon: alert.icon ?? DEFAULT_ICONS[type],
       id,
       placement,

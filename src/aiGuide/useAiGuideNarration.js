@@ -35,6 +35,9 @@ export const useAiGuideNarration = ({
   const [activeStepId, setActiveStepId] = useState(null)
   const isActiveRef = useRef(false)
   const currentPlaybackRef = useRef(null)
+  const lastStepIdRef = useRef(null)
+  const pendingStepIdsRef = useRef([])
+  const progressRunIdRef = useRef(0)
   const runIdRef = useRef(0)
 
   const stopCurrentPlayback = useCallback(() => {
@@ -48,10 +51,17 @@ export const useAiGuideNarration = ({
     currentPlayback.stop()
   }, [])
 
-  const stop = useCallback(() => {
+  const stop = useCallback(({ resetProgress = false } = {}) => {
     isActiveRef.current = false
     runIdRef.current += 1
     stopCurrentPlayback()
+
+    if (resetProgress) {
+      progressRunIdRef.current += 1
+      lastStepIdRef.current = null
+      pendingStepIdsRef.current = []
+    }
+
     setActiveStepId(null)
     setIsPlaying(false)
   }, [stopCurrentPlayback])
@@ -170,7 +180,7 @@ export const useAiGuideNarration = ({
     await speakText(step.text)
   }, [playAudio, speakText])
 
-  const playStepById = useCallback(async (stepId) => {
+  const playConfiguredStepById = useCallback(async (stepId) => {
     if (guideConfig.steps.length === 0) {
       onError?.(new Error('AI Guide has no configured steps.'))
       return
@@ -188,6 +198,7 @@ export const useAiGuideNarration = ({
 
     const runId = runIdRef.current + 1
     runIdRef.current = runId
+    lastStepIdRef.current = step.id
     stopCurrentPlayback()
     setActiveStepId(step.id)
 
@@ -210,9 +221,45 @@ export const useAiGuideNarration = ({
     }
   }, [guideConfig.steps, onError, playStep, stopCurrentPlayback])
 
+  const playStepById = useCallback(async (stepId) => {
+    if (!isActiveRef.current) {
+      return false
+    }
+
+    const normalizedStepId = String(stepId)
+    const stepExists = guideConfig.steps.some((entry) => entry.id === normalizedStepId)
+
+    if (!stepExists) {
+      return false
+    }
+
+    const progressRunId = progressRunIdRef.current + 1
+    progressRunIdRef.current = progressRunId
+    pendingStepIdsRef.current = [normalizedStepId]
+
+    const completed = await playConfiguredStepById(normalizedStepId)
+
+    if (completed && progressRunIdRef.current === progressRunId) {
+      pendingStepIdsRef.current = []
+    }
+
+    return completed
+  }, [guideConfig.steps, playConfiguredStepById])
+
   const playText = useCallback(async (text, { activeStepId: playbackStepId = null } = {}) => {
     if (!text || !isActiveRef.current) {
       return false
+    }
+
+    const resumeStepId = guideConfig.steps.some((entry) => entry.id === String(playbackStepId))
+      ? String(playbackStepId)
+      : null
+    const progressRunId = resumeStepId ? progressRunIdRef.current + 1 : null
+
+    if (resumeStepId) {
+      progressRunIdRef.current = progressRunId
+      lastStepIdRef.current = resumeStepId
+      pendingStepIdsRef.current = [resumeStepId]
     }
 
     const runId = runIdRef.current + 1
@@ -226,6 +273,10 @@ export const useAiGuideNarration = ({
 
       if (completed) {
         setActiveStepId(null)
+
+        if (progressRunIdRef.current === progressRunId) {
+          pendingStepIdsRef.current = []
+        }
       }
 
       return completed
@@ -237,7 +288,7 @@ export const useAiGuideNarration = ({
 
       return false
     }
-  }, [onError, speakText, stopCurrentPlayback])
+  }, [guideConfig.steps, onError, speakText, stopCurrentPlayback])
 
   const playAudioSource = useCallback(async (
     audioSource,
@@ -251,6 +302,17 @@ export const useAiGuideNarration = ({
       return fallbackText ? playText(fallbackText, { activeStepId: playbackStepId }) : false
     }
 
+    const resumeStepId = guideConfig.steps.some((entry) => entry.id === String(playbackStepId))
+      ? String(playbackStepId)
+      : null
+    const progressRunId = resumeStepId ? progressRunIdRef.current + 1 : null
+
+    if (resumeStepId) {
+      progressRunIdRef.current = progressRunId
+      lastStepIdRef.current = resumeStepId
+      pendingStepIdsRef.current = [resumeStepId]
+    }
+
     const runId = runIdRef.current + 1
     runIdRef.current = runId
     stopCurrentPlayback()
@@ -262,6 +324,10 @@ export const useAiGuideNarration = ({
 
       if (completed) {
         setActiveStepId(null)
+
+        if (progressRunIdRef.current === progressRunId) {
+          pendingStepIdsRef.current = []
+        }
       }
 
       return completed
@@ -278,25 +344,39 @@ export const useAiGuideNarration = ({
 
       return false
     }
-  }, [onError, playAudio, playText, stopCurrentPlayback])
+  }, [guideConfig.steps, onError, playAudio, playText, stopCurrentPlayback])
 
   const playStepsById = useCallback(async (stepIds) => {
     if (!Array.isArray(stepIds) || !isActiveRef.current) {
       return
     }
 
-    for (const stepId of stepIds) {
+    const configuredStepIds = stepIds
+      .map(String)
+      .filter((stepId) => guideConfig.steps.some((entry) => entry.id === stepId))
+
+    if (configuredStepIds.length === 0) {
+      return
+    }
+
+    const progressRunId = progressRunIdRef.current + 1
+    progressRunIdRef.current = progressRunId
+    pendingStepIdsRef.current = [...configuredStepIds]
+
+    for (const [index, stepId] of configuredStepIds.entries()) {
       if (!isActiveRef.current) {
         return
       }
 
-      const completed = await playStepById(stepId)
+      const completed = await playConfiguredStepById(stepId)
 
-      if (!completed) {
+      if (!completed || progressRunIdRef.current !== progressRunId) {
         return
       }
+
+      pendingStepIdsRef.current = configuredStepIds.slice(index + 1)
     }
-  }, [playStepById])
+  }, [guideConfig.steps, playConfiguredStepById])
 
   const start = useCallback(() => {
     stopCurrentPlayback()
@@ -312,12 +392,28 @@ export const useAiGuideNarration = ({
     isActiveRef.current = true
     setIsPlaying(true)
     onStart?.(guideConfig)
-    playStepById(1)
-  }, [guideConfig, onError, onStart, playStepById, stopCurrentPlayback])
+
+    const configuredStepIds = new Set(guideConfig.steps.map((step) => step.id))
+    const pendingStepIds = pendingStepIdsRef.current.filter((stepId) => configuredStepIds.has(stepId))
+    const lastStepId = configuredStepIds.has(lastStepIdRef.current) ? lastStepIdRef.current : null
+    const resumeStepIds = pendingStepIds.length > 0
+      ? pendingStepIds
+      : [lastStepId ?? guideConfig.steps[0].id]
+
+    if (resumeStepIds.length > 1) {
+      playStepsById(resumeStepIds)
+      return
+    }
+
+    playStepById(resumeStepIds[0])
+  }, [guideConfig, onError, onStart, playStepById, playStepsById, stopCurrentPlayback])
 
   const finish = useCallback(() => {
     isActiveRef.current = false
     runIdRef.current += 1
+    progressRunIdRef.current += 1
+    lastStepIdRef.current = null
+    pendingStepIdsRef.current = []
     stopCurrentPlayback()
     setActiveStepId(null)
     setIsPlaying(false)

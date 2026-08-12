@@ -49,7 +49,7 @@
         "en": "Check Button"
       },
       "description": {
-        "en": "The CHECK button verifies all the connections to ensure that they are correct. \n\nIf a wire is connected incorrectly, click the corresponding label number to remove the connection."
+        "en": "The CHECK button verifies all the connections to ensure that they are correct."
       },
       "audio": "./walkthrough-audios/Check Button.wav",
       "placement": "right"
@@ -82,28 +82,16 @@
       "id": 7,
       "target": "#verify-button",
       "title": {
-        "en": "Verify Button"
+        "en": "Calculate Button"
       },
       "description": {
-        "en": "The VERIFY button opens the theoretical verification section after all required readings are recorded."
+        "en": "The CALCULATE button auto-fills the resistance values in the theoretical verification section. For verification, you have to theoretically calculate the voltages using the provided equations and verify them using the VERIFY button."
       },
-      "audio": "./walkthrough-audios/plot button.wav",
+      "audio": "./walkthrough-audios/Calculate Button.wav",
       "placement": "right"
     },
     {
       "id": 8,
-      "target": "#reset-button",
-      "title": {
-        "en": "Reset Button"
-      },
-      "description": {
-        "en": "The RESET button refresh the simulation to its initial state for a fresh start."
-      },
-      "audio": "./walkthrough-audios/reset button.wav",
-      "placement": "right"
-    },
-      {
-      "id": 9,
       "target": "#print-button",
       "title": {
         "en": "Print Button"
@@ -115,13 +103,26 @@
       "placement": "right"
     },
     {
+      "id": 9,
+      "target": "#reset-button",
+      "title": {
+        "en": "Reset Button"
+      },
+      "description": {
+        "en": "The RESET button refresh the simulation to its initial state for a fresh start."
+      },
+      "audio": "./walkthrough-audios/reset button.wav",
+      "placement": "right"
+    },
+      
+    {
       "id": 10,
       "target": "#resistance-controls",
       "title": {
         "en": "Resistance Sliders"
       },
       "description": {
-        "en": " Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Current Law. \n\nRange: 1 kΩ to 5 kΩ"
+        "en": "Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Voltage Law.  \n\nRange: 1 kΩ to 5 kΩ"
       },
       "audio": "./walkthrough-audios/Resistance Sliders.wav",
       "placement": "right"
@@ -147,7 +148,7 @@
       "description": {
         "en": "Voltmeters are used to measure the voltage drop across each resistor in an electrical circuit. Record the voltage readings across each resistor at different supply voltages. \n\nRating:  0 - 20 V DC"
       },
-      "audio": "#",
+      "audio": "./walkthrough-audios/DC Voltmeters.wav",
       "placement": "bottom"
     },
     {
@@ -169,9 +170,9 @@
         "en": "Observation Table"
       },
       "description": {
-        "en": "This table records the measured voltage drop V1, V2, and V3 at different source voltages. These readings will be used later to plot the graph."
+        "en": "This table records the measured voltage drops V1, V2, and V3 at different source voltages. These readings will be used later to verify the KVL."
       },
-      "audio": "./walkthrough-audios/Observation table.wav",
+      "audio": "./walkthrough-audios/Observation Table.wav",
       "placement": "right"
     },
     {
@@ -181,7 +182,7 @@
         "en": "Equations"
       },
       "description": {
-        "en": " This section displays the equations you can use to verify Kirchhoff’s Voltage Law."
+        "en": "This section displays the equations you can use to verify Kirchhoff’s Voltage Law."
       },
       "audio": "./walkthrough-audios/Equations.wav",
       "placement": "top"
@@ -195,7 +196,7 @@
       "description": {
         "en": "This section allows you to verify the KVL using the measured readings and the provided equations. Compare the calculated and measured voltages to confirm that the algebraic sum of all voltages around the closed loop is zero."
       },
-      "audio": "./walkthrough-audios/graph.wav",
+      "audio": "./walkthrough-audios/Theoretical Verification.wav",
       "placement": "top"
     },
     {

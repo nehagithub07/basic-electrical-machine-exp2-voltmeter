@@ -555,11 +555,24 @@ const App = () => {
       return
     }
 
+    if (nextObservationCount === MAX_OBSERVATIONS) {
+      showStepAlert(EXPERIMENT_ALERTS.lastReadingAdded, {
+        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.lastReadingAdded.audio,
+        replaceExisting: true,
+      })
+
+      if (aiGuidePlaying) {
+        playAiGuideSteps([28])
+      }
+
+      return
+    }
+
   }
 
   const resetSimulation = useCallback(({ guideActive = false, stopGuide = true } = {}) => {
     if (stopGuide) {
-      stopAiGuide()
+      stopAiGuide({ resetProgress: true })
     }
 
     setPowerOn(false)
@@ -622,7 +635,15 @@ const App = () => {
     }
 
     document.getElementById('calculation-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    document.getElementById('calculation-verify-button')?.click()
+    setStatus(EXPERIMENT_ALERTS.calculationInstructions.title)
+    showStepAlert(EXPERIMENT_ALERTS.calculationInstructions, {
+      audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.calculationInstructions.audio,
+      replaceExisting: true,
+    })
+
+    if (aiGuidePlaying) {
+      playAiGuideSteps([35])
+    }
   }
 
   const handleCalculationVerification = useCallback((verified, calculation = null) => {
@@ -634,12 +655,34 @@ const App = () => {
       : 'Complete and verify the theoretical calculations.')
   }, [])
 
-  const handlePrint = () => {
-    if (aiGuidePlaying) {
-      playAiGuideSteps([32])
-    } else {
-      playLabAlertAudio(ALERT_AUDIO.print)
+  const handleCalculationVerificationAttempt = useCallback((outcome) => {
+    const feedbackByOutcome = {
+      correct: [EXPERIMENT_ALERTS.correctCalculations, 30],
+      incorrect: [EXPERIMENT_ALERTS.incorrectCalculations, 38],
+      'multiple-values-missing': [EXPERIMENT_ALERTS.multipleCalculationValuesMissing, 36],
+      'one-value-missing': [EXPERIMENT_ALERTS.calculationValueMissing, 37],
     }
+    const feedback = feedbackByOutcome[outcome]
+
+    if (!feedback) {
+      return
+    }
+
+    const [alert, aiGuideStepId] = feedback
+
+    setStatus(alert.title)
+    showStepAlert(alert, {
+      audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : alert.audio,
+      audioSpeech: aiGuidePlaying ? '' : alert.audioSpeech,
+      replaceExisting: true,
+    })
+
+    if (aiGuidePlaying) {
+      playAiGuideSteps([aiGuideStepId])
+    }
+  }, [aiGuidePlaying, playAiGuideSteps, showStepAlert])
+
+  const handlePrint = () => {
     window.print()
   }
 
@@ -1047,6 +1090,7 @@ const App = () => {
 
           <CalculationPanel
             observations={observations}
+            onVerificationAttempt={handleCalculationVerificationAttempt}
             onVerificationChange={handleCalculationVerification}
             requiredReadings={MAX_OBSERVATIONS}
           />

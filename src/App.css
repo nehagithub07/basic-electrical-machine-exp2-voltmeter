@@ -2034,6 +2034,512 @@
   letter-spacing: 0.04em;
 }
 
+/* Modern theoretical-verification workspace. */
+.calculation-panel {
+  --calculation-accent: #a75a25;
+  --calculation-border: #d7dfe6;
+  --calculation-ink: #1e2938;
+  --calculation-muted: #667386;
+  min-height: 720px;
+  margin-top: 20px;
+  padding: 24px;
+  border: 1px solid rgba(95, 66, 44, 0.2);
+  border-radius: 24px;
+  color: var(--calculation-ink);
+  background:
+    radial-gradient(circle at 96% 4%, rgba(210, 139, 75, 0.17), transparent 22%),
+    linear-gradient(145deg, #f8f5f0 0%, #f2ede6 58%, #ebe4da 100%);
+  box-shadow:
+    0 24px 54px rgba(39, 27, 19, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.calculation-panel::before {
+  inset: 12px;
+  border-color: rgba(112, 82, 59, 0.1);
+  border-radius: 17px;
+}
+
+.calculation-panel__heading {
+  min-height: 108px;
+  align-items: center;
+  margin: -24px -24px 20px;
+  padding: 22px 30px;
+  border: 0;
+  border-radius: 23px 23px 0 0;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(245, 176, 98, 0.24), transparent 25%),
+    linear-gradient(118deg, #1f1713 0%, #40251a 48%, #9a501f 100%);
+  box-shadow: 0 10px 25px rgba(53, 30, 17, 0.2);
+}
+
+.calculation-panel__heading::after {
+  right: 38px;
+  width: 104px;
+  height: 104px;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 18px rgba(255, 255, 255, 0.03),
+    0 0 0 38px rgba(255, 255, 255, 0.02);
+}
+
+.calculation-panel__eyebrow {
+  margin-bottom: 5px;
+  color: #f4bd77;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.calculation-panel__heading h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  line-height: 1.05;
+  text-shadow: 0 2px 6px rgba(8, 4, 2, 0.34);
+}
+
+.calculation-panel__subtitle {
+  margin: 8px 0 0 !important;
+  color: rgba(255, 248, 239, 0.82) !important;
+  font-size: 13px !important;
+  font-weight: 650 !important;
+  line-height: 1.35;
+}
+
+.calculation-panel__setup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(620px, 1.05fr);
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.calculation-panel__setup-card {
+  min-height: 116px;
+  padding: 20px 24px;
+  overflow: hidden;
+  border: 1px solid var(--calculation-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 8px 22px rgba(45, 35, 27, 0.07),
+    inset 0 1px 0 #fff;
+}
+
+.calculation-panel__setup-card::before {
+  width: 4px;
+}
+
+.calculation-panel__reading-card::before {
+  background: linear-gradient(180deg, #4283a6, #28566f);
+}
+
+.calculation-panel__resistance-card::before {
+  background: linear-gradient(180deg, #d79251, #9b5127);
+}
+
+.calculation-panel__setup-card h3 {
+  margin: 0 0 16px;
+  color: #70452d;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.calculation-panel__setup-card h3::before {
+  width: 8px;
+  height: 8px;
+  background: #bd7842;
+  box-shadow: 0 0 0 4px rgba(189, 120, 66, 0.12);
+}
+
+.calculation-panel__reading-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calculation-panel__reading-card label {
+  grid-template-columns: 142px minmax(260px, 1fr);
+  gap: 16px;
+  color: #48566a;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.calculation-panel__reading-card select {
+  min-height: 48px;
+  padding: 10px 42px 10px 14px;
+  border: 1px solid #c8d3dc;
+  border-radius: 10px;
+  color: var(--calculation-ink);
+  background: #fbfcfd;
+  font-weight: 650;
+}
+
+.calculation-panel__reading-card > strong {
+  align-self: flex-start;
+  margin: 10px 0 0 158px;
+  padding: 5px 10px;
+  border-color: rgba(45, 127, 88, 0.2);
+  color: #216846;
+  background: #edf8f2;
+  font-size: 13px;
+}
+
+.calculation-panel__resistance-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.calculation-panel__resistance-inputs label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  color: #526074;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.calculation-panel__resistance-inputs input {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+}
+
+.calculation-panel__resistance-inputs i {
+  color: #6a7482;
+  font-size: 13px;
+}
+
+.calculation-panel input,
+.calculation-panel select {
+  border-color: #c8d1da;
+  color: var(--calculation-ink);
+  background: #fff;
+  box-shadow: inset 0 1px 2px rgba(23, 35, 49, 0.05);
+}
+
+.calculation-panel input:hover:not(:disabled),
+.calculation-panel select:hover:not(:disabled) {
+  border-color: #8da2b3;
+}
+
+.calculation-panel input:focus,
+.calculation-panel select:focus {
+  border-color: #347ca3;
+  box-shadow:
+    0 0 0 4px rgba(52, 124, 163, 0.14),
+    inset 0 1px 2px rgba(23, 35, 49, 0.04);
+}
+
+.calculation-panel input:disabled,
+.calculation-panel select:disabled {
+  border-color: #d8dde2;
+  color: #7f8894;
+  background: #f1f3f5;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.calculation-panel--disabled .calculation-panel__setup,
+.calculation-panel--disabled .calculation-panel__content {
+  filter: none;
+  opacity: 1;
+}
+
+.calculation-panel__content--verification {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.calculation-panel__voltage-sections {
+  gap: 14px;
+}
+
+.calculation-panel__voltage-card {
+  min-height: 112px;
+  padding: 18px 20px;
+  border: 1px solid var(--calculation-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 8px 22px rgba(35, 29, 24, 0.07),
+    inset 0 1px 0 #fff;
+}
+
+.calculation-panel__voltage-card::before {
+  width: 4px;
+}
+
+.calculation-panel__voltage-card--v1 { --formula-accent: #c2574d; }
+.calculation-panel__voltage-card--v2 { --formula-accent: #397fa3; }
+.calculation-panel__voltage-card--v3 { --formula-accent: #548b62; }
+
+.calculation-panel__large-formula {
+  display: grid;
+  min-height: 74px;
+  grid-template-columns:
+    auto minmax(150px, 1fr) auto minmax(150px, 1fr)
+    auto minmax(150px, 0.9fr) auto;
+  gap: 10px;
+  align-items: center;
+  justify-content: stretch;
+  padding-left: 8px;
+  color: #475467;
+  font-size: 16px;
+}
+
+.calculation-panel__formula-symbol {
+  margin: 0;
+  color: var(--formula-accent);
+  font-size: 20px;
+}
+
+.calculation-panel__current-symbol {
+  color: #344052;
+}
+
+.calculation-panel__formula-operator {
+  color: #5e6877;
+}
+
+.calculation-panel__large-formula label {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.calculation-panel__large-formula input {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.calculation-panel__large-formula label i {
+  color: #717b88;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.calculation-panel__large-formula output {
+  min-width: 0;
+  width: 100%;
+  height: 48px;
+  border: 1px solid color-mix(in srgb, var(--formula-accent) 28%, #d7dfe6);
+  border-radius: 10px;
+  color: var(--formula-accent);
+  background: color-mix(in srgb, var(--formula-accent) 6%, #fff);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.calculation-panel__large-formula label.is-correct input {
+  border-color: #329363;
+  background: #f0faf4;
+  box-shadow: 0 0 0 3px rgba(50, 147, 99, 0.1);
+}
+
+.calculation-panel__large-formula label.is-incorrect input {
+  border-color: #d15b54;
+  background: #fff3f2;
+  box-shadow: 0 0 0 3px rgba(209, 91, 84, 0.1);
+}
+
+.calculation-panel .calculation-panel__result {
+  --result-accent: #397996;
+  position: relative;
+  padding: 20px;
+  border: 1px solid #cedbe2;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(67, 139, 169, 0.12), transparent 36%),
+    linear-gradient(145deg, #fbfdfe 0%, #edf4f7 100%);
+  box-shadow:
+    0 12px 28px rgba(31, 63, 78, 0.12),
+    inset 0 1px 0 #fff;
+}
+
+.calculation-panel .calculation-panel__result.is-verified {
+  --result-accent: #278257;
+  border-color: #bcd8c9;
+  background:
+    radial-gradient(circle at 100% 0, rgba(44, 160, 101, 0.14), transparent 36%),
+    linear-gradient(145deg, #fbfefc 0%, #edf8f2 100%);
+}
+
+.calculation-panel .calculation-panel__result.is-invalid {
+  --result-accent: #b64e48;
+  border-color: #e2c3c0;
+  background:
+    radial-gradient(circle at 100% 0, rgba(193, 80, 72, 0.11), transparent 36%),
+    linear-gradient(145deg, #fffdfd 0%, #fbf0ef 100%);
+}
+
+.calculation-panel__result::before {
+  height: 4px;
+  background: linear-gradient(90deg, var(--result-accent), color-mix(in srgb, var(--result-accent) 52%, #fff));
+}
+
+.calculation-panel__result-header {
+  gap: 13px;
+  margin: 0 0 14px;
+  padding-bottom: 14px;
+  border-bottom-color: color-mix(in srgb, var(--result-accent) 18%, transparent);
+}
+
+.calculation-panel__result-icon {
+  width: 46px;
+  height: 46px;
+  border-width: 3px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--result-accent) 76%, #fff), var(--result-accent));
+  box-shadow:
+    0 6px 14px color-mix(in srgb, var(--result-accent) 24%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--result-accent) 18%, transparent);
+  font-size: 21px;
+}
+
+.calculation-panel__verification-badge {
+  padding: 4px 9px;
+  border-color: color-mix(in srgb, var(--result-accent) 20%, transparent);
+  color: var(--result-accent);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: none;
+  font-size: 9px;
+}
+
+.calculation-panel__result-header h3 {
+  margin: 6px 0 2px;
+  color: #2b3b49;
+  font-size: 20px;
+}
+
+.calculation-panel__result-intro {
+  color: #687786 !important;
+  font-size: 12px !important;
+}
+
+.calculation-panel__voltage-summary {
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.calculation-panel__voltage-summary-item {
+  min-height: 72px;
+  padding: 9px;
+  border-color: #dce3e7;
+  border-top-color: var(--summary-accent, #8b9aa6);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: none;
+}
+
+.calculation-panel__voltage-summary-item--source { --summary-accent: #9b764d; }
+.calculation-panel__voltage-summary-item--v1 { --summary-accent: #c2574d; }
+.calculation-panel__voltage-summary-item--v2 { --summary-accent: #397fa3; }
+.calculation-panel__voltage-summary-item--v3 { --summary-accent: #548b62; }
+
+.calculation-panel__voltage-summary-item span {
+  margin-bottom: 3px;
+  color: #667381;
+  font-size: 13px;
+}
+
+.calculation-panel__voltage-summary-item strong,
+.calculation-panel__voltage-summary-item i {
+  color: #324454;
+  font-size: 19px;
+}
+
+.calculation-panel__kvl-equations {
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+
+.calculation-panel__kvl-equations > div {
+  min-height: 45px;
+  gap: 9px;
+  padding: 9px 10px;
+  border-color: color-mix(in srgb, var(--result-accent) 16%, #dce3e7);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.calculation-panel__kvl-equations span {
+  color: #526270;
+  font-size: 14px;
+}
+
+.calculation-panel__kvl-equations strong {
+  overflow: hidden;
+  color: var(--result-accent);
+  font-size: 15px;
+  text-overflow: ellipsis;
+}
+
+.calculation-panel__kvl-arrow {
+  color: var(--result-accent);
+  font-size: 16px;
+}
+
+.calculation-panel__result button {
+  min-height: 48px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #347e9e, #24596f);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 7px 16px rgba(36, 89, 111, 0.2);
+  font-size: 15px;
+  letter-spacing: 0.025em;
+}
+
+.calculation-panel__result.is-verified button {
+  background: linear-gradient(135deg, #2c9462, #1b6745);
+  box-shadow: 0 7px 16px rgba(27, 103, 69, 0.2);
+}
+
+.calculation-panel__result.is-invalid button {
+  background: linear-gradient(135deg, #c45a53, #913c37);
+  box-shadow: 0 7px 16px rgba(145, 60, 55, 0.18);
+}
+
+.calculation-panel__result button:disabled {
+  color: #6f7882;
+  background: #dbe0e4;
+  box-shadow: inset 0 1px 2px rgba(39, 50, 60, 0.08);
+  filter: none;
+  opacity: 1;
+}
+
+.calculation-panel__result button:not(:disabled):hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+
+.calculation-panel__result button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.calculation-panel__result p {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.calculation-panel__result .is-success { color: #23734d; }
+.calculation-panel__result .is-error { color: #a9433e; }
+
 .app-footer {
   display: flex;
   width: 1600px;
@@ -2567,9 +3073,9 @@ input:focus-visible {
   html,
   body,
   #root {
-    width: 1600px !important;
+    width: 1440px !important;
     height: 1418px !important;
-    min-width: 1600px !important;
+    min-width: 1440px !important;
     min-height: 1418px !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -2588,11 +3094,11 @@ input:focus-visible {
   #app-wrapper,
   #app-viewport,
   #app-scale {
-    width: 1600px !important;
+    width: 1440px !important;
     height: 1418px !important;
-    min-width: 1600px !important;
+    min-width: 1440px !important;
     min-height: 1418px !important;
-    max-width: 1600px !important;
+    max-width: 1440px !important;
     max-height: 1418px !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -2614,17 +3120,33 @@ input:focus-visible {
     left: 0 !important;
     transform: none !important;
     transform-origin: top left !important;
+    zoom: 1 !important;
   }
 
   .simulation-shell {
-    width: 1600px !important;
+    width: 1800px !important;
     height: 960px !important;
     overflow: hidden !important;
+    zoom: 0.8 !important;
+  }
+
+  .simulation-shell .header-board {
+    left: 196px !important;
+  }
+
+  .simulation-shell .workspace-grid {
+    left: 127px !important;
+  }
+
+  .calculation-panel {
+    width: 1800px !important;
+    min-height: 720px !important;
+    zoom: 0.8 !important;
   }
 
   .graph-panel,
   .graph-panel--separate {
-    width: 1600px !important;
+    width: 1440px !important;
     height: 430px !important;
     margin: 28px 0 0 !important;
     overflow: hidden !important;

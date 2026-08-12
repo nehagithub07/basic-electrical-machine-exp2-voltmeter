@@ -12,7 +12,7 @@ const isClose = (value, expected) => (
 )
 const formatVoltage = (value) => value === null ? '—' : String(Number(value.toFixed(3)))
 
-const CalculationPanel = ({ observations = [], onVerificationChange, requiredReadings = 5 }) => {
+const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerificationChange, requiredReadings = 5 }) => {
   const [selectedId, setSelectedId] = useState('')
   const [inputs, setInputs] = useState(emptyInputs)
   const [verification, setVerification] = useState(null)
@@ -58,14 +58,19 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
       return
     }
 
-    const allValuesEntered = CURRENT_FIELDS.every(({ currentKey, resistanceKey }) => (
-      inputs[currentKey] !== '' && Number.isFinite(Number(inputs[currentKey]))
-      && inputs[resistanceKey] !== '' && Number.isFinite(Number(inputs[resistanceKey]))
-    ))
+    const missingValueCount = CURRENT_FIELDS.flatMap(({ currentKey, resistanceKey }) => (
+      [currentKey, resistanceKey]
+    )).filter((key) => inputs[key] === '' || !Number.isFinite(Number(inputs[key]))).length
 
-    if (!allValuesEntered) {
-      setVerification({ passed: false, message: 'Enter all current and resistance values before verification.' })
+    if (missingValueCount > 0) {
+      const multipleValuesMissing = missingValueCount > 1
+      const message = multipleValuesMissing
+        ? 'Please enter all the values, then click the “Verify” button to verify KVL.'
+        : 'Please enter the required value, then click the “Verify” button to verify KVL.'
+
+      setVerification({ passed: false, message })
       onVerificationChange?.(false, null)
+      onVerificationAttempt?.(multipleValuesMissing ? 'multiple-values-missing' : 'one-value-missing')
       return
     }
 
@@ -87,8 +92,8 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
       parallelDropPassed,
       passed,
       message: passed
-        ? 'The entered current and resistance values are correct, and KVL is verified.'
-        : 'Verification failed. Check the entered current and resistance values.',
+        ? 'Calculations are correct. Kirchhoff’s Voltage Law (KVL) has been verified successfully. Now, click on the Generate Report button.'
+        : 'Incorrect calculations. Kirchhoff’s Voltage Law (KVL) is not verified. Please review your calculations and try again.',
     })
     onVerificationChange?.(passed, passed ? {
       calculatedVoltages: { v1, v2, v3 },
@@ -96,6 +101,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
       readingNumber: observations.findIndex((row) => row.id === selectedReading.id) + 1,
       sourceVoltage: selectedReading.voltage,
     } : null)
+    onVerificationAttempt?.(passed ? 'correct' : 'incorrect')
   }
 
   return (
@@ -112,8 +118,6 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
 
       <div className="calculation-panel__setup">
         <section className="calculation-panel__setup-card calculation-panel__reading-card">
-          <div className="calculation-panel__reading-header">
-           </div>
           <label htmlFor="calculation-reading-select">
             <span>Verification for: </span>
             <select id="calculation-reading-select" value={selectedId} onChange={selectReading} disabled={!isEnabled}>
@@ -199,7 +203,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
           })}
         </div>
 
-        <div className="calculation-panel__result">
+        <div className={`calculation-panel__result${verification?.passed ? ' is-verified' : verification ? ' is-invalid' : ''}`}>
           <div className="calculation-panel__result-header">
             <span className="calculation-panel__result-icon" aria-hidden="true">✓</span>
             <div>
@@ -236,7 +240,7 @@ const CalculationPanel = ({ observations = [], onVerificationChange, requiredRea
               <strong>{selectedReading ? String(Number(selectedReading.voltage.toFixed(1))) : '—'} = {formatVoltage(calculatedVoltages.v1)} + {formatVoltage(calculatedVoltages.v3)} (V)</strong>
             </div>
           </div>
-          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled || !selectedReading}>Verify KVL</button>
+          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled || !selectedReading}>Verify</button>
           {verification ? <p className={verification.passed ? 'is-success' : 'is-error'} role="status">{verification.message}</p> : null}
         </div>
       </div>

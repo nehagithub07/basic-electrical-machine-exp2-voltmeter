@@ -542,7 +542,10 @@ tr:nth-child(even) {
 .pdf-exporting .report-page {
   border-color: transparent !important;
   box-shadow: none !important;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  break-inside: auto !important;
+  page-break-inside: auto !important;
 }
 .pdf-exporting .section,
 .pdf-exporting .results-card,
@@ -550,10 +553,22 @@ tr:nth-child(even) {
 .pdf-exporting .report-graph-card #report-graph {
   overflow: visible !important;
 }
-.pdf-exporting .report-page--overview,
 .pdf-exporting .report-page--results {
-  break-after: page !important;
-  page-break-after: always !important;
+  break-before: auto !important;
+  page-break-before: auto !important;
+}
+.pdf-exporting .graphs-conclusion-section {
+  display: block;
+  break-before: page !important;
+  page-break-before: always !important;
+}
+.pdf-exporting .report-graph-card,
+.pdf-exporting .results-card--verification,
+.pdf-exporting .results-card--conclusion,
+.pdf-exporting thead,
+.pdf-exporting tr {
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
 }
 @media (max-width: 768px) {
   body {
@@ -615,6 +630,8 @@ tr:nth-child(even) {
     padding: 0;
     background: #ffffff;
     overflow: visible;
+    font-size: 13px;
+    line-height: 1.38;
   }
   .report-document {
     width: 100%;
@@ -622,17 +639,95 @@ tr:nth-child(even) {
   .report-page {
     width: 100%;
     margin: 0;
-    padding: 16px 18px;
+    padding: 0;
     border: none;
     box-shadow: none;
     border-radius: 0;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  .report-page--results {
+    break-before: auto;
+    page-break-before: auto;
+  }
+  .graphs-conclusion-section {
+    display: block;
+    break-before: page;
+    page-break-before: always;
+  }
+  .section {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+  }
+  .section > h2:first-child {
+    margin-bottom: 6px;
+    padding-bottom: 5px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  h3 {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  p {
+    margin-bottom: 6px;
   }
   .header-row {
-    grid-template-columns: 150px minmax(0, 1fr) 86px;
-    gap: 16px;
+    grid-template-columns: 140px minmax(0, 1fr) 72px;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .report-logo,
+  .report-logo--virtual-labs,
+  .report-logo--iit {
+    max-height: 64px;
+  }
+  .report-logo--virtual-labs {
+    max-width: 140px;
+  }
+  .report-logo--iit {
+    max-width: 72px;
+  }
+  .report-title-block {
+    padding-bottom: 6px;
   }
   .report-experiment-title {
-    font-size: 22px;
+    margin-bottom: 6px;
+    font-size: 20px;
+  }
+  .report-overview-top {
+    margin-bottom: 5px;
+  }
+  .info-grid {
+    gap: 7px;
+    margin-top: 5px;
+  }
+  .info-card {
+    padding: 7px 9px;
+  }
+  .two-column-list {
+    column-count: 2 !important;
+    column-gap: 26px;
+    margin-top: 7px;
+  }
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 2px;
+  }
+  .results-stack {
+    gap: 8px;
+  }
+  .results-card {
+    gap: 6px;
+    padding: 10px;
+  }
+  .compact-table th,
+  .compact-table td {
+    padding: 5px 7px;
+    font-size: 12px;
+    line-height: 1.3;
   }
   .report-graph-card #report-graph {
     width: 100%;
@@ -650,15 +745,12 @@ tr:nth-child(even) {
   h1,
   h2,
   h3,
-  table,
-  .table-shell,
-  .results-card,
-  .results-section,
   .report-title-block,
-  .section,
   .header-row,
   .info-grid,
   .report-graph-card,
+  .results-card--verification,
+  .results-card--conclusion,
   .graph,
   thead,
   tr {
@@ -750,9 +842,11 @@ tr:nth-child(even) {
 
         ${verifiedCalculationHtml}
 
-        <div class="results-card">
-          <h3>Conclusion</h3>
-          <p style="text-align: justify;">For each recorded supply voltage value, the sum of the voltage drops across the resistors was found to be equal to the applied source voltage. Hence, Kirchhoff's Voltage Law (KVL) was successfully verified for the given resistive DC circuit.</p>
+        <div class="graphs-conclusion-section">
+          <div class="results-card results-card--conclusion">
+            <h3>Conclusion</h3>
+            <p style="text-align: justify;">For each recorded supply voltage value, the sum of the voltage drops across the resistors was found to be equal to the applied source voltage. Hence, Kirchhoff's Voltage Law (KVL) was successfully verified for the given resistive DC circuit.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -781,7 +875,7 @@ tr:nth-child(even) {
       ensureHtml2Pdf().then(function() {
         var element = document.getElementById('report-document') || document.body;
         var opts = {
-          margin: [0.18, 0.18, 0.18, 0.18],
+          margin: [12, 12, 12, 12],
           filename: 'kcl-simulation-report.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
@@ -793,11 +887,11 @@ tr:nth-child(even) {
               clonedDoc.body.classList.add('pdf-exporting');
             }
           },
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
           pagebreak: {
             mode: ['css', 'legacy'],
-            before: ['.report-page--results'],
-            avoid: ['.report-page', '.header-row', '.report-overview', '.info-grid', 'thead', 'tr']
+            before: ['.graphs-conclusion-section'],
+            avoid: ['.header-row', '.report-overview', '.info-grid', '.report-graph-card', '.results-card--verification', '.results-card--conclusion', 'thead', 'tr']
           }
         };
         return window.html2pdf().set(opts).from(element).save();

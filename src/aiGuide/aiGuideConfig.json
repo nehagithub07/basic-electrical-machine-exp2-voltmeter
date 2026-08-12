@@ -25,8 +25,8 @@
     },
     {
       "id": 5,
-      "text": "Now, connect terminal 3 of the ammeter to terminal 11.",
-      "audio": "./audios/Now, connect terminal 3 of the ammeter to terminal 11.wav"
+      "text": " Now, connect terminal 3 of the voltmeter to terminal 11.",
+      "audio": "./audios/Now, connect terminal 3 of the voltmeter to terminal 11.wav"
     },
     {
       "id": 6,
@@ -76,7 +76,7 @@
     {
       "id": 15,
       "text": "Autoconnect completed. Now set the required resistance value by moving the resistance sliders.",
-      "audio": "#"
+      "audio": "./audios/Autoconnect completed. Now set the required resistance value by moving the resistance sliders.wav"
     },
     {
       "id": 16,
@@ -120,7 +120,7 @@
     },
     {
       "id": 24,
-      "text": "Readings added successfully. To record the second reading, change the voltage and click the Add button again.",
+      "text": "Readings added successfully. To record the second reading, change the source voltage and click the Add button again.",
       "audio": "./audios/1st readings added.wav"
     },
     {
@@ -130,48 +130,64 @@
     },
     {
       "id": 26,
-      "text": "Second reading added successfully. Change the voltage value and click the Add button again to record the next reading. Repeat these steps until at least three readings are recorded.",
+      "text": "Second reading added successfully. Change the source voltage value and click the Add button again to record the next reading. Repeat the same steps until all five readings are recorded.",
       "audio": "./audios/2nd readings added.wav"
     },
+     
     {
       "id": 27,
-      "text": "Third reading added successfully. Now, verify the KVL in the theoretical verification section or repeat these steps to record more readings.",
-      "audio": "#"
+      "text": "Last reading added successfully. Now click the “Calculate” button to verify the KVL theoretically.",
+      "audio": "./audios/5th reading added.wav"
     },
     {
       "id": 28,
-      "text": "All five readings have been recorded. Now verify KVL in the theoretical verification section.",
-      "audio": "#"
+      "text": "You can add up to five readings to the table. Now, verify the KVL in the theoretical verification section.",
+      "audio": "./audios/You can add up to five readings to the table. Now, verify the KVL in the theoretical verification section..wav"
     },
     {
       "id": 29,
-      "text": "You can add up to five readings to the table. Now, verify the KVL in the theoretical verification section.",
-      "audio": "./audios/For max. readings, add button click.wav"
+      "text": "Calculations are correct. Kirchhoff’s Voltage Law (KVL) has been verified successfully. Now, click on the Generate Report button.",
+      "audio": "./audios/Verify button click, Correct calculations.wav"
     },
     {
       "id": 30,
-      "text": "KVL has been verified successfully. Your simulation is now complete. You may generate the report, print the page, or reset to start again.",
-      "audio": "#"
-    },
-    {
-      "id": 31,
       "text": "The simulation has been reset. You can start again.",
       "audio": "./audios/Reset.wav"
     },
     {
-      "id": 32,
+      "id": 31,
       "text": "Opening the print dialog.",
       "audio": "./audios/Print.wav"
     },
     {
-      "id": 33,
+      "id": 32,
       "text": "Report Generated: Your report has been generated successfully. Click OK to view your report.",
       "audio": "./audios/Generate Report button click.wav"
     },
     {
-      "id": 34,
+      "id": 33,
       "text": "Let's move on to the next connection.",
       "audio": "./audios/Let's move on to the next connection.wav"
+    },
+    {
+      "id": 34,
+      "text": "The resistance values are prefilled in the “Resistance Values” panel under the “Theoretical Verification” section. Calculate the branch currents theoretically using the equations provided in the “Equations” button. Enter the calculated current and resistance values in the input fields, then click the “Verify” button to verify KVL.",
+      "audio": "./audios/After clicking the Calculate button.wav"
+    },
+    {
+      "id": 35,
+      "text": "Please enter all the values, then click the “Verify” button to verify KVL.",
+      "audio": "./audios/Verify button click, more than one value is missing.wav"
+    },
+    {
+      "id": 36,
+      "text": "Please enter the required value, then click the “Verify” button to verify KVL.",
+      "audio": "./audios/Verify button click, one value is missing.wav"
+    },
+    {
+      "id": 37,
+      "text": "Incorrect calculations. Kirchhoff’s Voltage Law (KVL) is not verified. Please review your calculations and try again.",
+      "audio": "./audios/Verify button click, Incorrect calculations.wav"
     }
   ]
 }
