@@ -5,7 +5,7 @@
   "steps": [
     {
       "id": 1,
-      "text": "Hello! I am your AI Guide. I will guide you through each step of the experiment. Please follow the instructions carefully and perform the actions as directed. Before we begin, let us familiarize ourselves with the simulation interface. To start, click on the start walkthrough",
+      "text": "Hello! I am your AI Guide. I will guide you through each step of the experiment. Please follow the instructions carefully and perform the actions as directed. Before we begin, let us familiarize ourselves with the simulation interface. To start, click on the start walkthrough ",
       "audio": "./audios/AI Guide click.wav"
     },
     {
@@ -76,7 +76,7 @@
     {
       "id": 15,
       "text": "Autoconnect completed. Now set the required resistance value by moving the resistance sliders.",
-      "audio": "./audios/Autoconnect completed. Now set the required resistance value by moving the resistance sliders.wav"
+      "audio": "./audios/AutoConnect_Completed.wav"
     },
     {
       "id": 16,

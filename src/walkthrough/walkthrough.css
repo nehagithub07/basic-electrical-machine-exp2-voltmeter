@@ -186,6 +186,7 @@
   font-weight: 600;
   line-height: 1.55;
   text-align: justify;
+  white-space: pre-line; 
 }
 
 .walkthrough-popup__progress {

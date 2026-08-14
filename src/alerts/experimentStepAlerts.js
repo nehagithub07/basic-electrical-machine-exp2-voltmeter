@@ -21,7 +21,7 @@ const getAlertAudio = (...fileNames) => {
 export const ALERT_AUDIO = {
   aiGuideClick: getAlertAudio('AI Guide click.wav'),
   allConnectionsCompleted: getAlertAudio('Guide all complete conn.wav'),
-  autoConnect: getAlertAudio('Autoconnect.wav'),
+  autoConnect: getAlertAudio('AutoConnect_Completed.wav'),
   connect1To9: getAlertAudio('Connect terminal 1 to terminal 9.wav', 'Correct Connections.wav'),
   connect2To10: getAlertAudio('Connect terminal 2 to terminal 10.wav', "Let's move on to the next connection.wav"),
   connect3To11: getAlertAudio('Now, connect terminal 3 of the voltmeter to terminal 11.wav'),
@@ -243,7 +243,7 @@ export const EXPERIMENT_ALERTS = {
   },
   readingAdded: {
     audio: ALERT_AUDIO.firstReadingAdded,
-    description: 'To record the second reading, change the voltage and click the Add button again.',
+    description: 'To record the second reading, change the source voltage and click the Add button again.',
     icon: '✅',
     stepNumber: 6,
     target: '#observation-table-panel',
@@ -252,7 +252,7 @@ export const EXPERIMENT_ALERTS = {
   },
   secondReadingAdded: {
     audio: ALERT_AUDIO.secondReadingAdded,
-    description: 'Change the voltage and add the third reading. At least three readings are required.',
+    description: 'Change the source voltage value and click the Add button again to record the next reading. Repeat the same steps until all five readings are recorded.',
     icon: 'OK',
     stepNumber: 6,
     target: '#voltage-control',

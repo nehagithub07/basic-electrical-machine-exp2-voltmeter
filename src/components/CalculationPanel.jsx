@@ -46,10 +46,27 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
     resetVerification()
   }
 
-  const updateInput = (key, value) => {
-    setInputs((current) => ({ ...current, [key]: value }))
+const updateInput = (key, value) => {
+  let num = Number(value)
+
+  if (value === '') {
+    setInputs((current) => ({ ...current, [key]: '' }))
     resetVerification()
+    return
   }
+
+  if (!Number.isFinite(num)) return
+
+  // Apply limits
+  if (key.startsWith('i')) {
+    num = Math.min(100, Math.max(1, num)) // 1–100
+  } else if (key.startsWith('r')) {
+    num = Math.min(5, Math.max(1, num)) // 1–5
+  }
+
+  setInputs((current) => ({ ...current, [key]: num }))
+  resetVerification()
+}
 
   const verifyKvl = () => {
     if (!selectedReading) {
@@ -111,7 +128,7 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
           <span className="calculation-panel__eyebrow">KIRCHHOFF'S VOLTAGE LAW</span>
           <h2 id="calculation-title">THEORETICAL VERIFICATION</h2>
           <p className="calculation-panel__subtitle">
-            {isEnabled ? 'Choose any recorded reading and enter each current/resistance pair.' : `Record all ${requiredReadings} readings to unlock this section (${observations.length}/${requiredReadings}).`}
+            {isEnabled ? 'Choose any recorded reading and enter each current/resistance value.' : `Record all ${requiredReadings} readings to unlock this section (${observations.length}/${requiredReadings}).`}
           </p>
         </div>
       </div>
@@ -174,7 +191,9 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
                       onChange={(event) => updateInput(currentKey, event.target.value)}
                       placeholder="Enter Value"
                       step="any"
-                      type="number"
+                      type="number" 
+                      min="1"
+                      max="100"
                       value={inputs[currentKey]}
                     />
                     <i>mA</i>
@@ -190,6 +209,8 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
                       placeholder="Enter Value"
                       step="any"
                       type="number"
+                      min="1"
+                      max="5"
                       value={inputs[resistanceKey]}
                     />
                     <i>kΩ</i>

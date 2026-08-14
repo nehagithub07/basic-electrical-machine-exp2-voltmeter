@@ -208,6 +208,7 @@
   padding: 0 18px 4px;
   grid-template-columns: repeat(4, 104px);
   gap: 8px 12px;
+
 }
 
 .action-buttons-card {
@@ -237,6 +238,7 @@
     inset 0 -8px 13px rgba(0, 0, 0, 0.2),
     0 4px 7px rgba(37, 22, 13, 0.42);
   transition: transform 160ms ease, filter 160ms ease;
+    cursor: pointer;
 }
 
 .action-button:hover {
@@ -477,7 +479,7 @@
   position: absolute;
   top: 10px;
   left: -10px;
-  width: 290px;
+  width: 270px;
   height: 7px;
   content: "";
   border: 1px solid rgba(65, 43, 24, 0.42);
@@ -492,8 +494,8 @@
 .resistance-slider__input {
   position: absolute;
   top: 0;
-  left: -10px;
-  width: 250px;
+  left: -11px;
+  width: 270px;
   height: 28px;
   appearance: none;
   background: transparent;
@@ -860,7 +862,8 @@
 
 .voltmeter--V3 {
   --voltmeter-needle-image-top: -44px;
-  --voltmeter-needle-image-left: -30px;
+  --voltmeter-needle-image-left: -29px;;
+ 
 }
 
 .voltmeter::before {
@@ -3178,6 +3181,7 @@ input:focus-visible {
     page-break-after: avoid !important;
   }
 
+  /* ❌ REMOVED .app-footer from here */
   .walkthrough-layer,
   .walkthrough-dim-panel,
   .walkthrough-interaction-shield,
@@ -3190,11 +3194,20 @@ input:focus-visible {
   .lab-alert-spotlight,
   .action-instructions-panel,
   .connection-lab .jtk-overlay,
-  .app-footer,
   [role="tooltip"],
   .tooltip,
   .tippy-box {
     display: none !important;
+  }
+
+  /* ✅ ONLY ADDITION */
+  .app-footer {
+    display: block !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+     text-align: center; 
   }
 
   .walkthrough-active-target,

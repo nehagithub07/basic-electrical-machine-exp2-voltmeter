@@ -50,7 +50,7 @@ const buttons = [
   },
   {
     id: 'verify-button',
-    label: 'VERIFY',
+    label: 'CALCULATE',
     tone: 'action-button--orange',
     Icon: PlotIcon,
     handlerName: 'onVerify',

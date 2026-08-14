@@ -122,7 +122,7 @@
         "en": "Resistance Sliders"
       },
       "description": {
-        "en": "Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Voltage Law.  \n\nRange: 1 kΩ to 5 kΩ"
+        "en": "Set the values of R1, R2, and R3 by moving the resistance sliders. These resistance values will remain constant throughout the experiment to ensure accurate verification of Kirchhoff’s Voltage Law.\n\nRange: 1 kΩ to 5 kΩ"
       },
       "audio": "./walkthrough-audios/Resistance Sliders.wav",
       "placement": "right"
@@ -134,7 +134,7 @@
         "en": "Regulated DC Power Supply"
       },
       "description": {
-        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value. \n\nRating:  15 V DC"
+        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value. \n\n Rating:  15 V DC"
       },
       "audio": "./walkthrough-audios/Regulated DC Power Supply.wav",
       "placement": "left"
