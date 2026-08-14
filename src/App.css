@@ -862,7 +862,7 @@
 
 .voltmeter--V3 {
   --voltmeter-needle-image-top: -44px;
-  --voltmeter-needle-image-left: -35px;
+  --voltmeter-needle-image-left: -29px;;
  
 }
 
@@ -1849,7 +1849,7 @@
 
 .calculation-panel__kvl-equations > div {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: auto auto 1fr;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -1862,20 +1862,27 @@
   color: #406653;
   font-size: 16px;
   font-weight: 800;
-}
-
-.calculation-panel__kvl-equations strong {
-  color: #075f3b;
-  font-size: 18px;
-  text-align: right;
   white-space: nowrap;
 }
 
+.calculation-panel__kvl-equations strong {
+  position: static;
+  color: #075f3b;
+  font-size: 18px;
+  text-align: center;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: visible;
+}
+
 .calculation-panel__kvl-arrow {
+  position: relative;
+  left: 7px;
   color: #168052;
   font-size: 19px;
   font-weight: 900;
   text-align: center;
+  white-space: nowrap;
 }
 
 .calculation-panel__kvl {
@@ -1886,7 +1893,6 @@
   background: #e8f7ee;
   font-weight: 800;
 }
-
 /* Premium presentation for theoretical verification and final KVL check. */
 .calculation-panel {
   border: 1px solid rgba(79, 47, 25, 0.35);
@@ -2492,6 +2498,8 @@
 }
 
 .calculation-panel__kvl-arrow {
+  position: relative;
+  right: 60px;
   color: var(--result-accent);
   font-size: 16px;
 }
