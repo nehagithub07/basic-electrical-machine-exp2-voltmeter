@@ -579,7 +579,7 @@
   height: 31px;
   color: #fff;
   background: linear-gradient(180deg, #7b461f, #4a2a15);
-  font-size: 11px;
+  font-size: 10.76px;
   font-weight: 900;
 }
 
@@ -2846,12 +2846,16 @@
 
 .formula-panel {
   position: absolute;
-  right: 0;
+  right: 40px;
   bottom: calc(100% + 12px);
-  width: 376px;
+  width: 400px;
   max-width: calc(100vw - 48px);
-  max-height: min(720px, calc(100vh - 130px));
-  overflow-y: auto;
+
+  /* scrollbar */
+  max-height: 400px;
+  overflow-y: scroll;
+  overflow-x: auto;
+
   padding: 14px;
   border: 2px solid rgba(89, 55, 30, 0.35);
   border-radius: 8px;
@@ -2861,6 +2865,30 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.75),
     0 14px 24px rgba(50, 30, 17, 0.28);
   text-align: left;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #8f7350 #f4e5ce;
+}
+
+/* Chrome, Edge, Safari */
+.formula-panel::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.formula-panel::-webkit-scrollbar-track {
+  background: #f4e5ce;
+  border-radius: 10px;
+}
+
+.formula-panel::-webkit-scrollbar-thumb {
+  background: #8f7350;
+  border-radius: 10px;
+}
+
+.formula-panel::-webkit-scrollbar-thumb:hover {
+  background: #6f523b;
 }
 
 .formula-panel__header {
