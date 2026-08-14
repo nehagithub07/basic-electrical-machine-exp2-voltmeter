@@ -177,7 +177,7 @@
     {
       "id": 35,
       "text": "Please enter all the values, then click the “Verify” button to verify KVL.",
-      "audio": "./audios/Verify button click, one value is missing.wav"
+      "audio": "./audios/This section displays the equations you can use to verify Kirchhoff’s Voltage Law..wav"
     },
     {
       "id": 36,

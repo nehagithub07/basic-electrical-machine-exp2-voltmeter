@@ -41,7 +41,7 @@ export const ALERT_AUDIO = {
   graph: getAlertAudio('Graph 2.wav'),
   insufficientReadings: getAlertAudio('InsufficientReadings.wav'),
   incorrectCalculations: getAlertAudio('Verify button click, Incorrect calculations.wav'),
-  maxReadings: getAlertAudio('For max. readings, add button click.wav'),
+  maxReadings: getAlertAudio('You can add up to five readings to the table. Now, verify the KVL in the theoretical verification section..wav'),
   multipleWrongConnections: getAlertAudio('Multiple wrong connections.wav'),
   powerSupplyTurnOn: getAlertAudio('powerSupplyTurnOn.wav'),
   print: getAlertAudio('Print.wav'),
@@ -50,10 +50,8 @@ export const ALERT_AUDIO = {
   resistanceRequired: getAlertAudio('After correct connections, ps click.wav'),
   resistanceSet: getAlertAudio('After resistance is set.wav'),
   secondReadingAdded: getAlertAudio('2nd readings added.wav'),
-  sixReadingsAdded: getAlertAudio('After 6 readings, Graph click.wav'),
-  tenReadingsAdded: getAlertAudio('After 10 readings have been done.wav'),
   voltageSet: getAlertAudio('Voltage is set.wav'),
-  verifyMultipleValuesMissing: getAlertAudio('Verify button click, more than one value is missing.wav'),
+  verifyMultipleValuesMissing: getAlertAudio('This section displays the equations you can use to verify Kirchhoff’s Voltage Law..wav'),
   verifyOneValueMissing: getAlertAudio('Verify button click, one value is missing.wav'),
   wrongConnection: getAlertAudio('Wrong connection.wav'),
 }
@@ -284,15 +282,6 @@ export const EXPERIMENT_ALERTS = {
     title: 'Minimum 3 Readings Required for Verification',
     type: 'warning',
   },
-  sufficientData: {
-    audio: ALERT_AUDIO_PLACEHOLDER,
-    description: 'Now verify KVL in the theoretical verification section, or record up to two more readings.',
-    icon: '✅',
-    stepNumber: 7,
-    target: '#calculation-panel',
-    title: 'Third reading added successfully.',
-    type: 'success',
-  },
   tenReadingsRecorded: {
     audio: ALERT_AUDIO_PLACEHOLDER,
     description: 'Now verify KVL in the theoretical verification section.',
@@ -331,9 +320,6 @@ export const EXPERIMENT_ALERTS = {
   },
   multipleCalculationValuesMissing: {
     audio: ALERT_AUDIO.verifyMultipleValuesMissing,
-    audioSpeech: ALERT_AUDIO.verifyMultipleValuesMissing === ALERT_AUDIO_PLACEHOLDER
-      ? 'Please enter all the values, then click the “Verify” button to verify KVL.'
-      : '',
     description: '',
     icon: '!',
     stepNumber: 8,

@@ -11,6 +11,7 @@ const isClose = (value, expected) => (
   Number.isFinite(value) && Math.abs(value - expected) <= Math.max(0.000001, Math.abs(expected) * 0.02)
 )
 const formatVoltage = (value) => value === null ? '—' : String(Number(value.toFixed(3)))
+const preventWheelValueChange = (event) => event.currentTarget.blur()
 
 const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerificationChange, requiredReadings = 3 }) => {
   const [selectedId, setSelectedId] = useState('')
@@ -22,6 +23,7 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
     () => isEnabled ? observations.find((row) => String(row.id) === selectedId) ?? null : null,
     [isEnabled, observations, selectedId],
   )
+  const inputsLocked = !isEnabled || !selectedReading || verification?.passed === true
   const calculatedVoltages = useMemo(() => Object.fromEntries(CURRENT_FIELDS.map((field) => {
     const currentMilliamperes = Number(inputs[field.currentKey])
     const resistanceKiloOhms = Number(inputs[field.resistanceKey])
@@ -46,28 +48,32 @@ const CalculationPanel = ({ observations = [], onVerificationAttempt, onVerifica
     resetVerification()
   }
 
-const updateInput = (key, value) => {
-  let num = Number(value)
+  const updateInput = (key, value) => {
+    if (!/^\d*\.?\d{0,3}$/.test(value)) return
 
-  if (value === '') {
-    setInputs((current) => ({ ...current, [key]: '' }))
+    if (value === '') {
+      setInputs((current) => ({
+        ...current,
+        [key]: '',
+      }))
+      resetVerification()
+      return
+    }
+
+    const num = Number(value)
+
+    if (!Number.isFinite(num)) return
+
+    if (key.startsWith('i') && (num < 0 || num > 100)) return
+    if (key.startsWith('r') && (num < 1 || num > 5)) return
+
+    setInputs((current) => ({
+      ...current,
+      [key]: value,
+    }))
+
     resetVerification()
-    return
   }
-
-  if (!Number.isFinite(num)) return
-
-  // Apply limits
-  if (key.startsWith('i')) {
-    num = Math.min(100, Math.max(1, num)) // 1–100
-  } else if (key.startsWith('r')) {
-    num = Math.min(5, Math.max(1, num)) // 1–5
-  }
-
-  setInputs((current) => ({ ...current, [key]: num }))
-  resetVerification()
-}
-
   const verifyKvl = () => {
     if (!selectedReading) {
       setVerification({ passed: false, message: 'Select a reading before verification.' })
@@ -155,6 +161,7 @@ const updateInput = (key, value) => {
                   <input
                     aria-label={`Recorded R${index} resistance`}
                     id={`recorded-${resistanceKey}`}
+                    onWheel={preventWheelValueChange}
                     readOnly
                     type="number"
                     value={recordedResistances ? String(Number(recordedResistances[resistanceKey].toFixed(1))) : ''}
@@ -186,13 +193,14 @@ const updateInput = (key, value) => {
                     <span className="sr-only">Enter I{index}</span>
                     <input
                       id={`formula-${currentKey}`}
-                    disabled={!isEnabled || !selectedReading}
+                      disabled={inputsLocked}
                       inputMode="decimal"
                       onChange={(event) => updateInput(currentKey, event.target.value)}
+                      onWheel={preventWheelValueChange}
                       placeholder="Enter Value"
-                      step="any"
-                      type="number" 
-                      min="1"
+                      step="0.001"
+                      type="number"
+                      min="0"
                       max="100"
                       value={inputs[currentKey]}
                     />
@@ -203,11 +211,12 @@ const updateInput = (key, value) => {
                     <span className="sr-only">Enter R{index}</span>
                     <input
                       id={`formula-${resistanceKey}`}
-                      disabled={!isEnabled || !selectedReading}
+                      disabled={inputsLocked}
                       inputMode="decimal"
                       onChange={(event) => updateInput(resistanceKey, event.target.value)}
+                      onWheel={preventWheelValueChange}
                       placeholder="Enter Value"
-                      step="any"
+                      step="0.001"
                       type="number"
                       min="1"
                       max="5"
@@ -261,7 +270,7 @@ const updateInput = (key, value) => {
               <strong>{selectedReading ? String(Number(selectedReading.voltage.toFixed(1))) : '—'} = {formatVoltage(calculatedVoltages.v1)} + {formatVoltage(calculatedVoltages.v3)} (V)</strong>
             </div>
           </div>
-          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled}>Verify</button>
+          <button id="calculation-verify-button" type="button" onClick={verifyKvl} disabled={!isEnabled || verification?.passed === true}>Verify</button>
           {verification ? <p className={verification.passed ? 'is-success' : 'is-error'} role="status">{verification.message}</p> : null}
         </div>
       </div>

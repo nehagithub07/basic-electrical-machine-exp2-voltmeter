@@ -320,7 +320,7 @@ const App = () => {
   const [observations, setObservations] = useState([])
   const [graphGenerated, setGraphGenerated] = useState(false)
   const [reportGenerated, setReportGenerated] = useState(false)
-  const [verifiedCalculation, setVerifiedCalculation] = useState(null)
+  const [verifiedCalculations, setVerifiedCalculations] = useState([])
   const [, setStatus] = useState('Make the connections, click CHECK, then set the resistance values.')
 
   const [autoConnectRequest, setAutoConnectRequest] = useState(0)
@@ -660,9 +660,7 @@ const App = () => {
     const nextObservationCount = readingCount + 1
 
     setObservations([...observations, nextObservation])
-    setGraphGenerated(false)
     setReportGenerated(false)
-    setVerifiedCalculation(null)
     setStatus('Reading added to the observation table.')
 
     if (nextObservationCount === 1) {
@@ -724,7 +722,7 @@ const App = () => {
     setObservations([])
     setGraphGenerated(false)
     setReportGenerated(false)
-    setVerifiedCalculation(null)
+    setVerifiedCalculations([])
     setAutoConnectRequest(0)
     setCheckRequest(0)
     setConnectionsReadyForCheck(false)
@@ -789,9 +787,18 @@ const App = () => {
   }
 
   const handleCalculationVerification = useCallback((verified, calculation = null) => {
-    setGraphGenerated(verified)
-    setReportGenerated(false)
-    setVerifiedCalculation(verified ? calculation : null)
+    if (verified && calculation) {
+      setGraphGenerated(true)
+      setReportGenerated(false)
+      setVerifiedCalculations((current) => {
+        const nextCalculations = current.some(({ readingId }) => readingId === calculation.readingId)
+          ? current.map((entry) => entry.readingId === calculation.readingId ? calculation : entry)
+          : [...current, calculation]
+
+        return nextCalculations.sort((first, second) => first.readingNumber - second.readingNumber)
+      })
+    }
+
     setStatus(verified
       ? 'Calculations are correct and KVL is verified. You can now generate the report.'
       : 'Complete and verify the theoretical calculations.')
@@ -893,7 +900,7 @@ const App = () => {
       observations,
       resistances: { r1, r2, r3 },
       sessionStart,
-      verifiedCalculation,
+      verifiedCalculations,
     })
 
     if (!generated) {

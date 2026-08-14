@@ -47,7 +47,7 @@ const createReportHtml = ({
   observations,
   resistances,
   sessionStart,
-  verifiedCalculation,
+  verifiedCalculations,
   virtualLabsLogoSrc,
 }) => {
   const reportDate = new Date()
@@ -65,23 +65,26 @@ const createReportHtml = ({
   const r2 = toNumber(resistances?.r2 ?? firstObservation.r2)
   const r3 = toNumber(resistances?.r3 ?? firstObservation.r3)
   const observationRows = createObservationRows(observations)
-  const verifiedValues = verifiedCalculation?.calculatedVoltages
-  const verifiedCalculationHtml = verifiedCalculation && verifiedValues ? `
+  const verifiedCalculationRows = verifiedCalculations.map((calculation) => {
+    const verifiedValues = calculation.calculatedVoltages
+
+    return `<tr>
+      <td>Reading ${escapeHtml(calculation.readingNumber)}</td>
+      <td>${formatNumber(calculation.sourceVoltage, 3)}</td>
+      <td>${formatNumber(verifiedValues.v1, 3)}</td>
+      <td>${formatNumber(verifiedValues.v2, 3)}</td>
+      <td>${formatNumber(verifiedValues.v3, 3)}</td>
+      <td><strong>KVL Verified</strong></td>
+    </tr>`
+  }).join('')
+  const verifiedCalculationHtml = verifiedCalculationRows ? `
     <div class="results-card results-card--verification">
-      <h3>Verified Reading and Calculated Values</h3>
-      <p>Reading <strong>${escapeHtml(verifiedCalculation.readingNumber)}</strong>, with user-selected supply voltage
-        <strong>${formatNumber(verifiedCalculation.sourceVoltage, 1)} V</strong>, was used for KVL verification.</p>
+      <h3>Verified Readings</h3>
+      <p>All readings successfully used for KVL verification are shown below.</p>
       <div class="table-shell">
         <table class="compact-table">
           <thead><tr><th>Verified Reading</th><th>V<sub>s</sub> (V)</th><th>Calculated V<sub>1</sub> (V)</th><th>Calculated V<sub>2</sub> (V)</th><th>Calculated V<sub>3</sub> (V)</th><th>Status</th></tr></thead>
-          <tbody><tr>
-            <td>Reading ${escapeHtml(verifiedCalculation.readingNumber)}</td>
-            <td>${formatNumber(verifiedCalculation.sourceVoltage, 3)}</td>
-            <td>${formatNumber(verifiedValues.v1, 3)}</td>
-            <td>${formatNumber(verifiedValues.v2, 3)}</td>
-            <td>${formatNumber(verifiedValues.v3, 3)}</td>
-            <td><strong>KVL Verified</strong></td>
-          </tr></tbody>
+          <tbody>${verifiedCalculationRows}</tbody>
         </table>
       </div>
     </div>` : ''
@@ -838,7 +841,7 @@ tr:nth-child(even) {
               <thead>
                 <tr>
                   <th>S.No.</th>
-                  <th>Voltage (Power supply)</th>
+                  <th>Source Voltage (V)</th>
                   <th>V<sub>1</sub> (V)</th>
                   <th>V<sub>2</sub> (V)</th>
                   <th>V<sub>3</sub> (V)</th>
@@ -916,7 +919,7 @@ tr:nth-child(even) {
   `
 }
 
-export const generateKclReport = ({ observations, resistances, sessionStart, verifiedCalculation }) => {
+export const generateKclReport = ({ observations, resistances, sessionStart, verifiedCalculations = [] }) => {
   const baseHref = new URL(import.meta.env.BASE_URL, window.location.origin).href
   const iitLogoSrc = new URL('../assets/IIT Logo.png', import.meta.url).href
   const virtualLabsLogoSrc = new URL('../assets/image.png', import.meta.url).href
@@ -927,7 +930,7 @@ export const generateKclReport = ({ observations, resistances, sessionStart, ver
     observations,
     resistances,
     sessionStart,
-    verifiedCalculation,
+    verifiedCalculations,
     virtualLabsLogoSrc,
   })
   const reportBlob = new Blob([reportHtml], { type: 'text/html' })
