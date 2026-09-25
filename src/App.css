@@ -398,7 +398,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  color: #24170f;
+  color: #184c2d;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.42;
@@ -408,9 +408,10 @@
 
 .action-instructions-panel__step {
   padding: 9px 11px;
-  border: 1px solid transparent;
+  border: 1px solid #a8d5b5;
   border-radius: 8px;
-  background: rgba(255, 251, 244, 0.58);
+  background: linear-gradient(180deg, #edf9ef, #def1e3);
+  box-shadow: inset 4px 0 0 #50a36b;
   transition:
     background 180ms ease,
     border-color 180ms ease,
@@ -419,22 +420,29 @@
 }
 
 .action-instructions-panel__step--active {
-  color: #20130b;
-  border-color: rgba(219, 138, 24, 0.56);
+  color: #123e23;
+  border-color: #32854c;
   background:
-    linear-gradient(180deg, rgba(255, 231, 150, 0.94), rgba(255, 244, 203, 0.9));
+    linear-gradient(180deg, #d7f0df, #c8e8d2);
   box-shadow:
-    inset 4px 0 0 #d98718,
-    0 3px 10px rgba(93, 54, 18, 0.16);
+    inset 4px 0 0 #237a3f,
+    0 3px 10px rgba(25, 93, 47, 0.16);
 }
 
 .action-instructions-panel__steps strong {
-  color: #5b2e13;
+  color: #1e6838;
   font-weight: 900;
 }
 
 .action-instructions-panel__step--active strong {
-  color: #8b4300;
+  color: #14572c;
+}
+
+.action-instructions-panel__guide {
+  margin: 0 0 14px;
+  color: #184c2d;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .action-instructions-panel__substeps {
@@ -442,7 +450,7 @@
   gap: 6px;
   margin: 8px 0 0 18px;
   padding: 0;
-  color: #2f1f14;
+  color: #184c2d;
   font-size: 14px;
   font-weight: 750;
 }

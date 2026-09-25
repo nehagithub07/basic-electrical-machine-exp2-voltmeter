@@ -65,6 +65,20 @@
   letter-spacing: 0;
 }
 
+.walkthrough-start-button--highlighted {
+  outline: 4px solid #ffd54a;
+  outline-offset: 5px;
+  animation: walkthrough-start-highlight 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes walkthrough-start-highlight {
+  to { box-shadow: 0 0 0 10px rgba(255, 213, 74, 0.25), 0 0 30px #ffd54a; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walkthrough-start-button--highlighted { animation: none; }
+}
+
 .walkthrough-start-button__spark {
   width: 10px;
   height: 10px;

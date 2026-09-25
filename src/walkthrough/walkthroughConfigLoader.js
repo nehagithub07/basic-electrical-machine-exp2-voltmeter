@@ -35,6 +35,10 @@ const resolveWalkthroughAudio = (audio) => {
 
   const normalizedAudio = audio.replaceAll('\\', '/')
 
+  if (normalizedAudio.startsWith('./walkthrough-audios/')) {
+    return walkthroughAudioModules[normalizedAudio] ?? '#'
+  }
+
   return walkthroughAudioModules[normalizedAudio] ?? audio
 }
 

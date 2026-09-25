@@ -11,7 +11,7 @@ const ObservationTable = ({ observations }) => (
       <table className="observation-table">
         <thead>
           <tr>
-            <th>S.No</th>
+            <th>S.No.</th>
             <th>Source Voltage (V)</th>
             <th>
               V<sub>1</sub> (V)

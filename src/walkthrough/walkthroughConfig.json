@@ -49,7 +49,7 @@
         "en": "Check Button"
       },
       "description": {
-        "en": "The CHECK button verifies all the connections to ensure that they are correct."
+        "en": "The **CHECK** button verifies all the connections to ensure they are correct.\n\n**Note:** If a wire is connected incorrectly, click the corresponding label number to remove the connection."
       },
       "audio": "./walkthrough-audios/Check Button.wav",
       "placement": "right"
@@ -134,7 +134,7 @@
         "en": "Regulated DC Power Supply"
       },
       "description": {
-        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value. \n\n Rating:  15 V DC"
+        "en": "This section provides the required DC voltage to the circuit. The display shows the active voltage supplied to the circuit, and the slider can be used to set the desired voltage value. \n\n **Rating:**  15 V DC"
       },
       "audio": "./walkthrough-audios/Regulated DC Power Supply.wav",
       "placement": "left"
@@ -146,7 +146,7 @@
         "en": "DC Voltmeters"
       },
       "description": {
-        "en": "Voltmeters are used to measure the voltage drop across each resistor in an electrical circuit. Record the voltage readings across each resistor at different supply voltages. \n\nRating:  0 - 20 V DC"
+        "en": "Voltmeters are used to measure the voltage drop across each resistor in an electrical circuit. Record the voltage readings across each resistor at different supply voltages. \n\n**Rating:**  0 - 20 V DC"
       },
       "audio": "./walkthrough-audios/DC Voltmeters.wav",
       "placement": "bottom"

@@ -74,7 +74,7 @@ const buttons = [
 const instructionSteps = [
   {
     number: 1,
-    text: 'Make connections by dragging nodes from the apparatus to the circuit.',
+    text: 'Make connections as per the instructions given below by dragging and dropping wires from the apparatus terminals to the circuit, or use Autoconnect to make the connections automatically.',
     substeps: [
       'Connect the power supply to the circuit (1-9, 2-10).',
       'Connect voltmeters (3-11, 4-12), (5-13, 6-14), and (7-15, 8-16), or connect any voltmeter to any resistance in the circuit.',
@@ -83,7 +83,7 @@ const instructionSteps = [
   },
   {
     number: 2,
-    text: <>Check your connections by clicking on the <strong>'CHECK'</strong> button.</>,
+    text: <>Check the manual connections by clicking the <strong>'CHECK'</strong> button. Autoconnect will automatically verify the connections.</>,
   },
   {
     number: 3,
@@ -91,7 +91,7 @@ const instructionSteps = [
   },
   {
     number: 4,
-    text: <>Click on the <strong>'Power'</strong> button to turn on the power supply.</>,
+    text: <>Click on the <strong>'Power'</strong> button to turn <strong>ON</strong> the power supply.</>,
   },
   {
     number: 5,
@@ -107,19 +107,23 @@ const instructionSteps = [
   },
   {
     number: 8,
-    text: 'Select an observation, calculate R, I₁, I₂, I₃, V₁, V₂, and V₃, then enter them in the calculation section.',
+    text: 'Click CALCULATE to display the recorded resistance values. Select an observation, calculate the currents using the equations, and enter the current and resistance values in the verification section.',
   },
   {
     number: 9,
-    text: <>Click <strong>'VERIFY'</strong> and confirm V = V₁ + V₂ = V₁ + V₃.</>,
+    text: <>In the Theoretical Verification section, select a reading to verify, enter the required calculated values, and click the <strong>'Verify'</strong> button to verify the reading. Confirm V = V₁ + V₂ = V₁ + V₃.</>,
   },
   {
     number: 10,
-    text: <>Click on the <strong>'PRINT'</strong> button to print the page.</>,
+    text: <>Click the <strong>'Generate Report'</strong> button to generate the simulation report after completing at least one successful verification.</>,
   },
   {
     number: 11,
-    text: <>Click on the <strong>'RESET'</strong> button to refresh the page.</>,
+    text: <>Click on the <strong>'PRINT'</strong> button to print the simulation or simulation report.</>,
+  },
+  {
+    number: 12,
+    text: <>Click on the <strong>'RESET'</strong> button to refresh the simulation.</>,
   },
 ]
 
@@ -213,6 +217,9 @@ const ActionButtons = ({
           </div>
 
           <div className="action-instructions-panel__body">
+            <p className="action-instructions-panel__guide">
+              <strong>AI Guide: The AI guide will assist you in performing the simulation accurately at each step.</strong>
+            </p>
             <ol className="action-instructions-panel__steps">
               {instructionSteps.map((step) => {
                 const isActive = step.number === activeInstructionStep

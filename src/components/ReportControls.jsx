@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { FormulaIcon, PdfIcon } from './Icons.jsx'
-import { useWalkthrough } from '../walkthrough/useWalkthrough.js'
 
 const formulas = [
   {
@@ -76,9 +75,8 @@ const ReportControls = ({
   reportGenerated,
 }) => {
   const [formulasOpen, setFormulasOpen] = useState(false)
-  const { isOpen: walkthroughOpen } = useWalkthrough()
   const readingsReady = readingCount >= minReadings
-  const reportButtonDisabled = !walkthroughOpen && !readingsReady
+  const reportButtonDisabled = !readingsReady || !graphGenerated
   const buttonTitle = reportGenerated
     ? 'Report generated. Click to regenerate the report.'
     : readingsReady && !graphGenerated
@@ -111,7 +109,7 @@ const ReportControls = ({
           </dl>
 
           <p className="formula-panel__note">
-            KCL verification: I<sub>1</sub> = I<sub>2</sub> + I<sub>3</sub>
+            KVL verification: V<sub>s</sub> = V<sub>1</sub> + V<sub>2</sub> or V<sub>s</sub> = V<sub>1</sub> + V<sub>3</sub>
           </p>
         </aside>
       ) : null}

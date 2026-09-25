@@ -504,7 +504,7 @@ const LabAlertProvider = ({ children }) => {
           aria-live={centerAlert.type === 'error' || centerAlert.type === 'warning' ? 'assertive' : 'polite'}
           className="lab-alert-region lab-alert-region--center"
         >
-          <LabAlertCard alert={centerAlert} onDismiss={dismissAlert} />
+          <LabAlertCard alert={centerAlert} key={centerAlert.id} onDismiss={dismissAlert} />
         </div>
       ) : null}
     </LabAlertContext.Provider>

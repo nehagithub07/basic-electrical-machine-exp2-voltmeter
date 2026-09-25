@@ -3,7 +3,7 @@ import v1Img from '../assets/V1.png'
 import v2Img from '../assets/V2.png'
 import v3Img from '../assets/V3.png'
 import needleImg from '../assets/needle.png'
-import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
+import { getTerminalConnectedClass, getTerminalHighlightClass } from '../utils/terminalHighlight.js'
 
 // The meter artwork is a 0–20 V scale, so map calculated voltage to that full arc.
 const METER_MAX_READING = 20
@@ -49,7 +49,7 @@ const Voltmeter = ({ connectedTerminalIds = [], highlightedTerminalIds = [], lab
         title={`${label} positive`}
       />
       <span
-        className={`terminal-number-label terminal-number-label--meter-plus terminal-number-label--endpoint-${terminals.positive}${getTerminalNumberHighlightClass(highlightedTerminalIds, positiveTerminalId)}`}
+        className={`terminal-number-label terminal-number-label--meter-plus terminal-number-label--endpoint-${terminals.positive}`}
         data-terminal-id={positiveTerminalId}
         title={`${label} positive`}
       >
@@ -64,7 +64,7 @@ const Voltmeter = ({ connectedTerminalIds = [], highlightedTerminalIds = [], lab
         title={`${label} negative`}
       />
       <span
-        className={`terminal-number-label terminal-number-label--meter-minus terminal-number-label--endpoint-${terminals.negative}${getTerminalNumberHighlightClass(highlightedTerminalIds, negativeTerminalId)}`}
+        className={`terminal-number-label terminal-number-label--meter-minus terminal-number-label--endpoint-${terminals.negative}`}
         data-terminal-id={negativeTerminalId}
         title={`${label} negative`}
       >

@@ -13,6 +13,7 @@ import { ALERT_AUDIO, ALERT_AUDIO_PLACEHOLDER, EXPERIMENT_ALERTS } from './alert
 import { useLabAlerts } from './alerts/useLabAlerts.js'
 import { useAiGuideNarration } from './aiGuide/useAiGuideNarration.js'
 import { dispatchExclusiveAudioStart } from './utils/audioCoordinator.js'
+import { getConnectionFeedback } from './utils/connectionFeedback.js'
 // import StatusBar from './components/StatusBar.jsx'
  
 import { calculateReadings } from './utils/circuitMath.js'
@@ -229,6 +230,7 @@ const getConnectionPromptText = (terminalIds) => {
 
 const getActiveInstructionStep = ({
   allResistanceValuesAdjusted,
+  calculationStarted,
   connectionsReadyForCheck,
   connectionsVerified,
   graphGenerated,
@@ -254,8 +256,12 @@ const getActiveInstructionStep = ({
   }
 
   if (readingCount >= MIN_GRAPH_READINGS) {
-    if (!graphGenerated) {
+    if (!calculationStarted) {
       return 8
+    }
+
+    if (!graphGenerated) {
+      return 9
     }
 
     return reportGenerated ? 11 : 10
@@ -319,9 +325,10 @@ const App = () => {
   const [powerOn, setPowerOn] = useState(false)
   const [observations, setObservations] = useState([])
   const [graphGenerated, setGraphGenerated] = useState(false)
+  const [calculationStarted, setCalculationStarted] = useState(false)
   const [reportGenerated, setReportGenerated] = useState(false)
   const [verifiedCalculations, setVerifiedCalculations] = useState([])
-  const [, setStatus] = useState('Make the connections, click CHECK, then set the resistance values.')
+  const [status, setStatus] = useState('Make the connections, click CHECK, then set the resistance values.')
 
   const [autoConnectRequest, setAutoConnectRequest] = useState(0)
   const [checkRequest, setCheckRequest] = useState(0)
@@ -387,6 +394,7 @@ const App = () => {
   const activeInstructionStep = useMemo(
     () => getActiveInstructionStep({
       allResistanceValuesAdjusted,
+      calculationStarted,
       connectionsReadyForCheck,
       connectionsVerified,
       graphGenerated,
@@ -397,6 +405,7 @@ const App = () => {
     }),
     [
       allResistanceValuesAdjusted,
+      calculationStarted,
       connectionsReadyForCheck,
       connectionsVerified,
       graphGenerated,
@@ -445,6 +454,7 @@ const App = () => {
 
   const {
     activeStepId: activeAiGuideStepId,
+    highlightedTarget: aiGuideHighlightedTarget,
     isPlaying: aiGuidePlaying,
     playAudioSource: playAiGuideAudio,
     playText: playAiGuideText,
@@ -461,7 +471,8 @@ const App = () => {
     const correctionAudio = getConnectionPromptAudio(terminalIds)
     const correctionText = getConnectionPromptText(terminalIds)
 
-    await playAiGuideSteps([12])
+    const completed = await playAiGuideSteps([12])
+    if (!completed) return
 
     if (correctionAudio && correctionAudio !== ALERT_AUDIO_PLACEHOLDER) {
       await playAiGuideAudio(
@@ -545,27 +556,18 @@ const App = () => {
 
   const handleR1Change = useCallback((nextResistance) => {
     setR1(nextResistance)
-
-    if (nextResistance !== r1) {
-      markResistanceAdjusted('r1')
-    }
-  }, [markResistanceAdjusted, r1])
+    markResistanceAdjusted('r1')
+  }, [markResistanceAdjusted])
 
   const handleR2Change = useCallback((nextResistance) => {
     setR2(nextResistance)
-
-    if (nextResistance !== r2) {
-      markResistanceAdjusted('r2')
-    }
-  }, [markResistanceAdjusted, r2])
+    markResistanceAdjusted('r2')
+  }, [markResistanceAdjusted])
 
   const handleR3Change = useCallback((nextResistance) => {
     setR3(nextResistance)
-
-    if (nextResistance !== r3) {
-      markResistanceAdjusted('r3')
-    }
-  }, [markResistanceAdjusted, r3])
+    markResistanceAdjusted('r3')
+  }, [markResistanceAdjusted])
 
   const recordObservation = () => {
     if (!connectionsVerified) {
@@ -685,15 +687,6 @@ const App = () => {
       return
     }
 
-    if (nextObservationCount === MIN_GRAPH_READINGS) {
-      showStepAlert(EXPERIMENT_ALERTS.sufficientData, {
-        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.sufficientData.audio,
-        replaceExisting: true,
-      })
-
-      return
-    }
-
     if (nextObservationCount === MAX_OBSERVATIONS) {
       showStepAlert(EXPERIMENT_ALERTS.lastReadingAdded, {
         audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.lastReadingAdded.audio,
@@ -721,6 +714,7 @@ const App = () => {
     setR3(INITIAL_RESISTANCE)
     setObservations([])
     setGraphGenerated(false)
+    setCalculationStarted(false)
     setReportGenerated(false)
     setVerifiedCalculations([])
     setAutoConnectRequest(0)
@@ -774,6 +768,7 @@ const App = () => {
       return
     }
 
+    setCalculationStarted(true)
     document.getElementById('calculation-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     setStatus(EXPERIMENT_ALERTS.calculationInstructions.title)
     showStepAlert(EXPERIMENT_ALERTS.calculationInstructions, {
@@ -787,9 +782,9 @@ const App = () => {
   }
 
   const handleCalculationVerification = useCallback((verified, calculation = null) => {
+    setGraphGenerated(verified)
+    setReportGenerated(false)
     if (verified && calculation) {
-      setGraphGenerated(true)
-      setReportGenerated(false)
       setVerifiedCalculations((current) => {
         const nextCalculations = current.some(({ readingId }) => readingId === calculation.readingId)
           ? current.map((entry) => entry.readingId === calculation.readingId ? calculation : entry)
@@ -927,21 +922,9 @@ const App = () => {
     }
 
     if (result.latestConnectionIsWrong) {
-      const correctionLine = getConnectionPromptText(result.nextRequiredConnection)
-      const correctionAudio = getConnectionPromptAudio(result.nextRequiredConnection)
-      const hasCorrectionAudio = correctionAudio && correctionAudio !== ALERT_AUDIO_PLACEHOLDER
-
       setConnectionsReadyForCheck(false)
-      setStatus('This connection is wrong')
-      showStepAlert(EXPERIMENT_ALERTS.incorrectNodeConnection, {
-        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.incorrectNodeConnection.audio,
-        audioSpeech: aiGuidePlaying || hasCorrectionAudio ? null : correctionLine,
-        dedupeKey: null,
-        description: correctionLine,
-        followUpAudio: !aiGuidePlaying && hasCorrectionAudio ? correctionAudio : ALERT_AUDIO_PLACEHOLDER,
-        replaceExisting: true,
-        title: 'This connection is wrong.',
-      })
+      allConnectionsAlertShownRef.current = false
+      setStatus('Click Check to review the circuit connections.')
 
       if (aiGuidePlaying) {
         playWrongConnectionCorrection(result.nextRequiredConnection)
@@ -1026,57 +1009,29 @@ const App = () => {
     setResistanceAdjusted(getInitialResistanceAdjusted())
     allConnectionsAlertShownRef.current = false
 
-    if (result.totalConnections === 0) {
-      const correctionStepId = getAiGuideConnectionStepId(result.nextRequiredConnection)
-
-      setStatus('Missing connections. Please make the required connections first.')
-      showStepAlert(EXPERIMENT_ALERTS.missingConnections, {
-        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.missingConnections.audio,
-        description: `No wires are connected yet. ${getConnectionPromptText(result.nextRequiredConnection)}`,
-        replaceExisting: true,
-      })
-
-      if (aiGuidePlaying) {
-        playAiGuideSteps([14, correctionStepId].filter(Boolean))
-      }
-
-      return
-    }
-
+    const hasWrongConnections = result.hasInvalidConnection
+    const alert = hasWrongConnections
+      ? EXPERIMENT_ALERTS.incorrectNodeConnection
+      : EXPERIMENT_ALERTS.missingConnections
     const correctionStepId = getAiGuideConnectionStepId(result.nextRequiredConnection)
-    const connectionPrompt = getConnectionPromptText(result.nextRequiredConnection)
-    const connectionPromptAudio = getConnectionPromptAudio(result.nextRequiredConnection)
-    const hasConnectionPromptAudio = connectionPromptAudio && connectionPromptAudio !== ALERT_AUDIO_PLACEHOLDER
 
-    if (result.hasInvalidConnection) {
-      setStatus('This connection is wrong. Follow the suggested terminal connection.')
-      showStepAlert(EXPERIMENT_ALERTS.incorrectNodeConnection, {
-        audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.incorrectNodeConnection.audio,
-        audioSpeech: aiGuidePlaying || hasConnectionPromptAudio ? null : connectionPrompt,
-        description: connectionPrompt,
-        followUpAudio: !aiGuidePlaying && hasConnectionPromptAudio ? connectionPromptAudio : ALERT_AUDIO_PLACEHOLDER,
-        replaceExisting: true,
-        title: 'This connection is wrong.',
-      })
-
-      if (aiGuidePlaying) {
-        playWrongConnectionCorrection(result.nextRequiredConnection)
-      }
-
-      return
-    }
-
-    setStatus(
-      `Missing connections. Correct matched points: ${result.matchedCount}; total wires: ${result.totalConnections}.`,
-    )
-    showStepAlert(EXPERIMENT_ALERTS.missingConnections, {
-      audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : EXPERIMENT_ALERTS.missingConnections.audio,
-      description: `Some required wires are still missing. ${connectionPrompt}`,
+    setStatus(hasWrongConnections ? 'Wrong and missing connections found.' : 'Missing connections found.')
+    showStepAlert(alert, {
+      audio: aiGuidePlaying ? ALERT_AUDIO_PLACEHOLDER : alert.audio,
+      dedupeKey: null,
+      description: getConnectionFeedback(result),
+      heading: hasWrongConnections ? 'Wrong Connection' : 'Missing Connections',
+      icon: hasWrongConnections ? '❌' : '⚠️',
       replaceExisting: true,
+      title: hasWrongConnections ? 'Wrong Connection' : 'Missing Connections',
     })
 
     if (aiGuidePlaying) {
-      playAiGuideSteps([14, correctionStepId].filter(Boolean))
+      if (hasWrongConnections) {
+        playWrongConnectionCorrection(result.nextRequiredConnection)
+      } else {
+        playAiGuideSteps([14, correctionStepId].filter(Boolean))
+      }
     }
   }, [aiGuidePlaying, playAiGuideSteps, playWrongConnectionCorrection, showStepAlert])
 
@@ -1197,7 +1152,7 @@ const App = () => {
         >
           <main className="simulation-shell" id="walkthrough-demo-experiment">
             <HeaderBoard />
-            <WalkthroughStartButton variant="side-tab" />
+            <WalkthroughStartButton highlighted={aiGuideHighlightedTarget === '#walkthrough-start-button'} variant="side-tab" />
             {/* <StatusBar status={status} /> */}
             <span className="sr-only" role="status" aria-live="polite">{status}</span>
 
@@ -1209,7 +1164,7 @@ const App = () => {
                     onAiGuide: aiGuidePlaying,
                   }}
                   disabledButtons={{
-                    onAdd: !powerOn || !voltageAdjusted,
+                    onAdd: !powerOn || !voltageAdjusted || hasDuplicateReading || readingCount >= MAX_OBSERVATIONS,
                     onAutoConnect: connectionsVerified || powerOn,
                     onCheck: connectionsVerified,
                     onVerify: readingCount < MIN_GRAPH_READINGS,
@@ -1269,6 +1224,7 @@ const App = () => {
           </main>
 
           <CalculationPanel
+            calculationStarted={calculationStarted}
             key={`calculation-panel-${resetRequest}`}
             observations={observations}
             onVerificationAttempt={handleCalculationVerificationAttempt}
@@ -1277,7 +1233,7 @@ const App = () => {
           />
 
           <footer className="app-footer" aria-label="Copyright">
-            &copy; 2026 Virtual Labs IIT Roorkee
+            &copy; 2026 Virtual Labs | IIT Roorkee
           </footer>
         </div>
       </div>

@@ -201,16 +201,54 @@ export const isValidConnectionPair = (firstId, secondId) => (
 )
 
 export const getConnectionStatus = (instance) => {
-  const connections = getAllConnections(instance)
-  const validation = validateOldExperimentConnections(instance)
-  const invalidConnections = connections.filter((connection) => {
-    const { sourceId, targetId } = getConnectionEndpointIds(connection)
-
-    return !isValidConnectionPair(sourceId, targetId)
+  const connections = getAllConnections(instance).map(getConnectionEndpointIds)
+  const connectedKeys = new Set(connections.map(({ sourceId, targetId }) => (
+    getTerminalPairKey(sourceId, targetId)
+  )))
+  // Keep as many existing wires as possible, including valid meter swaps.
+  // Both leads of each meter must measure the same, unoccupied branch.
+  const branchOrders = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]]
+  const candidates = branchOrders.map((order) => [
+    ...DEFAULT_AUTO_CONNECTIONS.slice(0, 2),
+    ...Object.values(VOLTMETER_BRANCH_CONNECTIONS).flatMap((branches, index) => {
+      const branch = branches[order[index]]
+      return [
+        [branch.positiveTerminal, branch.circuitPositiveTerminal],
+        [branch.negativeTerminal, branch.circuitNegativeTerminal],
+      ]
+    }),
+  ])
+  const countMatches = (pairs) => pairs.filter(([sourceId, targetId]) => (
+    connectedKeys.has(getTerminalPairKey(sourceId, targetId))
+  )).length
+  const expectedConnections = candidates.reduce((best, candidate) => (
+    countMatches(candidate) > countMatches(best) ? candidate : best
+  ))
+  const expectedKeys = new Set(expectedConnections.map(([sourceId, targetId]) => (
+    getTerminalPairKey(sourceId, targetId)
+  )))
+  const correctConnections = []
+  const invalidConnections = []
+  const seen = new Set()
+  connections.forEach(({ sourceId, targetId }) => {
+    const key = getTerminalPairKey(sourceId, targetId)
+    const collection = expectedKeys.has(key) && !seen.has(key)
+      ? correctConnections
+      : invalidConnections
+    collection.push([sourceId, targetId])
+    seen.add(key)
   })
+  const missingConnections = expectedConnections.filter(([sourceId, targetId]) => (
+    !connectedKeys.has(getTerminalPairKey(sourceId, targetId))
+  ))
 
   return {
-    ...validation,
+    isCorrect: invalidConnections.length === 0 && missingConnections.length === 0,
+    matchedCount: correctConnections.length,
+    totalConnections: connections.length,
+    correctConnections,
+    invalidConnections,
+    missingConnections,
     hasInvalidConnection: invalidConnections.length > 0,
     invalidConnectionCount: invalidConnections.length,
   }
@@ -379,71 +417,9 @@ export const hasConnectionBetween = (instance, firstId, secondId) => (
   Boolean(getConnectionBetween(instance, firstId, secondId))
 )
 
-const getConnectedPeerTerminalId = (instance, terminalId) => {
-  const connection = getAllConnections(instance).find((candidate) => {
-    const { sourceId, targetId } = getConnectionEndpointIds(candidate)
-
-    return sourceId === terminalId || targetId === terminalId
-  })
-
-  if (!connection) {
-    return null
-  }
-
-  const { sourceId, targetId } = getConnectionEndpointIds(connection)
-
-  return sourceId === terminalId ? targetId : sourceId
-}
-
-export const getNextRequiredConnectionPair = (instance) => {
-  const missingPowerConnection = DEFAULT_AUTO_CONNECTIONS
-    .slice(0, 2)
-    .find(([sourceId, targetId]) => !hasConnectionBetween(instance, sourceId, targetId))
-
-  if (missingPowerConnection) {
-    return missingPowerConnection
-  }
-
-  for (const [meterLabel, branches] of Object.entries(VOLTMETER_BRANCH_CONNECTIONS)) {
-    const { negativeTerminal, positiveTerminal } = branches[0]
-    const positivePeer = getConnectedPeerTerminalId(instance, positiveTerminal)
-    const negativePeer = getConnectedPeerTerminalId(instance, negativeTerminal)
-    const positiveBranch = branches.find((branch) => (
-      branch.circuitPositiveTerminal === positivePeer
-    ))
-    const negativeBranch = branches.find((branch) => (
-      branch.circuitNegativeTerminal === negativePeer
-    ))
-
-    if (positiveBranch && !negativePeer) {
-      return [negativeTerminal, positiveBranch.circuitNegativeTerminal]
-    }
-
-    if (negativeBranch && !positivePeer) {
-      return [positiveTerminal, negativeBranch.circuitPositiveTerminal]
-    }
-
-    if (positivePeer || negativePeer) {
-      continue
-    }
-
-    const preferredBranchIndex = Number(meterLabel.slice(1)) - 1
-    const preferredBranches = [
-      branches[preferredBranchIndex],
-      ...branches.filter((_, index) => index !== preferredBranchIndex),
-    ]
-    const availableBranch = preferredBranches.find((branch) => (
-      !getConnectedPeerTerminalId(instance, branch.circuitPositiveTerminal)
-      && !getConnectedPeerTerminalId(instance, branch.circuitNegativeTerminal)
-    ))
-
-    if (availableBranch) {
-      return [positiveTerminal, availableBranch.circuitPositiveTerminal]
-    }
-  }
-
-  return null
-}
+export const getNextRequiredConnectionPair = (instance) => (
+  getConnectionStatus(instance).missingConnections[0] ?? null
+)
 
 export const getVoltmeterReadingKeys = (instance) => {
   const readingKeys = {
@@ -528,47 +504,8 @@ export const autoConnectDefaultCircuit = (instance) => {
 }
 
 export const validateOldExperimentConnections = (instance) => {
-  const matchedConnections = []
-
-  for (let i = 0; i < VALID_CONNECTION_SEQUENCE.length - 1; i += 1) {
-    const firstTerminal = VALID_CONNECTION_SEQUENCE[i]
-    const secondTerminal = VALID_CONNECTION_SEQUENCE[i + 1]
-
-    const matchedConnection = getConnectionBetween(
-      instance,
-      firstTerminal,
-      secondTerminal,
-    )
-
-    if (!matchedConnection || i % 2 !== 0) {
-      continue
-    }
-
-    matchedConnections.push(matchedConnection)
-
-    try {
-      const nextPairIsMissing = !hasConnectionBetween(
-        instance,
-        VALID_CONNECTION_SEQUENCE[i + 2],
-        VALID_CONNECTION_SEQUENCE[i + 3],
-      )
-
-      if (nextPairIsMissing && i % 4 === 0) {
-        matchedConnections.pop()
-      }
-    } catch {
-      // Same idea as old JS:
-      // if the next pair does not exist, just continue.
-    }
-  }
-
-  const totalConnections = getAllConnections(instance).length
-
-  return {
-    isCorrect: matchedConnections.length === 8 && totalConnections === 8,
-    matchedCount: matchedConnections.length,
-    totalConnections,
-  }
+  const { isCorrect, matchedCount, totalConnections } = getConnectionStatus(instance)
+  return { isCorrect, matchedCount, totalConnections }
 }
 
 export const lockJsPlumbCircuit = (instance, containerElement) => {

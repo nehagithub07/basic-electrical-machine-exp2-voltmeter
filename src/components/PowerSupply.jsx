@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import powerSupplyOff from '../assets/PowerSupply_Off.png'
 import powerSupplyOn from '../assets/PowerSupply_ON.png'
-import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
+import { getTerminalConnectedClass, getTerminalHighlightClass } from '../utils/terminalHighlight.js'
 
 const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], onTogglePower, powerOn, setVoltage, voltage }) => {
   const displayedVoltage = powerOn ? `${Number(voltage.toFixed(1))} V` : ''
@@ -29,7 +29,7 @@ const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], o
         title="Power positive"
       />
       <span
-        className={`terminal-number-label terminal-number-label--power-plus terminal-number-label--endpoint-1${getTerminalNumberHighlightClass(highlightedTerminalIds, positiveTerminalId)}`}
+        className="terminal-number-label terminal-number-label--power-plus terminal-number-label--endpoint-1"
         data-terminal-id={positiveTerminalId}
         title="Power positive"
       >
@@ -44,7 +44,7 @@ const PowerSupply = ({ connectedTerminalIds = [], highlightedTerminalIds = [], o
         title="Power negative"
       />
       <span
-        className={`terminal-number-label terminal-number-label--power-minus terminal-number-label--endpoint-2${getTerminalNumberHighlightClass(highlightedTerminalIds, negativeTerminalId)}`}
+        className="terminal-number-label terminal-number-label--power-minus terminal-number-label--endpoint-2"
         data-terminal-id={negativeTerminalId}
         title="Power negative"
       >

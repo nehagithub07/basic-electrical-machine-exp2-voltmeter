@@ -42,6 +42,7 @@ const formatSum = (a, b) => {
 const preventWheelValueChange = (event) => event.currentTarget.blur()
 
 const CalculationPanel = ({
+  calculationStarted = false,
   observations = [],
   onVerificationAttempt,
   onVerificationChange,
@@ -51,7 +52,7 @@ const CalculationPanel = ({
   const [inputs, setInputs] = useState(emptyInputs)
   const [verification, setVerification] = useState(null)
 
-  const isEnabled = observations.length >= requiredReadings
+  const isEnabled = calculationStarted && observations.length >= requiredReadings
   const recordedResistances = isEnabled ? observations[0] : null
 
   const selectedReading = useMemo(
@@ -103,8 +104,8 @@ const CalculationPanel = ({
   }
 
   const updateInput = (key, value) => {
-    // Allow maximum 3 digits after decimal point.
-    if (!/^\d*\.?\d{0,3}$/.test(value)) return
+    const pattern = key.startsWith('r') ? /^\d*\.?\d{0,1}$/ : /^\d*\.?\d{0,3}$/
+    if (!pattern.test(value)) return
 
     if (value === '') {
       setInputs((current) => ({
@@ -256,7 +257,9 @@ const CalculationPanel = ({
           <p className="calculation-panel__subtitle">
             {isEnabled
               ? 'Choose any recorded reading and enter each current/resistance value.'
-              : `Record all ${requiredReadings} readings to unlock this section (${observations.length}/${requiredReadings}).`}
+              : observations.length >= requiredReadings
+                ? 'Click Calculate to display resistance values and select a recorded reading.'
+                : `Record at least ${requiredReadings} readings, then click Calculate to unlock this section (${observations.length}/${requiredReadings}).`}
           </p>
         </div>
       </div>
@@ -276,7 +279,7 @@ const CalculationPanel = ({
                 Choose a recorded reading…
               </option>
 
-              {observations.slice(0, 5).map((row, index) => (
+              {(isEnabled ? observations.slice(0, 5) : []).map((row, index) => (
                 <option
                   value={String(row.id)}
                   key={row.id}
@@ -318,7 +321,7 @@ const CalculationPanel = ({
                       recordedResistances
                         ? formatNumber(
                             recordedResistances[resistanceKey],
-                            3,
+                            1,
                           )
                         : ''
                     }
@@ -429,7 +432,7 @@ const CalculationPanel = ({
                         }
                         onWheel={preventWheelValueChange}
                         placeholder="Enter Value"
-                        step="0.001"
+                        step="0.1"
                         type="number"
                         min="1"
                         max="5"
@@ -595,22 +598,14 @@ const CalculationPanel = ({
             type="button"
             onClick={verifyKvl}
             disabled={
-              !isEnabled || verification?.passed === true
+              inputsLocked
             }
           >
             Verify
           </button>
-
-          {verification ? (
-            <p
-              className={
-                verification.passed
-                  ? 'is-success'
-                  : 'is-error'
-              }
-              role="status"
-            >
-              {verification.message}
+          {verification?.passed === true ? (
+            <p className="calculation-panel__rounding-note is-success" role="status">
+              <strong>Note:</strong> The reading has been verified after rounding off the values.
             </p>
           ) : null}
         </div>

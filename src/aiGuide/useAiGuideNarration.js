@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import defaultAiGuideConfig from './aiGuideConfig.json'
 import { isConfiguredAudioSource, loadAiGuideConfig } from './aiGuideConfigLoader.js'
+import { getSpeechSegments, watchAudioCue } from './narrationCue.js'
 import { addExclusiveAudioListener, dispatchExclusiveAudioStart } from '../utils/audioCoordinator.js'
 
 const AI_GUIDE_AUDIO_SOURCE_ID = 'ai-guide'
@@ -33,6 +34,7 @@ export const useAiGuideNarration = ({
   )
   const [isPlaying, setIsPlaying] = useState(false)
   const [activeStepId, setActiveStepId] = useState(null)
+  const [highlightedTarget, setHighlightedTarget] = useState(null)
   const isActiveRef = useRef(false)
   const currentPlaybackRef = useRef(null)
   const lastStepIdRef = useRef(null)
@@ -41,6 +43,7 @@ export const useAiGuideNarration = ({
   const runIdRef = useRef(0)
 
   const stopCurrentPlayback = useCallback(() => {
+    setHighlightedTarget(null)
     const currentPlayback = currentPlaybackRef.current
 
     if (!currentPlayback) {
@@ -66,7 +69,7 @@ export const useAiGuideNarration = ({
     setIsPlaying(false)
   }, [stopCurrentPlayback])
 
-  const speakText = useCallback((text) => new Promise((resolve, reject) => {
+  const speakText = useCallback((text, { highlightTarget = null } = {}) => new Promise((resolve, reject) => {
     if (!canUseSpeechSynthesis()) {
       reject(new Error('Speech synthesis is not available in this browser.'))
       return
@@ -84,6 +87,7 @@ export const useAiGuideNarration = ({
       }
 
       settled = true
+      utterance.onstart = null
       utterance.onend = null
       utterance.onerror = null
 
@@ -98,6 +102,9 @@ export const useAiGuideNarration = ({
     utterance.rate = 0.95
     utterance.pitch = 1
 
+    utterance.onstart = () => {
+      if (highlightTarget) setHighlightedTarget(highlightTarget)
+    }
     utterance.onend = () => settle(resolve)
     utterance.onerror = (event) => {
       if (event.error === 'canceled' || event.error === 'interrupted') {
@@ -119,11 +126,13 @@ export const useAiGuideNarration = ({
     window.speechSynthesis.speak(utterance)
   }), [guideConfig.locale])
 
-  const playAudio = useCallback((audioSource) => new Promise((resolve, reject) => {
+  const playAudio = useCallback((audioSource, cue = null) => new Promise((resolve, reject) => {
     const audio = new Audio(audioSource)
+    const removeCueListener = watchAudioCue(audio, cue, setHighlightedTarget)
     let settled = false
 
     const cleanup = () => {
+      removeCueListener()
       audio.removeEventListener('ended', handleEnded)
       audio.removeEventListener('error', handleError)
     }
@@ -166,9 +175,10 @@ export const useAiGuideNarration = ({
   }), [])
 
   const playStep = useCallback(async (step) => {
+    const runId = runIdRef.current
     if (isConfiguredAudioSource(step.audio)) {
       try {
-        await playAudio(step.audio)
+        await playAudio(step.audio, step.highlightCue)
         return
       } catch (error) {
         if (!step.text) {
@@ -177,7 +187,10 @@ export const useAiGuideNarration = ({
       }
     }
 
-    await speakText(step.text)
+    for (const segment of getSpeechSegments(step.text, step.highlightCue)) {
+      if (runIdRef.current !== runId || !isActiveRef.current) return
+      await speakText(segment.text, segment)
+    }
   }, [playAudio, speakText])
 
   const playConfiguredStepById = useCallback(async (stepId) => {
@@ -376,6 +389,7 @@ export const useAiGuideNarration = ({
 
       pendingStepIdsRef.current = configuredStepIds.slice(index + 1)
     }
+    return true
   }, [guideConfig.steps, playConfiguredStepById])
 
   const start = useCallback(({ stepIds = null } = {}) => {
@@ -435,6 +449,7 @@ export const useAiGuideNarration = ({
   return {
     config: guideConfig,
     activeStepId,
+    highlightedTarget,
     finish,
     isPlaying,
     playAudioSource,

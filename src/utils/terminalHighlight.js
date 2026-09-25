@@ -11,9 +11,3 @@ export const getTerminalHighlightClass = (highlightedTerminalIds, terminalId) =>
 export const getTerminalConnectedClass = (connectedTerminalIds = [], terminalId) => (
   connectedTerminalIds.includes(terminalId) ? ' jtk-connected' : ''
 )
-
-export const getTerminalNumberHighlightClass = (highlightedTerminalIds, terminalId) => (
-  isTerminalHighlighted(highlightedTerminalIds, terminalId)
-    ? ' terminal-number-label--guide-highlight'
-    : ''
-)

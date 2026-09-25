@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { dispatchExclusiveAudioStart } from '../utils/audioCoordinator.js'
 
 const EXIT_DURATION = 180
-
 const dispatchLabAlertEvent = (eventName, detail) => {
   if (typeof window === 'undefined') {
     return
@@ -36,6 +36,9 @@ const LabAlertCard = ({ alert, onDismiss }) => {
   const audioSpeech = alert.audioSpeech ?? alert.speech
   const titleId = `lab-alert-title-${id}`
   const descriptionId = `lab-alert-description-${id}`
+  const heading = alert.heading ?? title
+  const message = heading === title ? null : title
+  const hasContent = Boolean(message || description)
   const role = type === 'error' || type === 'warning' ? 'alert' : 'status'
   const showNarration = Boolean(alert.audioNarration || alert.narration || onNarration)
   const showTutorialControls = Boolean(tutorialMode || onNext || onPrevious)
@@ -49,6 +52,8 @@ const LabAlertCard = ({ alert, onDismiss }) => {
       id,
       reason,
     })
+    // Narration may be owned by the AI Guide instead of this alert.
+    dispatchExclusiveAudioStart('alert-dismiss')
 
     setIsClosing(true)
 
@@ -107,7 +112,7 @@ const LabAlertCard = ({ alert, onDismiss }) => {
 
   return (
     <article
-      aria-describedby={description ? descriptionId : undefined}
+      aria-describedby={hasContent ? descriptionId : undefined}
       aria-labelledby={titleId}
       className={`lab-alert-card lab-alert-card--${type} ${isClosing ? 'lab-alert-card--closing' : ''}`}
       data-placement={placement}
@@ -115,16 +120,9 @@ const LabAlertCard = ({ alert, onDismiss }) => {
     >
       <div className="lab-alert-card__glow" aria-hidden="true" />
 
-      <div className="lab-alert-card__main">
+      <header className="lab-alert-card__header">
         <span className="lab-alert-card__icon" aria-hidden="true">{icon}</span>
-
-        <div className="lab-alert-card__content">
-          <div className="lab-alert-card__meta">
-            <span>{type.toUpperCase()}</span>
-          </div>
-          <h2 id={titleId}>{title}</h2>
-          {description ? <p id={descriptionId}>{description}</p> : null}
-        </div>
+        <h2 id={titleId}>{heading}</h2>
 
         <div className="lab-alert-card__tools">
           {showNarration ? (
@@ -146,7 +144,18 @@ const LabAlertCard = ({ alert, onDismiss }) => {
             ×
           </button>
         </div>
-      </div>
+      </header>
+
+      {hasContent ? (
+        <div className="lab-alert-card__content" id={descriptionId}>
+          {message ? <p className="lab-alert-card__message">{message}</p> : null}
+          {description ? (
+            description.split(/\n\s*\n/).map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="lab-alert-card__actions">
         {showTutorialControls ? (

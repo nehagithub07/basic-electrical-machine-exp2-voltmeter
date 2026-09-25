@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 
 import { memo } from 'react'
 import circuitImage from '../assets/circuit.png'
-import { getTerminalConnectedClass, getTerminalHighlightClass, getTerminalNumberHighlightClass } from '../utils/terminalHighlight.js'
+import { getTerminalConnectedClass, getTerminalHighlightClass } from '../utils/terminalHighlight.js'
 const terminalLabels = [
   {
     id: '9-endpoint',
@@ -61,7 +61,7 @@ const CircuitDiagram = ({ className = '', connectedTerminalIds = [], highlighted
             title={`Circuit terminal ${label}`}
           />
           <span
-            className={`terminal-number-label terminal-number-label--circuit terminal-number-label--endpoint-${label}${getTerminalNumberHighlightClass(highlightedTerminalIds, id)}`}
+            className={`terminal-number-label terminal-number-label--circuit terminal-number-label--endpoint-${label}`}
             data-terminal-id={id}
             title={`Circuit terminal ${label}`}
           >

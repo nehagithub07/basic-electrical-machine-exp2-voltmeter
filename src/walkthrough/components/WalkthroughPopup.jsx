@@ -26,6 +26,14 @@ const PauseIcon = () => (
 
 const isValidAudioSource = (audio) => Boolean(audio && audio !== '#')
 
+const formatDescription = (description) => description.split(/(\*\*[^*]+\*\*|\b(?:Rating|Note|Readings?)\b)/gi).map((part, index) => (
+  part.startsWith('**')
+    ? <strong key={index}>{part.slice(2, -2)}</strong>
+    : /^(?:Rating|Note|Readings?)$/i.test(part)
+      ? <strong key={index}>{part}</strong>
+      : part
+))
+
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
 const getPlacementOrder = (placement) => {
@@ -245,7 +253,7 @@ const WalkthroughPopup = ({
       </div>
 
       <p className="walkthrough-popup__description" id={descriptionId}>
-        {activeStep.description}
+        {formatDescription(activeStep.description)}
       </p>
 
       <div className="walkthrough-popup__progress" aria-hidden="true">

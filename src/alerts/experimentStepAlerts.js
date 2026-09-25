@@ -76,6 +76,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   allConnectionsCompleted: {
+    heading: 'Connections completed.',
     audio: ALERT_AUDIO.allConnectionsCompleted,
     description: '',
     icon: '✅',
@@ -85,6 +86,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   incorrectNodeConnection: {
+    heading: 'Wrong connection.',
     audio: ALERT_AUDIO.wrongConnection,
     dedupeKey: 'wrong-connection',
     description: 'Remove the wrong wire and follow the highlighted terminals.',
@@ -113,6 +115,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   connectionErrorFound: {
+    heading: 'Connection error.',
     audio: ALERT_AUDIO.multipleWrongConnections,
     icon: '⚠️',
     stepNumber: 2,
@@ -121,6 +124,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'error',
   },
   requiredConnectionsFirst: {
+    heading: 'Connections required.',
     audio: ALERT_AUDIO.firstCheckClick,
     description: '',
     icon: '!',
@@ -130,6 +134,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   missingConnections: {
+    heading: 'Missing connections.',
     audio: ALERT_AUDIO.firstCheckClick,
     description: 'Some required connections are missing. Follow the highlighted terminals to complete the circuit.',
     icon: '!',
@@ -148,6 +153,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'error',
   },
   multipleWrongConnections: {
+    heading: 'Wrong connections.',
     audio: ALERT_AUDIO.multipleWrongConnections,
     description: '',
     icon: '!',
@@ -157,6 +163,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'error',
   },
   adjustResistance: {
+    heading: 'Set resistance values.',
     audio: ALERT_AUDIO.resistanceRequired,
     dedupeKey: 'step-3-adjust-resistance',
     description: '',
@@ -167,6 +174,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   resistanceValuesSelected: {
+    heading: 'Resistance values selected.',
     audio: ALERT_AUDIO.resistanceSet,
     description: 'The resistance values for R1, R2, and R3 have been set. Click on the Power to turn ON the power supply.',
     icon: 'OK',
@@ -176,6 +184,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   resistanceLocked: {
+    heading: 'Resistance values locked.',
     description: 'Resistance controls are locked while the circuit is powered.',
     icon: '✅',
     stepNumber: 3,
@@ -184,6 +193,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   powerOn: {
+    heading: 'Power supply turned ON.',
     audio: ALERT_AUDIO.powerSupplyTurnOn,
     description: '',
     icon: '⚡',
@@ -193,6 +203,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   powerOffDuringExperiment: {
+    heading: 'Power supply turned OFF.',
     audio: ALERT_AUDIO_PLACEHOLDER,
     description: '',
     icon: '⚠️',
@@ -202,6 +213,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   cannotStartPower: {
+    heading: 'Check connections first.',
     audio: ALERT_AUDIO.firstPowerSupplyClick,
     description: '',
     icon: '⚠️',
@@ -211,6 +223,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   adjustVoltage: {
+    heading: 'Adjust source voltage.',
     dedupeKey: 'step-5-adjust-voltage',
     description: 'Move the voltage control and watch the meter needles respond.',
     icon: '⚡',
@@ -220,6 +233,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   currentUpdating: {
+    heading: 'Readings updating.',
     dedupeKey: 'step-5-current-updating',
     description: 'The voltmeter values are linked to the active supply voltage.',
     duration: 2600,
@@ -230,6 +244,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   addingReading: {
+    heading: 'Adding reading.',
     audio: ALERT_AUDIO_PLACEHOLDER,
     description: 'The current values are being transferred to the table.',
     duration: 1800,
@@ -267,6 +282,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   continueReadings: {
+    heading: 'Continue taking readings.',
     description: 'Record readings at different voltage settings before plotting.',
     icon: '📊',
     stepNumber: 7,
@@ -292,6 +308,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   maxReadingsReached: {
+    heading: 'Maximum readings reached.',
     audio: ALERT_AUDIO.maxReadings,
     description: 'Now verify KVL in the theoretical verification section.',
     icon: '!',
@@ -301,6 +318,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   lastReadingAdded: {
+    heading: 'Last reading added successfully.',
     audio: ALERT_AUDIO.fifthReadingAdded,
     description: '',
     icon: 'OK',
@@ -310,6 +328,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   calculationInstructions: {
+    heading: 'Theoretical verification.',
     audio: ALERT_AUDIO.calculateButtonClick,
     description: '',
     icon: 'OK',
@@ -319,6 +338,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   multipleCalculationValuesMissing: {
+    heading: 'Calculated values required.',
     audio: ALERT_AUDIO.verifyMultipleValuesMissing,
     description: '',
     icon: '!',
@@ -328,6 +348,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   calculationValueMissing: {
+    heading: 'Calculated value required.',
     audio: ALERT_AUDIO.verifyOneValueMissing,
     description: '',
     icon: '!',
@@ -337,6 +358,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   incorrectCalculations: {
+    heading: 'Incorrect calculations.',
     audio: ALERT_AUDIO.incorrectCalculations,
     description: '',
     icon: '!',
@@ -346,6 +368,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'error',
   },
   correctCalculations: {
+    heading: 'KVL verified successfully.',
     audio: ALERT_AUDIO.correctCalculations,
     description: '',
     icon: 'OK',
@@ -372,6 +395,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   valuesDeviate: {
+    heading: 'Readings do not match.',
     description: 'Check wiring, resistance values, and recorded readings before continuing.',
     icon: '⚠️',
     stepNumber: 8,
@@ -389,6 +413,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   graphPlotted: {
+    heading: 'Graph plotted successfully.',
     audio: ALERT_AUDIO.graph,
     description: 'Your simulation is now complete. You may view the report by clicking on the generate report button, then use print to print the page or reset to start the simulation again.',
     icon: '✅',
@@ -434,6 +459,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'info',
   },
   resetWarning: {
+    heading: 'Reset simulation?',
     confirmLabel: 'OK',
     dedupeKey: 'step-11-reset-warning',
     description: 'Confirm reset before the current table and circuit are cleared.',
@@ -446,6 +472,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'warning',
   },
   resetSuccess: {
+    heading: 'Simulation reset.',
     audio: ALERT_AUDIO.reset,
     description: '',
     icon: '✅',

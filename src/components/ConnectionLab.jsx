@@ -12,7 +12,6 @@ import {
   getConnectedTerminalIds,
   getConnectionStatus,
   getNextRequiredConnectionPair,
-  isValidConnectionPair,
   lockJsPlumbCircuit,
   resolveJsPlumb,
   wireHoverPaintStyles,
@@ -139,10 +138,8 @@ const ConnectionLab = ({
         const connection = info?.connection ?? info
         const sourceId = connection?.sourceId || connection?.source?.id
         const targetId = connection?.targetId || connection?.target?.id
-        const latestConnectionIsInvalid = Boolean(
-          sourceId && targetId && !isValidConnectionPair(sourceId, targetId),
-        )
-        const latestConnectionIsWrong = latestConnectionIsInvalid
+        const status = getConnectionStatus(instance)
+        const latestConnectionIsWrong = status.hasInvalidConnection
         const nextRequiredConnection = getNextRequiredConnectionPair(instance)
 
         if (suppressConnectionAlertsRef.current) {
@@ -151,7 +148,7 @@ const ConnectionLab = ({
         }
 
         onConnectionChangeRef.current?.({
-          ...getConnectionStatus(instance),
+          ...status,
           latestConnection: {
             sourceId,
             targetId,
