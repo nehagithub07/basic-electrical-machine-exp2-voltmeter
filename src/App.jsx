@@ -869,7 +869,6 @@ const App = () => {
       if (aiGuidePlaying) {
         playAiGuideSteps([34])
       }
-      window.alert('Please complete and verify the calculations first.')
       return
     }
 
@@ -900,7 +899,12 @@ const App = () => {
 
     if (!generated) {
       setStatus('Unable to open the report window.')
-      window.alert('Unable to open the report window. Please allow pop-ups and try again.')
+      showStepAlert({
+        title: 'Unable to Open Report',
+        description: 'Unable to open the report window. Please allow pop-ups and try again.',
+        target: '#generate-report-button',
+        type: 'warning',
+      })
       return
     }
 

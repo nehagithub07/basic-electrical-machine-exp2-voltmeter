@@ -328,7 +328,7 @@ export const EXPERIMENT_ALERTS = {
     type: 'success',
   },
   calculationInstructions: {
-    heading: 'Theoretical verification.',
+    heading: 'Theoretical Verification',
     audio: ALERT_AUDIO.calculateButtonClick,
     description: '',
     icon: 'OK',

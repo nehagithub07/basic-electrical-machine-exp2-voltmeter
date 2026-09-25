@@ -26,10 +26,10 @@ const PauseIcon = () => (
 
 const isValidAudioSource = (audio) => Boolean(audio && audio !== '#')
 
-const formatDescription = (description) => description.split(/(\*\*[^*]+\*\*|\b(?:Rating|Note|Readings?)\b)/gi).map((part, index) => (
+const formatDescription = (description) => description.split(/(\*\*[^*]+\*\*|\b(?:Rating|Range|Note)\b:?)/gi).map((part, index) => (
   part.startsWith('**')
     ? <strong key={index}>{part.slice(2, -2)}</strong>
-    : /^(?:Rating|Note|Readings?)$/i.test(part)
+    : /^(?:Rating|Range|Note):?$/i.test(part)
       ? <strong key={index}>{part}</strong>
       : part
 ))

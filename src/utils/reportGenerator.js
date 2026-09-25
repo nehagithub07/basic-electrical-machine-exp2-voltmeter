@@ -81,11 +81,10 @@ const createReportHtml = ({
   }).join('')
   const verifiedCalculationHtml = verifiedCalculationRows ? `
     <div class="results-card results-card--verification">
-      <h3>Verified Readings</h3>
-      <p>All readings successfully used for KVL verification are shown below.</p>
-      <div class="table-shell">
+      <h3>Theoritical Verification</h3>
+        <div class="table-shell">
         <table class="compact-table">
-          <thead><tr><th>Verified Reading</th><th>V<sub>s</sub> (V)</th><th>Calculated V<sub>1</sub> (V)</th><th>Calculated V<sub>2</sub> (V)</th><th>Calculated V<sub>3</sub> (V)</th><th>Status</th></tr></thead>
+          <thead><tr><th>Verified Reading</th><th>V<sub>s</sub> (V)</th><th> V<sub>1</sub> (V)</th><th>V<sub>2</sub> (V)</th><th>V<sub>3</sub> (V)</th><th>Status</th></tr></thead>
           <tbody>${verifiedCalculationRows}</tbody>
         </table>
       </div>
@@ -98,7 +97,7 @@ const createReportHtml = ({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kirchhoff Voltage Law Simulation Report</title>
+  <title>KVL Simulation Report</title>
   <base href="${escapeHtml(baseHref)}">
   <style>${reportStyles}</style>
 </head>
@@ -137,13 +136,13 @@ const createReportHtml = ({
 
       <h3>Components and Key Parameters</h3>
       <ul class="two-column-list">
-        <li>DC power supply: 1–15 V</li>
-        <li>DC Voltmeter V<sub>1</sub> for the voltage drop across R<sub>1</sub>: 0 - 20 V</li>
-        <li>DC Voltmeter V<sub>2</sub> for the voltage drop across R<sub>2</sub>: 0 - 20 V</li>
-        <li>DC Voltmeter V<sub>3</sub> for the voltage drop across R<sub>3</sub>: 0 - 20 V</li>
-        <li>R<sub>1</sub>: ${formatResistance(r1 * 1000)} &Omega;</li>
-        <li>R<sub>2</sub>: ${formatResistance(r2 * 1000)} &Omega;</li>
-        <li>R<sub>3</sub>: ${formatResistance(r3 * 1000)} &Omega;</li>
+        <li>DC power supply: 15 V</li>
+        <li>DC Voltmeter V<sub>1</sub>: 0 - 20 V</li>
+        <li>R<sub>1</sub>: ${formatResistance(r1)} k&Omega;</li>
+        <li>DC Voltmeter V<sub>2</sub>: 0 - 20 V</li>
+        <li>R<sub>2</sub>: ${formatResistance(r2)} k&Omega;</li>
+        <li>DC Voltmeter V<sub>3</sub>: 0 - 20 V</li>
+        <li>R<sub>3</sub>: ${formatResistance(r3)} k&Omega;</li>
         <li>Connecting leads</li>
       </ul>
 

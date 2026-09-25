@@ -77,9 +77,9 @@ const instructionSteps = [
     text: 'Make connections as per the instructions given below by dragging and dropping wires from the apparatus terminals to the circuit, or use Autoconnect to make the connections automatically.',
     substeps: [
       'Connect the power supply to the circuit (1-9, 2-10).',
-      'Connect voltmeters (3-11, 4-12), (5-13, 6-14), and (7-15, 8-16), or connect any voltmeter to any resistance in the circuit.',
-      'Click on a label to delete all connections for the corresponding node.',
+      'Connect voltmeters (3-11, 4-12), (5-13, 6-14), and (7-15, 8-16)',
     ],
+    note: 'Click on a label to delete all connections for the corresponding node.',
   },
   {
     number: 2,
@@ -87,7 +87,7 @@ const instructionSteps = [
   },
   {
     number: 3,
-    text: 'Set the values of resistances R1, R2, and R3 by adjusting the sliders on the left. These values will remain constant throughout the experiment.',
+    text: 'Set the values of resistances R1, R2, and R3 by moving the resistance sliders on the right side. These values will remain constant throughout the experiment.',
   },
   {
     number: 4,
@@ -103,15 +103,15 @@ const instructionSteps = [
   },
   {
     number: 7,
-    text: 'Repeat the reading process until at least three observations have been recorded. You may record up to five readings.',
+    text: 'Repeat the steps 5 and 6 until at least three observations have been recorded. You may record up to five readings.',
   },
   {
     number: 8,
-    text: 'Click CALCULATE to display the recorded resistance values. Select an observation, calculate the currents using the equations, and enter the current and resistance values in the verification section.',
+    text: <>Click the <strong>'CALCULATE'</strong> button to display the recorded resistance values and follow the step 9.</>,
   },
   {
     number: 9,
-    text: <>In the Theoretical Verification section, select a reading to verify, enter the required calculated values, and click the <strong>'Verify'</strong> button to verify the reading. Confirm V = V₁ + V₂ = V₁ + V₃.</>,
+    text: <>In the Theoretical Verification section, select a reading to verify, enter the required calculated values, and click the <strong>'Verify'</strong> button to verify the reading.</>,
   },
   {
     number: 10,
@@ -218,7 +218,7 @@ const ActionButtons = ({
 
           <div className="action-instructions-panel__body">
             <p className="action-instructions-panel__guide">
-              <strong>AI Guide: The AI guide will assist you in performing the simulation accurately at each step.</strong>
+              <strong>AI Guide:</strong> The AI guide will assist you in performing the simulation accurately at each step.
             </p>
             <ol className="action-instructions-panel__steps">
               {instructionSteps.map((step) => {
@@ -238,6 +238,11 @@ const ActionButtons = ({
                           <li key={substep}>{substep}</li>
                         ))}
                       </ol>
+                    ) : null}
+                    {step.note ? (
+                      <p className="action-instructions-panel__note">
+                        <strong>Note:</strong> {step.note}
+                      </p>
                     ) : null}
                   </li>
                 )

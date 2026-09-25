@@ -70,9 +70,9 @@ const CircuitDiagram = ({ className = '', connectedTerminalIds = [], highlighted
         </Fragment>
       ))}
 
-      <span className="resistor-value resistor-value--r1">{r1} &Omega;</span>
-      <span className="resistor-value resistor-value--r2">{r2} &Omega;</span>
-      <span className="resistor-value resistor-value--r3">{r3} &Omega;</span>
+      <span className="resistor-value resistor-value--r1">{r1} k&Omega;</span>
+      <span className="resistor-value resistor-value--r2">{r2} k&Omega;</span>
+      <span className="resistor-value resistor-value--r3">{r3} k&Omega;</span>
     </div>
   </section>
 )
