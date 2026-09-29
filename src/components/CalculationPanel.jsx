@@ -46,7 +46,7 @@ const CalculationPanel = ({
   observations = [],
   onVerificationAttempt,
   onVerificationChange,
-  requiredReadings = 3,
+  requiredReadings = 5,
 }) => {
   const [selectedId, setSelectedId] = useState('')
   const [inputs, setInputs] = useState(emptyInputs)
@@ -259,7 +259,7 @@ const CalculationPanel = ({
               ? 'Choose any recorded reading and enter each current/resistance value.'
               : observations.length >= requiredReadings
                 ? 'Click Calculate to display resistance values and select a recorded reading.'
-                : `Record at least ${requiredReadings} readings, then click Calculate to unlock this section (${observations.length}/${requiredReadings}).`}
+                : `Record at least 5 readings, then click Calculate to unlock this section.`}
           </p>
         </div>
       </div>

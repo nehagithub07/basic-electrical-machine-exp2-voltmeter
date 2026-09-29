@@ -85,12 +85,12 @@
     },
     {
       "id": 16,
-      "text": "Please add at least three readings before verifying KVL.",
+      "text": "Please add all five readings before verifying KVL.",
       "audio": "./audios/InsufficientReadings.wav"
     },
     {
       "id": 17,
-      "text": "Please add at least three readings before verifying KVL.",
+      "text": "Please add all five readings before verifying KVL.",
       "audio": "./audios/InsufficientReadings.wav"
     },
     {

@@ -424,7 +424,7 @@ export const EXPERIMENT_ALERTS = {
   },
   insufficientGraphReadings: {
     audio: ALERT_AUDIO.insufficientReadings,
-    description: 'Please add at least three readings before verifying KVL.',
+    description: 'Please add all five readings before verifying KVL.',
     icon: '❌',
     stepNumber: 9,
     target: '#observation-table-panel',

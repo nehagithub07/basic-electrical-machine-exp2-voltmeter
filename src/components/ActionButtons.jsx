@@ -103,7 +103,7 @@ const instructionSteps = [
   },
   {
     number: 7,
-    text: 'Repeat the steps 5 and 6 until at least three observations have been recorded. You may record up to five readings.',
+    text: 'Repeat the steps 5 and 6 until all five observations have been recorded.',
   },
   {
     number: 8,
