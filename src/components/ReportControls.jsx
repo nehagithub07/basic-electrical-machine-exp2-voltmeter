@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { FormulaIcon, PdfIcon } from './Icons.jsx'
+import { useRef, useState } from 'react'
+import { CloseIcon, FormulaIcon, PdfIcon } from './Icons.jsx'
 
 const formulas = [
   {
@@ -75,6 +75,7 @@ const ReportControls = ({
   reportGenerated,
 }) => {
   const [formulasOpen, setFormulasOpen] = useState(false)
+  const formulaButtonRef = useRef(null)
   const readingsReady = readingCount >= minReadings
   const reportButtonDisabled = !readingsReady || !graphGenerated
   const buttonTitle = reportGenerated
@@ -94,6 +95,18 @@ const ReportControls = ({
         >
           <div className="formula-panel__header">
             <h3 id="formula-panel-title">Equations</h3>
+            <button
+              type="button"
+              className="formula-panel__close"
+              aria-label="Close equations panel"
+              title="Close equations panel"
+              onClick={() => {
+                setFormulasOpen(false)
+                formulaButtonRef.current?.focus()
+              }}
+            >
+              <CloseIcon />
+            </button>
           </div>
 
           <dl className="formula-panel__list">
@@ -116,6 +129,7 @@ const ReportControls = ({
 
       <button
         id="formula-button"
+        ref={formulaButtonRef}
         type="button"
         className="formula-button"
         aria-controls="experiment-formula-panel"

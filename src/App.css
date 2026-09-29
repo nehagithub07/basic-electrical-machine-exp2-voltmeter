@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+
 #app-wrapper {
   width: 100%;
   min-height: 100vh;
@@ -31,7 +40,8 @@
   overflow: hidden;
   isolation: isolate;
   color: #2f1d14;
-  font-family: Arial, Helvetica, sans-serif;
+   font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   background-image:
     linear-gradient(90deg, rgba(242, 179, 94, 0.5), rgba(255, 218, 150, 0.2), rgba(138, 73, 29, 0.26)),
     linear-gradient(rgba(255, 214, 146, 0.42), rgba(120, 62, 24, 0.16)),
@@ -556,7 +566,7 @@
   border-radius: 7px;
   color: #3d2517;
   background: #fff4e4;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 800;
   box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.82);
 }
@@ -592,7 +602,7 @@
   height: 31px;
   color: #fff;
   background: linear-gradient(180deg, #7b461f, #4a2a15);
-  font-size: 10.76px;
+  font-size: 10.5px;
   font-weight: 900;
 }
 
@@ -617,6 +627,10 @@
 .observation-table td {
   border-right: 1px solid rgba(91, 58, 35, 0.22);
   border-bottom: 1px solid rgba(91, 58, 35, 0.18);
+}
+
+.observation-table th {
+  border-color: #e3bf8d;
 }
 
 .observation-table th:last-child,
@@ -1013,6 +1027,7 @@
   border: 1px solid rgba(122, 86, 52, 0.28);
   border-radius: 14px;
   color: #2f1d14;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
   background:
     linear-gradient(180deg, rgba(255, 251, 243, 0.98), rgba(239, 228, 211, 0.98)),
     radial-gradient(circle at 16% 0, rgba(255, 255, 255, 0.9), transparent 42%);
@@ -2610,7 +2625,7 @@
   margin: 4px 0 0;
   color: #3e2a1f;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -2674,6 +2689,7 @@
   inset: 18px 20px 16px;
   width: auto;
   height: auto;
+  font-family: inherit;
 }
 
 .graph-panel__plot-bg {
@@ -2728,18 +2744,18 @@
 
 .graph-panel__tick-label {
   fill: #6a4b34;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .graph-panel__tick-label--y {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .graph-panel__axis-title {
   fill: #38271c;
-  font-size: 13.5px;
-  font-weight: 900;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .graph-panel__axis-title--y {
@@ -2919,6 +2935,29 @@
   letter-spacing: 0;
 }
 
+.formula-panel__close {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(89, 55, 30, 0.35);
+  border-radius: 6px;
+  color: #362318;
+  background: #f4e5ce;
+  cursor: pointer;
+}
+
+.formula-panel__close:hover {
+  background: #ead7b7;
+}
+
+.formula-panel__close svg {
+  width: 18px;
+  height: 18px;
+}
+
 .formula-panel__list {
   display: grid;
   gap: 8px;
@@ -3019,7 +3058,7 @@
 .graph-panel__series-label {
   dominant-baseline: middle;
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 700;
   paint-order: stroke;
   stroke: rgba(255, 253, 248, 0.96);
   stroke-linejoin: round;

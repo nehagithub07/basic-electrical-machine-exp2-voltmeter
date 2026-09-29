@@ -122,7 +122,7 @@ const LabAlertCard = ({ alert, onDismiss }) => {
 
       <header className="lab-alert-card__header">
         <span className="lab-alert-card__icon" aria-hidden="true">{icon}</span>
-        <h2 id={titleId}>{heading}</h2>
+        <h2 id={titleId}>{heading.replace(/\.+$/, '')}</h2>
 
         <div className="lab-alert-card__tools">
           {showNarration ? (

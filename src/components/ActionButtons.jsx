@@ -79,7 +79,7 @@ const instructionSteps = [
       'Connect the power supply to the circuit (1-9, 2-10).',
       'Connect voltmeters (3-11, 4-12), (5-13, 6-14), and (7-15, 8-16)',
     ],
-    note: 'Click on a label to delete all connections for the corresponding node.',
+    note: 'Click on the label to delete the connection for the corresponding terminals.',
   },
   {
     number: 2,

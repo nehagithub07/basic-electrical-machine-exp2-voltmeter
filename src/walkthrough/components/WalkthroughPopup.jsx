@@ -26,13 +26,14 @@ const PauseIcon = () => (
 
 const isValidAudioSource = (audio) => Boolean(audio && audio !== '#')
 
-const formatDescription = (description) => description.split(/(\*\*[^*]+\*\*|\b(?:Rating|Range|Note)\b:?)/gi).map((part, index) => (
-  part.startsWith('**')
-    ? <strong key={index}>{part.slice(2, -2)}</strong>
-    : /^(?:Rating|Range|Note):?$/i.test(part)
+const formatDescription = (description) => description
+  .replace(/\*\*([^*]+)\*\*/g, '$1')
+  .split(/(\b(?:Note|Range|Rating):)/gi)
+  .map((part, index) => (
+    /^(?:Note|Range|Rating):$/i.test(part)
       ? <strong key={index}>{part}</strong>
       : part
-))
+  ))
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
