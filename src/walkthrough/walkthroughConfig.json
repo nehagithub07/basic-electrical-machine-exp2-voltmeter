@@ -172,7 +172,7 @@
       "description": {
         "en": "This table records the measured voltage drops V1, V2, and V3 at different source voltages. These readings will be used later to verify the KVL."
       },
-      "audio": "./walkthrough-audios/Observation Table.wav",
+      "audio": "./walkthrough-audios/Observation table.wav",
       "placement": "right"
     },
     {
